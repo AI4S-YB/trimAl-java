@@ -1,0 +1,23 @@
+{
+  "seed": 15120261006,
+  "counts": {
+    "T": 292300
+  },
+  "matches": {
+    "T": 292300
+  },
+  "total": 292300,
+  "exact_matches": 292300,
+  "differences": [],
+  "exit_codes": {
+    "cpp": 0,
+    "java": 0
+  },
+  "diagnostic_differences_not_gates": {
+    "cpp_vs_java_double_log10": 153671,
+    "cpp_float_vs_double_log10": 3676,
+    "cpp_float_vs_double_exp": 87
+  },
+  "production_mismatches": 0,
+  "skipped_cases": 0
+}

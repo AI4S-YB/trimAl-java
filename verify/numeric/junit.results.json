@@ -1,0 +1,15 @@
+{
+  "exit_code": 0,
+  "tests": [
+    "util/CppFormatTest",
+    "util/UtilsQuicksortTest",
+    "util/UtilsTest",
+    "stat/SimilarityMatrixTest",
+    "stat/StatisticsGapsTest",
+    "stat/StatisticsConservationTest"
+  ],
+  "found": 30,
+  "started": 30,
+  "successful": 30,
+  "failed": 0
+}

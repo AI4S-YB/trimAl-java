@@ -1,0 +1,5 @@
+# Slow O(n^2 L) real-data jobs excluded from the quick suite.
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strict -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strictplus -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -automated1 -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gappyout -htmlout $HTML -out $OUT

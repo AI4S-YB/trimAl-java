@@ -1,0 +1,138 @@
+# trimal baseline manifest v1
+# $IN = repo root, $OUT = output alignment, $HTML = html output
+
+# ---------- A. format conversion: 6 inputs x 12 output formats ----------
+# inputs span clw/fasta/pir/msl/phy/sequential_phy
+-in upstream/dataset/example.001.AA.clw -fasta -out $OUT
+-in upstream/dataset/example.001.AA.clw -clustal -out $OUT
+-in upstream/dataset/example.001.AA.clw -nbrf -out $OUT
+-in upstream/dataset/example.001.AA.clw -mega -out $OUT
+-in upstream/dataset/example.001.AA.clw -nexus -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip_m10 -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip_paml -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip_paml_m10 -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip3.2 -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip3.2_m10 -out $OUT
+-in upstream/dataset/example.001.AA.clw -htmlout $HTML -out $OUT
+-in upstream/dataset/example.004.AA.fasta -fasta -out $OUT
+-in upstream/dataset/example.004.AA.fasta -clustal -out $OUT
+-in upstream/dataset/example.004.AA.fasta -nbrf -out $OUT
+-in upstream/dataset/example.004.AA.fasta -mega -out $OUT
+-in upstream/dataset/example.004.AA.fasta -nexus -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip_m10 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip_paml -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip3.2 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -fasta_m10 -out $OUT
+-in upstream/dataset/example.006.AA.pir -fasta -out $OUT
+-in upstream/dataset/example.006.AA.pir -clustal -out $OUT
+-in upstream/dataset/example.006.AA.pir -nbrf -out $OUT
+-in upstream/dataset/example.006.AA.pir -nexus -out $OUT
+-in upstream/dataset/example.006.AA.pir -phylip -out $OUT
+-in upstream/dataset/example.001.AA.msl -fasta -out $OUT
+-in upstream/dataset/example.001.AA.msl -clustal -out $OUT
+-in upstream/dataset/example.001.AA.msl -phylip -out $OUT
+-in upstream/dataset/example.002.AA.phy -fasta -out $OUT
+-in upstream/dataset/example.002.AA.phy -clustal -out $OUT
+-in upstream/dataset/example.002.AA.phy -nexus -out $OUT
+-in upstream/dataset/example.002.AA.phy -phylip -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -fasta -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -phylip -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -nexus -out $OUT
+-in upstream/dataset/example.001.AA.clw -keepheader -fasta -out $OUT
+
+# ---------- B. trimming methods ----------
+-in upstream/dataset/example.004.AA.fasta -gappyout -out $OUT
+-in upstream/dataset/example.004.AA.fasta -strict -out $OUT
+-in upstream/dataset/example.004.AA.fasta -strictplus -out $OUT
+-in upstream/dataset/example.004.AA.fasta -automated1 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -automated2 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -nogap -out $OUT
+-in upstream/dataset/example.004.AA.fasta -noallgaps -out $OUT
+-in upstream/dataset/example.004.AA.fasta -terminalonly -out $OUT
+-in upstream/dataset/example.004.AA.fasta -cons 50 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -cons 60.5 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt 0.3 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt 0.3 -gt 0.9 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt 0.3 -st 0.5 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt 0.3 -st 0.5 -ct 0.7 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -resoverlap 0.8 -seqoverlap 60 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -selectcols 0-3,5,9-12 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -selectseqs 1-3 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -w 5 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gw 5 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -sw 5 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gappyout -complementary -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gappyout -colnumbering -out $OUT
+SKIP:orig-ub-garbage-columnsmap -in upstream/dataset/example.004.AA.fasta -gappyout -colnumbering -complementary -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gappyout -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strict -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strictplus -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -automated1 -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -automated2 -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -nogap -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -noallgaps -out $OUT
+-in upstream/dataset/example.015.AA.bctoNOG.ENOG41099F3.fasta -automated1 -out $OUT
+-in upstream/dataset/example.015.AA.bctoNOG.ENOG41099F3.fasta -strict -out $OUT
+-in upstream/dataset/example.015.AA.bctoNOG.ENOG41099F3.fasta -gappyout -out $OUT
+SKIP:orig-segv -in upstream/dataset/example.094.DNADeg.sequential_phy -gappyout -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -strict -out $OUT
+SKIP:orig-segv -in upstream/dataset/example.094.DNADeg.sequential_phy -automated1 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gappyout -w 7 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -strict -w 7 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt 0.3 -st 0.5 -w 3 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -mw 5 -gw 7 -sw 5 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -nogap -noallgaps -terminalonly -out $OUT
+
+# ---------- C. statistics printed to stdout ----------
+-in upstream/dataset/example.004.AA.fasta -sgc -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gsc -out $OUT
+-in upstream/dataset/example.004.AA.fasta -sft -out $OUT
+-in upstream/dataset/example.004.AA.fasta -sfc -out $OUT
+-in upstream/dataset/example.004.AA.fasta -sident -out $OUT
+-in upstream/dataset/example.004.AA.fasta -soverlap -out $OUT
+-in upstream/dataset/example.004.AA.fasta -ssc -out $OUT
+-in upstream/dataset/example.004.AA.fasta -sst -out $OUT
+-in upstream/dataset/example.004.AA.fasta -identity -out $OUT
+-in upstream/dataset/example.004.AA.fasta -overlap -out $OUT
+-in upstream/dataset/example.004.AA.fasta -colscore -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -sgc -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gsc -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -sft -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -sfc -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -identity -out $OUT
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -colscore -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -sgc -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -identity -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -colscore -out $OUT
+
+# ---------- D. comparison / consistency ----------
+-in upstream/dataset/example.004.AA.fasta -backtrans upstream/dataset/example.094.DNADeg.sequential_phy -out $OUT
+-compareset $IN/verify/corpus/cmp1.files -out $OUT
+-compareset $IN/verify/corpus/cmp1.files -forceselect upstream/dataset/example.001.AA.phy -out $OUT
+SKIP:orig-segv -compareset $IN/verify/corpus/cmp1.files -ct 0.5 -out $OUT
+-compareset $IN/verify/corpus/cmp2.files -out $OUT
+-compareset $IN/verify/corpus/cmp2.files -complementary -out $OUT
+
+# ---------- E. alternative matrix / degenerated DNA ----------
+-in upstream/dataset/example.094.DNADeg.sequential_phy --alternative_matrix degenerated_nt_identity -sgc -out $OUT
+-in upstream/dataset/example.004.AA.fasta -matrix upstream/dataset/matrix.BLOSUM62 -colscore -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -matrix upstream/dataset/matrix.Degenerated_DNA -colscore -out $OUT
+
+# ---------- F. html ----------
+-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gappyout -htmlout $HTML -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -strict -htmlout $HTML -out $OUT
+
+# ---------- G. error paths ----------
+-in verify/corpus/missing_file.fasta -out $OUT
+-in verify/corpus/empty.fasta -out $OUT
+-in verify/corpus/bad_trunc.fasta -out $OUT
+-in verify/corpus/one_seq.fasta -out $OUT
+-out $OUT
+-in upstream/dataset/example.004.AA.fasta
+-in upstream/dataset/example.004.AA.fasta -wrongflag -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt -out $OUT
+-in upstream/dataset/example.004.AA.fasta -gt abc -out $OUT
+-in upstream/dataset/example.004.AA.fasta -cons 150 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -w 0 -out $OUT

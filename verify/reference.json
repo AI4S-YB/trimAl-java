@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/inab/trimal",
+  "branch": "trimAl",
+  "queried_head": "5b5f730430843d39c579acdf8094969780c3c23e",
+  "identity": "trimAl v1.5.rev1 build[2025-11-25]",
+  "compiler": "g++ 11.4.0",
+  "flags": "-Wall -O2",
+  "platform": "WSL Ubuntu x86_64",
+  "note": "All 24 acquired C++ source/header/makefile blobs match the v1.5.1 tag.",
+  "pinned_tag": "v1.5.1",
+  "pinned_commit": "d637091abe33595775f40480970d1a18d87a7bcb"
+}

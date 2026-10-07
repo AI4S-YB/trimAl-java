@@ -1,0 +1,32 @@
+{
+  "tag": "v1.5.1",
+  "commit": "d637091abe33595775f40480970d1a18d87a7bcb",
+  "matched": [
+    "alignment.cpp",
+    "alignment.h",
+    "autAlignment.cpp",
+    "compareFiles.cpp",
+    "compareFiles.h",
+    "defines.h",
+    "main.cpp",
+    "makefile",
+    "readAl.cpp",
+    "rwAlignment.cpp",
+    "sequencesMatrix.cpp",
+    "sequencesMatrix.h",
+    "similarityMatrix.cpp",
+    "similarityMatrix.h",
+    "statAl.cpp",
+    "statisticsConservation.cpp",
+    "statisticsConservation.h",
+    "statisticsFiles.cpp",
+    "statisticsFiles.h",
+    "statisticsGaps.cpp",
+    "statisticsGaps.h",
+    "utils.cpp",
+    "utils.h",
+    "values.h"
+  ],
+  "different": [],
+  "identical_source": true
+}

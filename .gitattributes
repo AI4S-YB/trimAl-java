@@ -1,0 +1,9 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+java/trimal text eol=lf
+java/readal text eol=lf
+java/statal text eol=lf
+*.cmd text eol=crlf
+*.fa text eol=lf
+*.fasta text eol=lf

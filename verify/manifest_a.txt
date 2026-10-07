@@ -1,0 +1,42 @@
+# ---------- A. format conversion: 6 inputs x 12 output formats ----------
+# inputs span clw/fasta/pir/msl/phy/sequential_phy
+-in upstream/dataset/example.001.AA.clw -fasta -out $OUT
+-in upstream/dataset/example.001.AA.clw -clustal -out $OUT
+-in upstream/dataset/example.001.AA.clw -nbrf -out $OUT
+-in upstream/dataset/example.001.AA.clw -mega -out $OUT
+-in upstream/dataset/example.001.AA.clw -nexus -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip_m10 -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip_paml -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip_paml_m10 -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip3.2 -out $OUT
+-in upstream/dataset/example.001.AA.clw -phylip3.2_m10 -out $OUT
+-in upstream/dataset/example.001.AA.clw -htmlout $HTML -out $OUT
+-in upstream/dataset/example.004.AA.fasta -fasta -out $OUT
+-in upstream/dataset/example.004.AA.fasta -clustal -out $OUT
+-in upstream/dataset/example.004.AA.fasta -nbrf -out $OUT
+-in upstream/dataset/example.004.AA.fasta -mega -out $OUT
+-in upstream/dataset/example.004.AA.fasta -nexus -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip_m10 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip_paml -out $OUT
+-in upstream/dataset/example.004.AA.fasta -phylip3.2 -out $OUT
+-in upstream/dataset/example.004.AA.fasta -fasta_m10 -out $OUT
+-in upstream/dataset/example.006.AA.pir -fasta -out $OUT
+-in upstream/dataset/example.006.AA.pir -clustal -out $OUT
+-in upstream/dataset/example.006.AA.pir -nbrf -out $OUT
+-in upstream/dataset/example.006.AA.pir -nexus -out $OUT
+-in upstream/dataset/example.006.AA.pir -phylip -out $OUT
+-in upstream/dataset/example.001.AA.msl -fasta -out $OUT
+-in upstream/dataset/example.001.AA.msl -clustal -out $OUT
+-in upstream/dataset/example.001.AA.msl -phylip -out $OUT
+-in upstream/dataset/example.002.AA.phy -fasta -out $OUT
+-in upstream/dataset/example.002.AA.phy -clustal -out $OUT
+-in upstream/dataset/example.002.AA.phy -nexus -out $OUT
+-in upstream/dataset/example.002.AA.phy -phylip -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -fasta -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -phylip -out $OUT
+-in upstream/dataset/example.094.DNADeg.sequential_phy -nexus -out $OUT
+-in upstream/dataset/example.001.AA.clw -keepheader -fasta -out $OUT
+
+# ---------- B. trimming methods ----------

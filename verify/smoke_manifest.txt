@@ -1,0 +1,3 @@
+# Fast entrypoint check with no unverified inputs.
+--version
+-in upstream/dataset/example.004.AA.fasta -gappyout -out $OUT
