@@ -13,8 +13,8 @@
   },
   "jar": {
     "path": "java/target/trimal.jar",
-    "bytes": 144907,
-    "sha256": "753f54d87caaf92aab7be1c9e665ede607e91752d9215350b71238c66dae0635",
+    "bytes": 145351,
+    "sha256": "547e5778da87ce55172506c98859c793ab2830b91e617ccdd7f1d9becaa16726",
     "release": 11
   },
   "unit_tests": {
@@ -30,7 +30,7 @@
     "known_divergence": 6,
     "total": 508,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/quick_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/quick_manifest-20261008-081612",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/quick_manifest-20261009-072149",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -41,7 +41,7 @@
     "known_divergence": 4,
     "total": 475,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/extended_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/extended_manifest-20261008-082014",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/extended_manifest-20261009-072557",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -52,18 +52,18 @@
     "known_divergence": 4,
     "total": 117,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/legacy_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/legacy_manifest-20261008-082043",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/legacy_manifest-20261009-072625",
     "java": "java",
     "main": "trimal.TrimAl"
   },
   "scale_cli": {
-    "pass": 4,
+    "pass": 8,
     "fail": 0,
     "skip": 0,
     "known_divergence": 0,
-    "total": 4,
+    "total": 8,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/scale_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/scale_manifest-20261008-082333",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/scale_manifest-20261009-072955",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -87,7 +87,7 @@
         "known_divergence": 1
       }
     },
-    "elapsed_seconds": 64.63
+    "elapsed_seconds": 74.44
   },
   "windows_companions": {
     "total": 49,
@@ -155,27 +155,47 @@
   "scale_timings": {
     "case_0001": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strict",
-      "orig_seconds": 58.582,
-      "java_seconds": 6.617
+      "orig_seconds": 56.849,
+      "java_seconds": 7.286
     },
     "case_0002": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strictplus",
-      "orig_seconds": 58.613,
-      "java_seconds": 5.616
+      "orig_seconds": 56.116,
+      "java_seconds": 6.077
     },
     "case_0003": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -automated1",
-      "orig_seconds": 84.378,
-      "java_seconds": 9.276
+      "orig_seconds": 90.112,
+      "java_seconds": 11.924
     },
     "case_0004": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gappyout",
-      "orig_seconds": 434.895,
-      "java_seconds": 96.186
+      "orig_seconds": 611.759,
+      "java_seconds": 51.922
+    },
+    "case_0005": {
+      "args": "-in verify/corpus/extended/wide_60k.fa -sst",
+      "orig_seconds": 0.98,
+      "java_seconds": 0.601
+    },
+    "case_0006": {
+      "args": "-in verify/corpus/extended/wide_60k.fa -sgt",
+      "orig_seconds": 0.677,
+      "java_seconds": 0.762
+    },
+    "case_0007": {
+      "args": "-in verify/corpus/extended/wide_60k.fa -fasta",
+      "orig_seconds": 0.539,
+      "java_seconds": 1.269
+    },
+    "case_0008": {
+      "args": "-in verify/corpus/extended/wide_60k.fa -phylip",
+      "orig_seconds": 0.931,
+      "java_seconds": 0.794
     }
   },
   "reports": {
-    "main_cli": "verify/results/quick_manifest-20261008-081612/report.json",
+    "main_cli": "verify/results/quick_manifest-20261009-072149/report.json",
     "companions": "verify/companions/result.json",
     "windows": "verify/companions/result_windows.json",
     "numeric": "verify/numeric/results.json",

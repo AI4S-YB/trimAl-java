@@ -107,8 +107,8 @@ The reports preserve the original streams even for SKIP cases.
 - `verify/companions/`: `readal` and `statal` CLI comparisons.
 - `java/src/test/`: JUnit tests for reusable compatibility components.
 
-Each suite has its own runner and persisted results. Additional oracle/audit reruns
-from Linux/WSL (all infer the workspace path from their own location):
+Each suite has its own runner and persisted results. Additional reruns from
+Linux/WSL (all infer the workspace path from their own location):
 
 ```bash
 python3 verify/numeric/run_numeric.py --label results
@@ -116,19 +116,39 @@ python3 verify/numeric/run_math.py
 python3 verify/numeric/run_ub.py
 python3 verify/alignment_audit/run_audit.py --round rerun
 python3 verify/alignment_audit/run_probes.py rerun
+python3 verify/threading_test.py
+python3 verify/fuzz_suite.py
 python3 verify/windows_smoke.py
 python3 verify/validation_summary.py
 ```
 
-`run_numeric.py` and `run_math.py` fail on production-field mismatches or failed
-processes. Diagnostic comparisons to unused Java double math are recorded separately,
-not mistaken for float compatibility failures. The UB oracle preserves its native
-outputs and sanitizer reports without treating unsafe C++ behavior as a guarantee.
-`run_audit.py` fails on actual differences, timeouts, Java exceptions or unexecuted
-requested round trips. Its original native crashes remain separately classified.
-The Windows smoke script requires Windows `java.exe` reachable from WSL; override
-`TRIMAL_WINDOWS_JAVA` or `--java-exe` when necessary.
+**Thread determinism gate** (`threading_test.py`): for conservation/HTML workloads,
+runs the Java build with `-Dtrimal.threads` = 1 (plain serial loop), 2, 7 and the
+JVM default, twice for the default, and requires every rc/stderr/stdout/output file
+to be byte-identical to the reference and to the other thread counts. This is the
+guard behind the bit-exact parallelization claim.
+
+**Loader fuzz gate** (`fuzz_suite.py`, seed 90210): 180 deterministic mutations of
+real corpus alignments — truncations, byte flips, line surgery, CRLF injection,
+control/high-byte insertion — each compared byte-for-byte through the same strict
+harness. This gate caught and fixed the `strcpy` NUL-truncation divergence in
+`utils::readLine`. `run_numeric.py` and `run_math.py` fail on production-field
+mismatches or failed processes; diagnostic comparisons to unused Java double math
+are recorded separately, never mistaken for float compatibility failures. The UB
+oracle preserves its native outputs and sanitizer reports without treating unsafe
+C++ behavior as a guarantee. `run_audit.py` fails on actual differences, timeouts,
+Java exceptions or unexecuted requested round trips; its original native crashes
+remain separately classified. The Windows smoke script requires Windows `java.exe`
+reachable from WSL; override `TRIMAL_WINDOWS_JAVA` or `--java-exe` when necessary.
 
 Exact final counts are recorded in `validation-summary.json` and summarized in the
 project README. Generated inputs/results are local test assets, not biological
 reference data.
+
+## CI
+
+`.github/workflows/ci.yml` automates the verification on every push: it clones
+upstream tag v1.5.1, builds the reference with make, runs the JUnit-enabled Maven
+build, the numeric oracle, the three differential matrices, the companion suite,
+the thread determinism gate and the loader fuzz gate on an ubuntu runner. The
+Windows smoke stays manual (it requires a Windows JVM host).

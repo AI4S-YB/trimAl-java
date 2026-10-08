@@ -36,3 +36,6 @@ verify/**/work/
 verify/**/results/
 verify/numeric/before.json
 verify/numeric/after.json
+verify/threading/
+verify/probe/
+verify/corpus/fuzz/

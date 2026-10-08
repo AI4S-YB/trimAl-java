@@ -3,3 +3,7 @@
 -in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strictplus -out $OUT
 -in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -automated1 -out $OUT
 -in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gappyout -htmlout $HTML -out $OUT
+-in verify/corpus/extended/wide_60k.fa -sst -out $OUT
+-in verify/corpus/extended/wide_60k.fa -sgt -out $OUT
+-in verify/corpus/extended/wide_60k.fa -fasta -out $OUT
+-in verify/corpus/extended/wide_60k.fa -phylip -out $OUT

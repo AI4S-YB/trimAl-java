@@ -281,6 +281,12 @@ public class Alignment {
       int t = s;
       while (t < nline.length() && nline.charAt(t) == '\t') t++;
       if (t == nline.length()) return null;
+      // utils::readLine returns strcpy(line, nline.c_str()): everything from the first
+      // NUL byte onward is lost at the C-string copy (loader fuzz found this via an
+      // injected NUL shifting PIR sequence-end detection). A line holding only NULs
+      // yields a non-null empty C string, hence "" rather than null here.
+      int firstNul = nline.indexOf("\u0000", t);
+      if (firstNul >= 0) return nline.substring(t, firstNul);
       return nline.substring(t);
     }
   }
@@ -824,7 +830,7 @@ public class Alignment {
       if (line == null)
         continue;
 
-      if (line.charAt(0) == '>')
+      if (!line.isEmpty() && line.charAt(0) == '>')
         infoAcc[i + 1].append(line, 1, line.length());
 
       Tok lw = new Tok(line);
@@ -1239,7 +1245,7 @@ public class Alignment {
       if (line == null)
         continue;
 
-      if ((line.charAt(0) == '>') && (line.length() > 3 && line.charAt(3) == ';') && (seqIdLine)) {
+      if ((!line.isEmpty() && line.charAt(0) == '>') && (line.length() > 3 && line.charAt(3) == ';') && (seqIdLine)) {
         seqIdLine = false;
         i += 1;
 
@@ -1772,20 +1778,31 @@ public class Alignment {
         file.p((i % 10) != 0 ? "=" : "+");
 
       // precompute each column once per block: the writer used to rebuild the whole
-      // column string for every residue, making HTML output O(sequences^2 x columns)
+      // column string for every residue, making HTML output O(sequences^2 x columns).
+      // CLUSTAL coloring is a pure function of (residue, column), so the per-column
+      // color rows are computed on daemon workers and written back serially.
       String[] blockColumns = new String[Math.max(0, Math.min(residNumber, upper) - j)];
+      char[][] blockColors = new char[blockColumns.length][];
       for (k = j; ((k < residNumber) && (k < upper)); k++) {
         StringBuilder column = new StringBuilder(sequenNumber);
         for (kj = 0; kj < sequenNumber; kj++)
           column.append(Utils.charAt(sequences[kj], k));
         blockColumns[k - j] = column.toString();
       }
+      final int blockStart = j;
+      Parallel.forIndex(0, blockColumns.length, kk -> {
+        char[] colors = new char[sequenNumber];
+        for (int i2 = 0; i2 < sequenNumber; i2++)
+          colors[i2] = Utils.determineColor(Utils.charAt(sequences[i2], blockStart + kk),
+              blockColumns[kk]);
+        blockColors[kk] = colors;
+      });
 
       for (i = 0; i < sequenNumber; i++) {
         file.endl().setw(maxLongName + 9).left().p(seqsName[i]);
 
         for (k = j; ((k < residNumber) && (k < upper)); k++) {
-          type = Utils.determineColor(Utils.charAt(sequences[i], k), blockColumns[k - j]);
+          type = blockColors[k - j][i];
           if (type == 'w')
             file.p(Utils.charAt(sequences[i], k));
           else
@@ -1920,21 +1937,31 @@ public class Alignment {
           file.p((i % 10) != 0 ? "=" : "+");
         file.endl();
 
-        // precompute each column once per block (was rebuilt per residue, O(seq^2 x col))
+        // precompute each column once per block (was rebuilt per residue, O(seq^2 x col));
+        // coloring rows are computed on daemon workers, see alignmentColourHTML
         String[] blockColumns = new String[Math.max(0, Math.min(residNumber, upper) - j)];
+        char[][] blockColors = new char[blockColumns.length][];
         for (k = j; ((k < residNumber) && (k < upper)); k++) {
           StringBuilder column = new StringBuilder(sequenNumber);
           for (kj = 0; kj < sequenNumber; kj++)
             column.append(Utils.charAt(sequences[kj], k));
           blockColumns[k - j] = column.toString();
         }
+        final int blockStart = j;
+        Parallel.forIndex(0, blockColumns.length, kk -> {
+          char[] colors = new char[sequenNumber];
+          for (int i2 = 0; i2 < sequenNumber; i2++)
+            colors[i2] = Utils.determineColor(Utils.charAt(sequences[i2], blockStart + kk),
+                blockColumns[kk]);
+          blockColors[kk] = colors;
+        });
 
         for (i = 0; i < sequenNumber; i++) {
           file.p("    <span class=").p(seq[i] ? "sel>" : "nsel>").p(seqsName[i])
               .p("</span>").setw(minHTML - 4 - seqsName[i].length()).right().p("");
 
           for (k = j; ((k < residNumber) && (k < upper)); k++) {
-            type = Utils.determineColor(Utils.charAt(sequences[i], k), blockColumns[k - j]);
+            type = blockColors[k - j][i];
             if (type == 'w')
               file.p(Utils.charAt(sequences[i], k));
             else
