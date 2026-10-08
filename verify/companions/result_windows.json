@@ -3,7 +3,7 @@
   "java_exe": "/mnt/c/Program Files/Eclipse Adoptium/jdk-21.0.11.10-hotspot/bin/java.exe",
   "java_version": "openjdk version \"21.0.11\" 2026-04-21 LTS\r\nOpenJDK Runtime Environment Temurin-21.0.11+10 (build 21.0.11+10-LTS)\r\nOpenJDK 64-Bit Server VM Temurin-21.0.11+10 (build 21.0.11+10-LTS, mixed mode, sharing)\r\n",
   "java_jar": "java/target/trimal.jar",
-  "java_jar_sha256": "a64f0eac67784b8ad71eedb6f5ec58b8f64ced06500d543c848c024061750ed2",
+  "java_jar_sha256": "753f54d87caaf92aab7be1c9e665ede607e91752d9215350b71238c66dae0635",
   "summary": {
     "total": 49,
     "passed": 49,

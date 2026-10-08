@@ -3,12 +3,19 @@ package trimal.stat;
 import java.io.IOException;
 
 import trimal.util.CppOut;
+import trimal.util.Parallel;
 import trimal.util.Utils;
 
 /**
  * Transcription of trimAl v1.5.1 statisticsConservation.cpp. Float/double
  * promotion and accumulation order are checked against the real C++ modules.
  * C++ exp(float) is emulated explicitly rather than through the double overload.
+ *
+ * The two O(sequences^2 x columns) loops (matrixIdentity construction and the
+ * per-column Q/MDK vectors) are parallelized across rows/columns. Units are
+ * independent and write only distinct slots while keeping their serial float
+ * accumulation order, so results are bit-identical to the serial loop; small
+ * workloads and -Dtrimal.threads=1 run the plain serial code.
  */
 public final class StatisticsConservation {
 
@@ -19,10 +26,10 @@ public final class StatisticsConservation {
   float[] Q;
   float[] MDK;
   float[] MDK_Window;
-  float[][] matrixIdentity;
+  float[] matrixIdentity; // row-major: identityAt(j, k) == matrixIdentity[j * sequences + k]
   SimilarityMatrix simMatrix;
 
-  public StatisticsConservation(String[] alignmentMatrix, int species, int aminos, int dataType_) {
+  public StatisticsConservation(String[] alignmentMatrix, int species, int aminos, int dataType_) throws IOException {
     columns = aminos;
     sequences = species;
     dataType = dataType_;
@@ -31,33 +38,44 @@ public final class StatisticsConservation {
     Q = new float[columns];
     MDK = new float[columns];
     MDK_Window = new float[columns];
-    matrixIdentity = new float[sequences][sequences];
+    matrixIdentity = new float[sequences * sequences];
 
     simMatrix = null;
 
     calculateMatrixIdentity(alignmentMatrix);
   }
 
-  private void calculateMatrixIdentity(String[] alignmentMatrix) {
+  private void calculateMatrixIdentity(String[] alignmentMatrix) throws IOException {
     char indet = (dataType == Utils.AAType) ? 'X' : 'N';
 
-    for (int i = 0; i < sequences; i++) {
-      for (int j = i + 1; j < sequences; j++) {
-        int sum = 0, length = 0;
-        for (int k = 0; k < columns; k++) {
-          char ci = alignmentMatrix[i].charAt(k);
-          char cj = alignmentMatrix[j].charAt(k);
-          if ((ci != '-') && (ci != indet)) {
-            if ((cj != '-') && (cj != indet))
-              if (cj == ci)
-                sum++;
-            length++;
-          } else if ((cj != '-') && (cj != indet))
-            length++;
-        }
-        matrixIdentity[j][i] = (float) (100.0 - ((float) sum / length) * 100.0);
-        matrixIdentity[i][j] = matrixIdentity[j][i];
+    long pairs = (long) sequences * (sequences - 1) / 2;
+    if (Parallel.threads() > 1 && sequences >= 2 * Parallel.threads()
+        && pairs * columns > 50_000_000L) {
+      Parallel.forIndex(0, sequences, i -> computeIdentityRow(alignmentMatrix, indet, i));
+    } else {
+      for (int i = 0; i < sequences; i++)
+        computeIdentityRow(alignmentMatrix, indet, i);
+    }
+  }
+
+  /** Owns exactly the (i, j>i) pairs: no other unit reads or writes these slots. */
+  private void computeIdentityRow(String[] alignmentMatrix, char indet, int i) {
+    for (int j = i + 1; j < sequences; j++) {
+      int sum = 0, length = 0;
+      for (int k = 0; k < columns; k++) {
+        char ci = alignmentMatrix[i].charAt(k);
+        char cj = alignmentMatrix[j].charAt(k);
+        if ((ci != '-') && (ci != indet)) {
+          if ((cj != '-') && (cj != indet))
+            if (cj == ci)
+              sum++;
+          length++;
+        } else if ((cj != '-') && (cj != indet))
+          length++;
       }
+      float value = (float) (100.0 - ((float) sum / length) * 100.0);
+      matrixIdentity[j * sequences + i] = value;
+      matrixIdentity[i * sequences + j] = value;
     }
   }
 
@@ -67,29 +85,56 @@ public final class StatisticsConservation {
     if (simMatrix == null)
       return false;
 
-    for (int i = 0; i < columns; i++) {
-      float num = 0, den = 0;
-      for (int j = 0; j < sequences; j++) {
-        char cj = alignmentMatrix[j].charAt(i);
-        if ((cj != '-') && (cj != indet))
-          for (int k = j + 1; k < sequences; k++) {
-            char ck = alignmentMatrix[k].charAt(i);
-            if ((ck != '-') && (ck != indet)) {
-              num += matrixIdentity[j][k] * simMatrix.getDistance(cj, ck);
-              den += matrixIdentity[j][k];
-            }
-          }
-      }
-      Q[i] = (den == 0) ? 0 : num / den;
-      MDK[i] = Utils.expf(-Q[i]);
+    // getDistance reports undefined symbols on stderr in scan order, so keep the
+    // serial loop whenever any residue could trigger that message.
+    boolean parallel = Parallel.threads() > 1
+        && columns >= 2 * Parallel.threads()
+        && (long) columns * sequences * (sequences - 1) / 2 > 20_000_000L
+        && !hasUndefinedSymbol(alignmentMatrix, indet);
 
-      if (gaps != null)
-        if (((float) gaps[i] / sequences) >= 0.8) MDK[i] = 0;
-
-      if (MDK[i] > 1) MDK[i] = 1;
-    }
+    if (parallel)
+      Parallel.forIndex(0, columns, i -> computeColumn(alignmentMatrix, gaps, indet, i));
+    else
+      for (int i = 0; i < columns; i++)
+        computeColumn(alignmentMatrix, gaps, indet, i);
 
     return true;
+  }
+
+  /** Owns exactly the output slots Q[i]/MDK[i] for its column. */
+  private void computeColumn(String[] alignmentMatrix, int[] gaps, char indet, int i) throws IOException {
+    float num = 0, den = 0;
+    for (int j = 0; j < sequences; j++) {
+      char cj = alignmentMatrix[j].charAt(i);
+      if ((cj != '-') && (cj != indet))
+        for (int k = j + 1; k < sequences; k++) {
+          char ck = alignmentMatrix[k].charAt(i);
+          if ((ck != '-') && (ck != indet)) {
+            num += matrixIdentity[j * sequences + k] * simMatrix.getDistance(cj, ck);
+            den += matrixIdentity[j * sequences + k];
+          }
+        }
+    }
+    Q[i] = (den == 0) ? 0 : num / den;
+    MDK[i] = Utils.expf(-Q[i]);
+
+    if (gaps != null)
+      if (((float) gaps[i] / sequences) >= 0.8) MDK[i] = 0;
+
+    if (MDK[i] > 1) MDK[i] = 1;
+  }
+
+  /** Over-approximates whether any residue could make getDistance print (conservative). */
+  private boolean hasUndefinedSymbol(String[] alignmentMatrix, char indet) {
+    for (int j = 0; j < sequences; j++) {
+      String row = alignmentMatrix[j];
+      for (int k = 0; k < columns; k++) {
+        char c = row.charAt(k);
+        if ((c != '-') && (c != indet) && !simMatrix.isDefined(c))
+          return true;
+      }
+    }
+    return false;
   }
 
   public boolean applyWindow(int _halfWindow) {

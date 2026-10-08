@@ -145,12 +145,13 @@ of the quick suite and run separately:
 bash verify/run_all.sh --scale
 ```
 
-All four have been completed **byte-identical** against the reference
-(reference 55–457 s, Java 95–243 s per job; total ≈ 10 min). The HTML writer
-precomputes each alignment column once per output block, which turned the heaviest
-job from 652 s into 95 s — 4.8× faster than the reference on that input — without
-changing a single output byte. Timings are recorded in `scale_timings` in
-[verify/validation-summary.json](verify/validation-summary.json).
+All four have been completed **byte-identical** against the reference. The
+O(sequence-count² × columns) conservation statistics run in parallel across
+rows/columns with per-unit serial accumulation order, which makes the Java builds
+8–10× faster than the reference on the strict family (7–9 s vs 59–86 s) and 4.6×
+faster on the HTML job (96 s vs 435 s); totals ≈ 2 min. `-Dtrimal.threads=1` forces
+the plain serial loop (bit-identical output). Timings are recorded in `scale_timings`
+in [verify/validation-summary.json](verify/validation-summary.json).
 These jobs are excluded from the quick gate purely for runtime; a timeout still
 counts as a failure.
 

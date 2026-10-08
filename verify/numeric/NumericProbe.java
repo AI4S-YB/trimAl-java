@@ -80,7 +80,7 @@ public final class NumericProbe {
         out.append("|vectors=").append(c.calculateVectors(rows, g.getGapsWindow()) ? 1 : 0);
         floats(out, "q", c.Q); floats(out, "mdk", c.MDK);
         float[] identity = new float[n * n]; int pos = 0;
-        for (float[] r : c.matrixIdentity) for (float v : r) identity[pos++] = v;
+        for (int q = 0; q < n * n; q++) identity[pos++] = c.matrixIdentity[q];
         floats(out, "identity", identity);
         out.append("|cw=").append(c.applyWindow(hw) ? 1 : 0);
         floats(out, "window", c.getMdkwVector());

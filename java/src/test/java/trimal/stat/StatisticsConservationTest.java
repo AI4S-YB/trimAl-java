@@ -20,7 +20,7 @@ public class StatisticsConservationTest {
     StatisticsConservation stats = new StatisticsConservation(rows, 2, 4, Utils.DNAType);
     assertTrue(stats.setSimilarityMatrix(matrix));
     assertTrue(stats.calculateVectors(rows, gaps.getGapsWindow()));
-    assertEquals(1107645781, Float.floatToRawIntBits(stats.matrixIdentity[0][1]));
+    assertEquals(1107645781, Float.floatToRawIntBits(stats.matrixIdentity[0 * stats.sequences + 1]));
     assertArrayEquals(new int[]{0, 1068827891, 0, 0}, bits(stats.Q));
     assertArrayEquals(new int[]{1065353216, 1048114072, 1065353216, 1065353216}, bits(stats.getMdkVector()));
     assertTrue(stats.applyWindow(1));
@@ -47,13 +47,13 @@ public class StatisticsConservationTest {
   @Test
   public void emptyPairIdentityIsNanAndMissingSimilarityReturnsFalse() throws Exception {
     StatisticsConservation stats = new StatisticsConservation(new String[]{"--", "NN"}, 2, 2, Utils.DNAType);
-    assertTrue(Float.isNaN(stats.matrixIdentity[0][1]));
+    assertTrue(Float.isNaN(stats.matrixIdentity[0 * stats.sequences + 1]));
     assertFalse(stats.calculateVectors(new String[]{"--", "NN"}, null));
     assertFalse(stats.setSimilarityMatrix(null));
   }
 
   @Test
-  public void allAboveThresholdUsesExplicitUbCompatibilityFallback() {
+  public void allAboveThresholdUsesExplicitUbCompatibilityFallback() throws Exception {
     StatisticsConservation stats = new StatisticsConservation(new String[]{"AAAA", "AAAA"}, 2, 4, Utils.DNAType);
     java.util.Arrays.fill(stats.getMdkwVector(), 1f);
     // Real g++ ordinary-build output is zero in all tested runs; ASan confirms

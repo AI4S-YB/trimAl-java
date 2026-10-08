@@ -20,7 +20,7 @@
         "known_divergence": 1
       }
     },
-    "elapsed_seconds": 56.12
+    "elapsed_seconds": 64.63
   },
   "java_version": "openjdk version \"11.0.32.1\" 2026-08-18\nOpenJDK Runtime Environment (build 11.0.32.1+1-post-1ubuntu1-22.04-Ubuntu)\nOpenJDK 64-Bit Server VM (build 11.0.32.1+1-post-1ubuntu1-22.04-Ubuntu, mixed mode, sharing)\n",
   "compile": null,
@@ -29,7 +29,7 @@
     "statal": "\nstatAl v1.5.rev1 build[2025-11-25]\n\n"
   },
   "java_jar": "java/target/trimal.jar",
-  "java_jar_sha256": "a64f0eac67784b8ad71eedb6f5ec58b8f64ced06500d543c848c024061750ed2",
+  "java_jar_sha256": "753f54d87caaf92aab7be1c9e665ede607e91752d9215350b71238c66dae0635",
   "seed": 151,
   "independent_random_datasets": 30,
   "cases": [

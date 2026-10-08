@@ -10,6 +10,7 @@ import trimal.stat.StatisticsConservation;
 import trimal.stat.StatisticsGaps;
 import trimal.util.CppFormat;
 import trimal.util.CppOut;
+import trimal.util.Parallel;
 import trimal.util.Utils;
 
 /**
@@ -249,9 +250,9 @@ public class Alignment {
     boolean eofFlag = false;
 
     Cursor(byte[] bytes) {
-      StringBuilder sb = new StringBuilder(bytes.length);
-      for (byte b : bytes) sb.append((char) (b & 0xFF));
-      content = sb.toString();
+      // ISO-8859-1 maps every byte 0-255 to the identical char: this is a plain copy,
+      // so it matches the previous per-byte loop while running at memcpy speed.
+      content = new String(bytes, java.nio.charset.StandardCharsets.ISO_8859_1);
     }
 
     /** ifstream::read(&c, 1): at end leaves c unchanged and raises eof. */
@@ -2925,7 +2926,7 @@ public class Alignment {
     }
   }
 
-  public boolean setSimilarityMatrix(SimilarityMatrix sm) {
+  public boolean setSimilarityMatrix(SimilarityMatrix sm) throws IOException {
     if (scons == null)
       scons = new StatisticsConservation(sequences, sequenNumber, residNumber, dataType);
 
@@ -3137,25 +3138,22 @@ public class Alignment {
 
   // ------------------------------------------------------------------ identities / overlaps
 
-  public void calculateSeqIdentity() {
-    int i, j, k, hit, dst;
+  public void calculateSeqIdentity() throws IOException {
     char indet;
 
     indet = getTypeAlignment() == Utils.AAType ? 'X' : 'N';
 
     identities = new float[sequenNumber][];
 
-    for (i = 0; i < sequenNumber; i++) {
-      identities[i] = new float[sequenNumber];
-
-      for (j = 0; j < i; j++)
-        identities[i][j] = identities[j][i];
-      identities[i][i] = 0;
-
-      for (j = i + 1; j < sequenNumber; j++) {
-        for (k = 0, hit = 0, dst = 0; k < residNumber; k++) {
-          char ci = Utils.charAt(sequences[i], k);
-          char cj = Utils.charAt(sequences[j], k);
+    // Phase 1: upper triangle. Each unit builds only its own row, so running rows on
+    // daemon workers is bit-identical to the serial transcription.
+    Parallel.forIndex(0, sequenNumber, row -> {
+      float[] values = new float[sequenNumber];
+      for (int jj = row + 1; jj < sequenNumber; jj++) {
+        int hit = 0, dst = 0;
+        for (int k = 0; k < residNumber; k++) {
+          char ci = Utils.charAt(sequences[row], k);
+          char cj = Utils.charAt(sequences[jj], k);
           if (((ci != indet) && (ci != '-')) ||
               ((cj != indet) && (cj != '-'))) {
             dst++;
@@ -3163,9 +3161,16 @@ public class Alignment {
               hit++;
           }
         }
-        identities[i][j] = (float) hit / dst;
+        values[jj] = (float) hit / dst;
       }
-    }
+      values[row] = 0;
+      identities[row] = values;
+    });
+
+    // Phase 2: mirror the symmetric half (cheap, restores the original fill order).
+    for (int i = 0; i < sequenNumber; i++)
+      for (int j = 0; j < i; j++)
+        identities[i][j] = identities[j][i];
   }
 
   public void calculateSeqOverlap() {
@@ -3194,7 +3199,7 @@ public class Alignment {
     }
   }
 
-  public int selectMethod() {
+  public int selectMethod() throws IOException {
     float mx, avg, maxSeq = 0, avgSeq = 0;
     int i, j;
 
@@ -3365,8 +3370,8 @@ public class Alignment {
     }
   }
 
-  public boolean calculateSpuriousVector(float overlap, float[] spuriousVector) {
-    int i, j, k, seqValue, ovrlap, hit;
+  public boolean calculateSpuriousVector(float overlap, float[] spuriousVector) throws IOException {
+    int ovrlap;
     float floatOverlap;
     char indet;
 
@@ -3384,29 +3389,35 @@ public class Alignment {
     else
       indet = 'N';
 
-    for (i = 0, seqValue = 0; i < sequenNumber; i++, seqValue = 0) {
-      for (j = 0; j < residNumber; j++) {
-        for (k = 0, hit = 0; k < i; k++) {
+    final int overlapCut = ovrlap;
+    final char indeterminate = indet;
+
+    // Each unit owns spuriousVector[i] and only reads the alignment.
+    Parallel.forIndex(0, sequenNumber, i -> {
+      int seqValue = 0;
+      for (int j = 0; j < residNumber; j++) {
+        int hit = 0;
+        for (int k = 0; k < i; k++) {
           if (sequences[i].charAt(j) == sequences[k].charAt(j))
             hit++;
-          else if ((sequences[i].charAt(j) != indet) && (sequences[i].charAt(j) != '-')
-              && (sequences[k].charAt(j) != indet) && (sequences[k].charAt(j) != '-'))
+          else if ((sequences[i].charAt(j) != indeterminate) && (sequences[i].charAt(j) != '-')
+              && (sequences[k].charAt(j) != indeterminate) && (sequences[k].charAt(j) != '-'))
             hit++;
         }
-        for (k = (i + 1); k < sequenNumber; k++) {
+        for (int k = (i + 1); k < sequenNumber; k++) {
           if (sequences[i].charAt(j) == sequences[k].charAt(j))
             hit++;
-          else if ((sequences[i].charAt(j) != indet) && (sequences[i].charAt(j) != '-')
-              && (sequences[k].charAt(j) != indet) && (sequences[k].charAt(j) != '-'))
+          else if ((sequences[i].charAt(j) != indeterminate) && (sequences[i].charAt(j) != '-')
+              && (sequences[k].charAt(j) != indeterminate) && (sequences[k].charAt(j) != '-'))
             hit++;
         }
 
-        if (hit >= ovrlap)
+        if (hit >= overlapCut)
           seqValue++;
       }
 
       spuriousVector[i] = ((float) seqValue / residNumber);
-    }
+    });
 
     return true;
   }
@@ -3415,7 +3426,7 @@ public class Alignment {
 
   int[] represStatic;
 
-  public int[] calculateRepresentativeSeq(float maximumIdent) {
+  public int[] calculateRepresentativeSeq(float maximumIdent) throws IOException {
     int i, j, pos, clusterNum;
     int[] cluster;
     int[][] seqs;
@@ -3461,7 +3472,7 @@ public class Alignment {
     return represStatic;
   }
 
-  public float getCutPointClusters(int clusterNumber) {
+  public float getCutPointClusters(int clusterNumber) throws IOException {
     float max, min, avg, gMax, gMin, startingPoint, prevValue = 0, iter = 0;
     int i, j, clusterNum;
     int[] cluster;
@@ -3545,7 +3556,7 @@ public class Alignment {
     return startingPoint;
   }
 
-  public Alignment getClustering(float identityThreshold) {
+  public Alignment getClustering(float identityThreshold) throws IOException {
     int i, j;
     int[] clustering;
     Alignment newAlig;

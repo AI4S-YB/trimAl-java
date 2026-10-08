@@ -316,6 +316,13 @@ public final class SimilarityMatrix {
     }
   }
 
+  /** True when getDistance(c, ...) would look up a defined matrix entry (no stderr). */
+  public boolean isDefined(char c) {
+    char up = asciiUpper(c);
+    if (up < 'A' || up > 'Z') return false;
+    return vhash[up - 'A'] != -1;
+  }
+
   public float getDistance(char a, char b) throws IOException {
     char chA = asciiUpper(a);
     char chB = asciiUpper(b);

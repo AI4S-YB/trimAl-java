@@ -28,7 +28,7 @@ def build():
     command += [str(ROOT / ('upstream/source/' + f + '.cpp')) for f in cpp]
     subprocess.run(command + ['-o', str(OUT / 'numeric_oracle')], check=True)
     (OUT / 'classes').mkdir(exist_ok=True)
-    names = ['util/CppFormat', 'util/CppOut', 'util/Utils', 'util/Values',
+    names = ['util/CppFormat', 'util/CppOut', 'util/Parallel', 'util/Utils', 'util/Values',
              'stat/SimilarityMatrix', 'stat/StatisticsGaps', 'stat/StatisticsConservation']
     subprocess.run(['/usr/bin/javac', '--release', '11', '-encoding', 'UTF-8', '-d', str(OUT / 'classes')]
                    + [str(ROOT / ('java/src/main/java/trimal/' + f + '.java')) for f in names]
