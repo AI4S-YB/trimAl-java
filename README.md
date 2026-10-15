@@ -145,13 +145,16 @@ of the quick suite and run separately:
 bash verify/run_all.sh --scale
 ```
 
-All four have been completed **byte-identical** against the reference. The
-O(sequence-count² × columns) conservation statistics run in parallel across
-rows/columns with per-unit serial accumulation order, which makes the Java builds
-8–10× faster than the reference on the strict family (7–9 s vs 59–86 s) and 4.6×
-faster on the HTML job (96 s vs 435 s); totals ≈ 2 min. `-Dtrimal.threads=1` forces
-the plain serial loop (bit-identical output). Timings are recorded in `scale_timings`
-in [verify/validation-summary.json](verify/validation-summary.json).
+All four have been completed **byte-identical** against the reference, and the Java
+build is now substantially faster on every one of them: strict 5 s vs 60 s,
+strictplus 5 s vs 58 s, automated1 8 s vs 88 s, gappyout -htmlout 8 s vs 526 s
+(11–66×; totals ≈ 26 s vs ≈ 12 min). Three changes deliver this while keeping every
+output byte identical: the O(sequence-count² × columns) statistics loops run in
+parallel across rows/columns with per-unit serial accumulation order (`-Dtrimal.threads=1`
+forces the plain serial loop), the HTML writers precompute each column once per
+output block, and file-backed writers batch their writes instead of issuing one
+flush syscall per line the way C++ `endl` does. Timings are recorded in
+`scale_timings` in [verify/validation-summary.json](verify/validation-summary.json).
 These jobs are excluded from the quick gate purely for runtime; a timeout still
 counts as a failure.
 

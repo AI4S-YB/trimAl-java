@@ -19,6 +19,7 @@ public final class CppOut implements AutoCloseable {
 
   private final OutputStream out;
   private final boolean stdStream;
+  private boolean flushOnEndl = true;
   private int precision = 6;
   private boolean fixed = false;
   private boolean left = false;
@@ -38,6 +39,17 @@ public final class CppOut implements AutoCloseable {
   /** Closing a standard stream wrapper flushes it without closing its descriptor. */
   public static CppOut toStderr() throws IOException {
     return StandardStreams.STDERR;
+  }
+
+  /**
+   * File-backed writer that accumulates lines and flushes once on close(). C++ endl
+   * flushes per line, which costs one write syscall per line on slow filesystems;
+   * the byte sequence is identical either way, so file output batches instead.
+   */
+  public static CppOut toFile(OutputStream out) {
+    CppOut fileOut = new CppOut(out, false);
+    fileOut.flushOnEndl = false;
+    return fileOut;
   }
 
   public CppOut(OutputStream out) {
@@ -63,7 +75,7 @@ public final class CppOut implements AutoCloseable {
 
   public CppOut endl() throws IOException {
     out.write('\n');
-    out.flush();
+    if (flushOnEndl) out.flush();
     return this;
   }
 

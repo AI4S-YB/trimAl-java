@@ -1372,7 +1372,7 @@ public class Alignment {
       // ofstream::open reports failure to the caller without throwing.
       return false;
     }
-    try (CppOut file = new CppOut(new java.io.BufferedOutputStream(destination, 1 << 16))) {
+    try (CppOut file = CppOut.toFile(new java.io.BufferedOutputStream(destination, 1 << 16))) {
       switch (oformat) {
         case 1:
           alignmentClustalToFile(file);
@@ -1839,7 +1839,7 @@ public class Alignment {
       // ofstream::open reports failure to the caller without throwing.
       return false;
     }
-    try (CppOut file = new CppOut(new java.io.BufferedOutputStream(destination, 1 << 16))) {
+    try (CppOut file = CppOut.toFile(new java.io.BufferedOutputStream(destination, 1 << 16))) {
 
       maxLongName = 0;
       for (i = 0; i < sequenNumber; i++)
