@@ -1,6 +1,9 @@
 package trimal.stat;
 
+import java.io.IOException;
+
 import trimal.util.CppOut;
+import trimal.util.Parallel;
 
 /**
  * Faithful transcription of trimAl v1.5.1 sequencesMatrix.cpp — per-sequence residue
@@ -13,7 +16,7 @@ public final class SequencesMatrix {
   int[][] matrix;
   String[] seqsName;
 
-  public SequencesMatrix(String[] sequences, String[] names, int sequenNumber, int residNumber) {
+  public SequencesMatrix(String[] sequences, String[] names, int sequenNumber, int residNumber) throws IOException {
     int i, j, k;
 
     resNumber = residNumber;
@@ -23,15 +26,34 @@ public final class SequencesMatrix {
     for (i = 0; i < sequenNumber; i++) seqsName[i] = names[i];
 
     matrix = new int[sequenNumber][];
-    for (i = 0; i < sequenNumber; i++) {
-      matrix[i] = new int[residNumber];
-      k = 1;
-      for (j = 0; j < residNumber; j++) {
-        if (sequences[i].charAt(j) != '-') {
-          matrix[i][j] = k;
-          k++;
-        } else {
-          matrix[i][j] = 0;
+    // Each unit fills only its own row (per-residue numbering is independent), so
+    // running rows on daemon workers is bit-identical to the serial loop.
+    if (Parallel.threads() > 1 && sequenNumber >= 2 * Parallel.threads()
+        && (long) sequenNumber * residNumber > 20_000_000L) {
+      Parallel.forIndex(0, sequenNumber, row -> {
+        int[] values = new int[residNumber];
+        int counter = 1;
+        for (int jj = 0; jj < residNumber; jj++) {
+          if (sequences[row].charAt(jj) != '-') {
+            values[jj] = counter;
+            counter++;
+          } else {
+            values[jj] = 0;
+          }
+        }
+        matrix[row] = values;
+      });
+    } else {
+      for (i = 0; i < sequenNumber; i++) {
+        matrix[i] = new int[residNumber];
+        k = 1;
+        for (j = 0; j < residNumber; j++) {
+          if (sequences[i].charAt(j) != '-') {
+            matrix[i][j] = k;
+            k++;
+          } else {
+            matrix[i][j] = 0;
+          }
         }
       }
     }

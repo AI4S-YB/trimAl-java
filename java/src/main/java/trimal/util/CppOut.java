@@ -29,6 +29,14 @@ public final class CppOut implements AutoCloseable {
     private static final CppOut STDOUT = new CppOut(
         new BufferedOutputStream(new FileOutputStream(FileDescriptor.out), 1 << 16), true);
     private static final CppOut STDERR = new CppOut(new FileOutputStream(FileDescriptor.err), true);
+
+    static {
+      // C++ std::cout flushes on every endl even when redirected, which costs one
+      // write syscall per line on slow filesystems. Keep per-line flushing on an
+      // interactive console and batch when redirected — the byte sequence is the same.
+      if (System.console() == null)
+        STDOUT.flushOnEndl = false;
+    }
   }
 
   /** Formatting flags persist across callers, just as they do on std::cout. */

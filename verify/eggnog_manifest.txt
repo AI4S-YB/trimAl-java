@@ -1,0 +1,32 @@
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -sgc -out $OUT

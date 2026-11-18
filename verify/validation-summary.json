@@ -13,8 +13,8 @@
   },
   "jar": {
     "path": "java/target/trimal.jar",
-    "bytes": 145440,
-    "sha256": "489e83bb93c0e9cfe8d914643e96c4161c0946adc7ae1e2c3c09d132952187c8",
+    "bytes": 146846,
+    "sha256": "5f902bde980a96d67ce7231ff9000b74c5d8969041aa751ae1bd235b19628d5c",
     "release": 11
   },
   "unit_tests": {
@@ -30,7 +30,7 @@
     "known_divergence": 6,
     "total": 508,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/quick_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/quick_manifest-20261015-205929",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/quick_manifest-20261016-190508",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -41,7 +41,7 @@
     "known_divergence": 4,
     "total": 475,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/extended_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/extended_manifest-20261015-210203",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/extended_manifest-20261016-190442",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -52,7 +52,7 @@
     "known_divergence": 4,
     "total": 117,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/legacy_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/legacy_manifest-20261015-210230",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/legacy_manifest-20261016-190735",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -63,7 +63,7 @@
     "known_divergence": 0,
     "total": 8,
     "manifest": "/mnt/j/ClaudeCodeDev/trimal/verify/scale_manifest.txt",
-    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/scale_manifest-20261015-210418",
+    "work": "/mnt/j/ClaudeCodeDev/trimal/verify/results/scale_manifest-20261016-184943",
     "java": "java",
     "main": "trimal.TrimAl"
   },
@@ -87,7 +87,7 @@
         "known_divergence": 1
       }
     },
-    "elapsed_seconds": 54.49
+    "elapsed_seconds": 49.77
   },
   "windows_companions": {
     "total": 49,
@@ -155,47 +155,47 @@
   "scale_timings": {
     "case_0001": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strict",
-      "orig_seconds": 59.713,
-      "java_seconds": 5.033
+      "orig_seconds": 57.098,
+      "java_seconds": 4.928
     },
     "case_0002": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -strictplus",
-      "orig_seconds": 58.445,
-      "java_seconds": 5.228
+      "orig_seconds": 58.066,
+      "java_seconds": 5.081
     },
     "case_0003": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -automated1",
-      "orig_seconds": 88.225,
-      "java_seconds": 7.822
+      "orig_seconds": 86.552,
+      "java_seconds": 7.68
     },
     "case_0004": {
       "args": "-in upstream/dataset/example.014.AA.EggNOG.COG0591.fasta -gappyout",
-      "orig_seconds": 526.121,
-      "java_seconds": 7.751
+      "orig_seconds": 468.372,
+      "java_seconds": 6.306
     },
     "case_0005": {
       "args": "-in verify/corpus/extended/wide_60k.fa -sst",
-      "orig_seconds": 0.512,
-      "java_seconds": 0.208
+      "orig_seconds": 0.54,
+      "java_seconds": 0.142
     },
     "case_0006": {
       "args": "-in verify/corpus/extended/wide_60k.fa -sgt",
-      "orig_seconds": 0.488,
-      "java_seconds": 0.118
+      "orig_seconds": 0.486,
+      "java_seconds": 0.092
     },
     "case_0007": {
       "args": "-in verify/corpus/extended/wide_60k.fa -fasta",
-      "orig_seconds": 0.424,
-      "java_seconds": 0.104
+      "orig_seconds": 0.432,
+      "java_seconds": 0.11
     },
     "case_0008": {
       "args": "-in verify/corpus/extended/wide_60k.fa -phylip",
-      "orig_seconds": 0.547,
-      "java_seconds": 0.1
+      "orig_seconds": 0.583,
+      "java_seconds": 0.081
     }
   },
   "reports": {
-    "main_cli": "verify/results/quick_manifest-20261015-205929/report.json",
+    "main_cli": "verify/results/quick_manifest-20261016-190508/report.json",
     "companions": "verify/companions/result.json",
     "windows": "verify/companions/result_windows.json",
     "numeric": "verify/numeric/results.json",

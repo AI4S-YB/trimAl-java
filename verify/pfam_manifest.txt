@@ -1,0 +1,41 @@
+# Pfam-A.seed scale suite: 10 largest families (min 500 seqs)
+-in verify/corpus/pfam/pfam_01_PHO4.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_01_PHO4.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_01_PHO4.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_01_PHO4.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_02_GFO_IDH_MocA_C3.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_02_GFO_IDH_MocA_C3.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_02_GFO_IDH_MocA_C3.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_02_GFO_IDH_MocA_C3.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_03_Terpene_syn_C_2.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_03_Terpene_syn_C_2.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_03_Terpene_syn_C_2.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_03_Terpene_syn_C_2.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_04_Sec1.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_04_Sec1.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_04_Sec1.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_04_Sec1.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_05_TonB_dep_Rec_b_barrel.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_05_TonB_dep_Rec_b_barrel.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_05_TonB_dep_Rec_b_barrel.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_05_TonB_dep_Rec_b_barrel.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_06_ZnuA.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_06_ZnuA.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_06_ZnuA.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_06_ZnuA.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_07_MutS_III.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_07_MutS_III.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_07_MutS_III.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_07_MutS_III.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_08_Methyltransf_25.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_08_Methyltransf_25.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_08_Methyltransf_25.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_08_Methyltransf_25.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_09_Peptidase_M13_N.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_09_Peptidase_M13_N.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_09_Peptidase_M13_N.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_09_Peptidase_M13_N.fasta -strict -fasta -out $OUT
+-in verify/corpus/pfam/pfam_10_Prenyltransf.fasta -gappyout -out $OUT
+-in verify/corpus/pfam/pfam_10_Prenyltransf.fasta -automated1 -out $OUT
+-in verify/corpus/pfam/pfam_10_Prenyltransf.fasta -sgc -out $OUT
+-in verify/corpus/pfam/pfam_10_Prenyltransf.fasta -strict -fasta -out $OUT

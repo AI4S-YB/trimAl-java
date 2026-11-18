@@ -152,3 +152,24 @@ upstream tag v1.5.1, builds the reference with make, runs the JUnit-enabled Mave
 build, the numeric oracle, the three differential matrices, the companion suite,
 the thread determinism gate and the loader fuzz gate on an ubuntu runner. The
 Windows smoke stays manual (it requires a Windows JVM host).
+
+## Downloaded real-data gates (Pfam / eggNOG)
+
+`pfam_extract.py` parses Pfam-A.seed.gz (EBI FTP, 194MB) and emits the largest
+families as FASTA plus a 40-case manifest (gappyout / automated1 / strict / sgc
+per family). `eggnog_stream.py` range-reads the eggNOG5 Bacteria
+`2_trimmed_algs.tar` (3.4GB) over HTTP without downloading it all and extracts
+mid-size clusters; the resulting 32-case manifest runs the same methods on
+4,150-10,656-sequence real clusters. Both gates run the strict differential
+harness and count toward the README totals:
+
+```bash
+python3 verify/pfam_extract.py            # needs verify/downloads/Pfam-A.seed.gz
+python3 verify/differential.py verify/pfam_manifest.txt --timeout 3600 --jobs 2
+python3 verify/eggnog_stream.py           # or: bash verify/pdl.sh <tar-url> <bytes> <out> 16 <workdir>
+python3 verify/differential.py verify/eggnog_manifest.txt --timeout 3600 --jobs 1
+```
+
+Measured on the reference datasets: every downloaded-data case byte-identical,
+with the Java build faster than the reference on every case (strict up to 13x,
+automated1 up to 12x, sgc up to 47x).

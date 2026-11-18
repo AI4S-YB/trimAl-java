@@ -3,6 +3,7 @@ package trimal.stat;
 import java.io.IOException;
 
 import trimal.util.CppOut;
+import trimal.util.Parallel;
 import trimal.util.Utils;
 
 /**
@@ -21,7 +22,7 @@ public final class StatisticsGaps {
   int[] gapsWindow;
   int[] numColumnsWithGaps;
 
-  public StatisticsGaps(String[] alignmentMatrix, int species, int aminos, int dataType_) {
+  public StatisticsGaps(String[] alignmentMatrix, int species, int aminos, int dataType_) throws IOException {
     columnLength = species;
     columns = aminos;
     maxGaps = 0;
@@ -35,14 +36,36 @@ public final class StatisticsGaps {
     gapsWindow = new int[columns];
     numColumnsWithGaps = new int[species + 1];
 
-    for (int i = 0; i < columns; i++) {
-      for (int j = 0; j < columnLength; j++) {
-        char c = Utils.charAt(alignmentMatrix[j], i);
-        if (c == '-')
-          gapsInColumn[i]++;
-        else if (c == indet)
-          aminosXInColumn[i]++;
+    // Column counts are independent integer sums over each column, so running
+    // columns on daemon workers is bit-identical to the serial loop; the shared
+    // histogram and maxGaps are then rebuilt in one cheap serial pass.
+    if (Parallel.threads() > 1 && columns >= 2 * Parallel.threads()
+        && (long) columns * columnLength > 20_000_000L) {
+      Parallel.forIndex(0, columns, i -> {
+        int gaps = 0, indetCount = 0;
+        for (int j = 0; j < columnLength; j++) {
+          char c = Utils.charAt(alignmentMatrix[j], i);
+          if (c == '-')
+            gaps++;
+          else if (c == indet)
+            indetCount++;
+        }
+        gapsInColumn[i] = gaps;
+        aminosXInColumn[i] = indetCount;
+      });
+    } else {
+      for (int i = 0; i < columns; i++) {
+        for (int j = 0; j < columnLength; j++) {
+          char c = Utils.charAt(alignmentMatrix[j], i);
+          if (c == '-')
+            gapsInColumn[i]++;
+          else if (c == indet)
+            aminosXInColumn[i]++;
+        }
       }
+    }
+
+    for (int i = 0; i < columns; i++) {
       numColumnsWithGaps[gapsInColumn[i]]++;
       gapsWindow[i] = gapsInColumn[i];
       if (gapsWindow[i] > maxGaps) maxGaps = gapsWindow[i];

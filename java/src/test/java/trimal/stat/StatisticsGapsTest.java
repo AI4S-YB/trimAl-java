@@ -6,7 +6,7 @@ import trimal.util.Utils;
 
 public class StatisticsGapsTest {
   @Test
-  public void reflectedWindowRoundingAndCutPointMatchOracle() {
+  public void reflectedWindowRoundingAndCutPointMatchOracle() throws Exception {
     String[] rows = {"AC--AC--", "A---ACGT", "AC-NACGT"};
     StatisticsGaps gaps = new StatisticsGaps(rows, 3, 8, Utils.DNAType);
     assertArrayEquals(new int[]{0, 1, 3, 2, 0, 0, 1, 1}, gaps.getGapsWindow());
@@ -20,7 +20,7 @@ public class StatisticsGapsTest {
   }
 
   @Test
-  public void emptyHistogramDoesNotExposeJavaArrayException() {
+  public void emptyHistogramDoesNotExposeJavaArrayException() throws Exception {
     StatisticsGaps gaps = new StatisticsGaps(new String[]{"", ""}, 2, 0, Utils.DNAType);
     // Upstream reads outside the empty histogram and can print arbitrary slope
     // values; this is a deliberate safe result, not a claimed original match.
@@ -28,7 +28,7 @@ public class StatisticsGapsTest {
   }
 
   @Test
-  public void allGapColumnsRemainIncludedInHistogram() {
+  public void allGapColumnsRemainIncludedInHistogram() throws Exception {
     StatisticsGaps gaps = new StatisticsGaps(new String[]{"----", "----"}, 2, 4, Utils.DNAType);
     assertArrayEquals(new int[]{2, 2, 2, 2}, gaps.getGapsWindow());
     assertArrayEquals(new int[]{0, 0, 4}, gaps.numColumnsWithGaps);

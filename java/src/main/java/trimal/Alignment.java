@@ -796,24 +796,30 @@ public class Alignment {
 
     filename = "!Title " + alignmentFile + ";";
 
-    String line = null;
-    sequenNumber = 0;
-    while (!file.atEof()) {
-      line = file.readLine();
-      if (line == null)
+    // Count '>' lines with one linear scan over the decoded content. Equivalent to
+    // the readLine+strtok transcription (readLine strips leading ' '/tab and drops
+    // '\r' anywhere; the first token then starts at the first remaining char) while
+    // skipping the per-line StringBuilder/tokenizer allocations on large genomes.
+    String content = file.content;
+    int contentLength = content.length();
+    int scan = 0;
+    while (scan < contentLength) {
+      char c = content.charAt(scan);
+      if (c == ' ' || c == '\t' || c == '\r') {
+        scan++;
         continue;
-
-      Tok lw = new Tok(line);
-      Tok str = Tok.strtok(lw, Utils.DELIMITERS);
-      if (str == null)
-        continue;
-
-      if (str.at(0) == '>')
+      }
+      if (c == '>')
         sequenNumber++;
+      int newline = content.indexOf('\n', scan);
+      if (newline < 0)
+        break;
+      scan = newline + 1;
     }
 
     // second pass (C++: file.clear(); file.seekg(0);)
     file = open(alignmentFile);
+    String line = null;
     seqsName = new String[sequenNumber];
     sequences = new String[sequenNumber];
     seqsInfo = new String[sequenNumber];
@@ -1208,24 +1214,27 @@ public class Alignment {
 
     filename = "!Title " + alignmentFile + ";";
 
-    String line = null;
-    sequenNumber = 0;
-    while (!file.atEof()) {
-      line = file.readLine();
-      if (line == null)
+    // Count '>' lines with one linear scan (same equivalence as loadFastaAlignment).
+    String content = file.content;
+    int contentLength = content.length();
+    int scan = 0;
+    while (scan < contentLength) {
+      char c = content.charAt(scan);
+      if (c == ' ' || c == '\t' || c == '\r') {
+        scan++;
         continue;
-
-      Tok lw = new Tok(line);
-      Tok str = Tok.strtok(lw, Utils.DELIMITERS);
-      if (str == null)
-        continue;
-
-      if (str.at(0) == '>')
+      }
+      if (c == '>')
         sequenNumber++;
+      int newline = content.indexOf('\n', scan);
+      if (newline < 0)
+        break;
+      scan = newline + 1;
     }
 
     // restart
     file = open(alignmentFile);
+    String line = null;
     sequences = new String[sequenNumber];
     seqsName = new String[sequenNumber];
     seqsInfo = new String[sequenNumber];
@@ -2925,7 +2934,7 @@ public class Alignment {
 
   // ------------------------------------------------------------------ stats
 
-  public boolean calculateGapStats() {
+  public boolean calculateGapStats() throws IOException {
     if (sequences == null)
       return false;
 
@@ -3112,7 +3121,7 @@ public class Alignment {
     return numNames == sequenNumber;
   }
 
-  public void sequenMatrix() {
+  public void sequenMatrix() throws IOException {
     if (seqMatrix == null)
       seqMatrix = new SequencesMatrix(sequences, seqsName, sequenNumber, residNumber);
   }
@@ -3121,25 +3130,25 @@ public class Alignment {
     seqMatrix = null;
   }
 
-  public void getColumnSeqMatrix(int column, int[] columnSeqMatrix) {
+  public void getColumnSeqMatrix(int column, int[] columnSeqMatrix) throws IOException {
     if (seqMatrix == null)
       seqMatrix = new SequencesMatrix(sequences, seqsName, sequenNumber, residNumber);
     seqMatrix.getColumn(column, columnSeqMatrix);
   }
 
-  public void getColumnSeqMatrix(int value, int row, int[] columnSeqMatrix) {
+  public void getColumnSeqMatrix(int value, int row, int[] columnSeqMatrix) throws IOException {
     if (seqMatrix == null)
       seqMatrix = new SequencesMatrix(sequences, seqsName, sequenNumber, residNumber);
     seqMatrix.getColumn(value, row, columnSeqMatrix);
   }
 
-  public void setSeqMatrixOrder(int[] order) {
+  public void setSeqMatrixOrder(int[] order) throws IOException {
     if (seqMatrix == null)
       seqMatrix = new SequencesMatrix(sequences, seqsName, sequenNumber, residNumber);
     seqMatrix.setOrder(order);
   }
 
-  public SequencesMatrix getSeqMatrix() {
+  public SequencesMatrix getSeqMatrix() throws IOException {
     if (seqMatrix == null)
       seqMatrix = new SequencesMatrix(sequences, seqsName, sequenNumber, residNumber);
     return seqMatrix;
@@ -3598,6 +3607,13 @@ public class Alignment {
       saveSequences = new int[sequenNumber];
       for (int z = 0; z < sequenNumber; z++)
         saveSequences[z] = z;
+    }
+    if (saveResidues == null) {
+      // Same unaligned-input path: main() chains cleanNoAllGaps() after clustering,
+      // whose selection walk dereferences saveResidues (NULL segfault upstream).
+      saveResidues = new int[residNumber];
+      for (int z = 0; z < residNumber; z++)
+        saveResidues[z] = z;
     }
     for (i = 0; i < sequenNumber; i++)
       saveSequences[i] = -1;
