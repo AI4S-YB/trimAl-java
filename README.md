@@ -111,8 +111,10 @@ The completed verification run has **zero actual failures**:
 | Loader fuzz (two seeds × 180 mutations) | 360 / 360 | None |
 | Downloaded real data: Pfam-A.seed top-10 families | 40 / 40 | None |
 | Downloaded real data: 8 eggNOG5 Bacteria clusters (4K-10K seqs) | 32 / 32 | None |
+| Companions on downloaded clusters (readal conversions / statal stats) | 64 / 64 | None |
 | Thread determinism (4 workloads × 6 configs) | all byte-identical | None |
 | Windows: full quick matrix (Windows Java vs Linux ref) | 502 / 502 | None |
+| Windows: full extended matrix (Windows Java vs Linux ref) | 471 / 474 | 3 native UB (same signature as Linux) |
 | Windows: CLI smoke + companions | 96 / 96 | None |
 | Numeric module oracle | 8,219 / 8,219 | None in the production fields |
 | Independent float math oracle | 292,300 / 292,300 | None in the production fields |

@@ -1,0 +1,32 @@
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0006.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0008.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0013.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0018.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0019.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0025.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0031.trimmed_alg.faa -fasta -keepheader -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -clustal -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -phylip -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -nexus -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.faa -fasta -keepheader -out $OUT

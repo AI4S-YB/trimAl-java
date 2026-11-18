@@ -111,6 +111,18 @@ def main():
         row = {"case": name, "args": arguments, "status": "PASS" if identical else "FAIL",
                "native_rc": native_result["rc"], "windows_rc": windows_result["rc"],
                "native_seconds": native_result["seconds"], "windows_seconds": windows_result["seconds"]}
+        if not identical:
+            # Same evidence-based classification as differential.py: the only
+            # difference is the out-of-bounds integer printCorrespondence prints for
+            # a zero-column mapping (rc/stderr/files all match) -> known divergence.
+            import re as _re
+            if (native_result["rc"] == windows_result["rc"]
+                    and native_result["stderr"] == windows_result["stderr"]
+                    and java_files == native_files
+                    and _re.fullmatch(rb"#ColumnsMap\t-?\d+\n", native_result["stdout"]) is not None
+                    and windows_result["stdout"] == b"#ColumnsMap\t\n"):
+                row["status"] = "KNOWN_DIVERGENCE"
+                row["classification"] = "empty-map-oob-integer (native reads uninitialized heap)"
         (case_dir / "result.json").write_text(json.dumps(row, indent=2) + "\n", encoding="utf-8")
         return row
 
@@ -130,7 +142,8 @@ def main():
 
     summary = {"total": len(results),
                "passed": sum(r["status"] == "PASS" for r in results),
-               "failed": sum(r["status"] == "FAIL" for r in results)}
+               "failed": sum(r["status"] == "FAIL" for r in results),
+               "known_divergence": sum(r["status"] == "KNOWN_DIVERGENCE" for r in results)}
     report = {"suite": "Windows Java vs Linux reference, full quick matrix",
               "java_exe": executable, "jar": options.jar, "summary": summary,
               "cases": results}
