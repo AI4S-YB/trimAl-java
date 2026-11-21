@@ -173,3 +173,15 @@ python3 verify/differential.py verify/eggnog_manifest.txt --timeout 3600 --jobs 
 Measured on the reference datasets: every downloaded-data case byte-identical,
 with the Java build faster than the reference on every case (strict up to 13x,
 automated1 up to 12x, sgc up to 47x).
+
+## CI runner environment
+
+`.github/workflows/ci.yml` pins the runner to **ubuntu-22.04**. This matters: the
+float bits of the C++ reference oracle's `expf`/`log10f` (used directly by
+`statisticsConservation` for MDK and probed by the T cases) are relative to the
+build environment's libm. The first CI run on `ubuntu-latest` (24.04, glibc 2.39)
+produced 1,906 bit-level mismatches against the port — the same seed passes
+8,219/8,219 on the documented reference environment (Ubuntu 22.04, glibc 2.35,
+GCC 11, `-Wall -O2`), which is the baseline the pure-Java `expf`/`log10f` ports
+target. Pinning the runner keeps the oracle environment identical to that
+baseline. Actions deprecation warnings (Node.js 20) are cosmetic.
