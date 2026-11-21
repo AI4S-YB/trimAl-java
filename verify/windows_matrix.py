@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 """Full cross-platform gate: run every quick-matrix case with Windows Java against
 the Linux reference. Byte comparison of rc/stdout/stderr/files, no normalization.
 Requires Windows java.exe reachable from WSL (TRIMAL_WINDOWS_JAVA or --java-exe).

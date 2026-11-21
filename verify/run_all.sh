@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 # Build with tests, generate the quick matrix, and compare all output bytes.
 # Pass --scale to additionally run the slow 3,583-sequence conservation jobs.
 set -euo pipefail

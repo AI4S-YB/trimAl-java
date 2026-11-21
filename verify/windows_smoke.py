@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 """Compare the final JAR on Windows Java with the same Linux oracle and input paths."""
 import argparse
 import json

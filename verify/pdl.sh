@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 # Parallel ranged downloader for servers that throttle per connection (~10KB/s each).
 # Usage: pdl.sh <url> <size> <outfile> <parts> <workdir>
 set -u

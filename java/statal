@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 set -euo pipefail
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 JAVA="${JAVA_HOME:+$JAVA_HOME/bin/}java"

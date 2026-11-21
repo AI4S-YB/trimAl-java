@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 """Extract mega-families (tens of thousands of sequences) from a Pfam-A.full window.
 
 The window is a byte-prefix of Pfam-A.full.gz, so the gzip stream ends mid-family;
