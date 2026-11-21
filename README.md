@@ -111,6 +111,7 @@ The completed verification run has **zero actual failures**:
 | Loader fuzz (two seeds × 180 mutations) | 360 / 360 | None |
 | Downloaded real data: Pfam-A.seed top-10 families | 40 / 40 | None |
 | Downloaded real data: 8 eggNOG5 Bacteria clusters (4K-10K seqs) | 32 / 32 | None |
+| Downloaded real data: Pfam-A.full mega-families (79K–366K seqs) | 30 / 30 | None |
 | Companions on downloaded clusters (readal conversions / statal stats) | 64 / 64 | None |
 | Thread determinism (4 workloads × 6 configs) | all byte-identical | None |
 | Windows: full quick matrix (Windows Java vs Linux ref) | 502 / 502 | None |
@@ -167,6 +168,26 @@ flush syscall per line the way C++ `endl` does. Timings are recorded in
 `scale_timings` in [verify/validation-summary.json](verify/validation-summary.json).
 These jobs are excluded from the quick gate purely for runtime; a timeout still
 counts as a failure.
+
+### Mega-family scale (Pfam-A.full, up to 366,230 sequences)
+
+The ultimate stress tier streams a 500 MB prefix window of **Pfam-A.full** (the
+40.5 GB official alignment archive) and extracts six mega-families — the largest,
+`7tm_1` (GPCR), holds **366,230 sequences × 3,489 columns ≈ 1.28 billion cells**,
+34× larger than the biggest eggNOG cluster. Only O(n × L) methods apply here (the
+O(n²) identity matrix is infeasible at this scale in *both* implementations):
+
+| Family | Sequences × Columns | Native | Java |
+|---|---|---:|---:|
+| `7tm_1` — gappyout | 366,230 × 3,489 | 1,947 s | **71 s (27×)** |
+| `7tm_1` — noallgaps | 366,230 × 3,489 | 2,304 s | **82 s (28×)** |
+| `2_Hacid_dh_C` — gappyout | 126,849 × 1,500 | 226 s | **7 s (32×)** |
+| all 30 mega cases | up to 366K seqs | **189 min total** | **5 min total (38×)** |
+
+All 30 cases are **byte-identical** (`pffull_manifest.txt`, runner
+`pffull_extract.py`). At this scale the reference spends 32 minutes and a sluggish
+per-column `std::string` walk on `7tm_1` gappyout, while the port finishes in 71
+seconds — and both write identical 1.3 GB outputs.
 
 ## Preserved quirks and explicit differences
 
