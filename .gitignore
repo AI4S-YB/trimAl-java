@@ -45,3 +45,4 @@ verify/threading/
 verify/windows-main/case_*/
 verify/windows-matrix/
 verify/work/
+verify/corpus/pffull/
