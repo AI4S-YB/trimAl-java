@@ -2155,7 +2155,11 @@ public class Alignment {
     float[] vectAux = new float[residNumber];
     Utils.copyVect(vectValues, vectAux, residNumber);
     Utils.quicksort(vectAux, 0, residNumber - 1);
-    cut = vectAux[(int) ((float) (residNumber - 1) * (100.0 - baseLine) / 100.0)];
+    // A zero-column alignment makes the reference read past its sorted copy
+    // (uninitialised heap, so the value is not reproducible). Nothing later can
+    // observe it - there is no column left to compare against - so do not read it.
+    cut = residNumber == 0 ? Float.NaN
+        : vectAux[(int) ((float) (residNumber - 1) * (100.0 - baseLine) / 100.0)];
     cut = cutpoint < cut ? cutpoint : cut;
     ret = cleanByCutValue(cut, baseLine, vectValues, complementary);
     return ret;
@@ -3492,6 +3496,11 @@ public class Alignment {
     int[] cluster;
     int[][] seqs;
     float max;
+
+    // With no sequence the reference writes cluster[0] = seqs[-1][1], past two empty
+    // arrays, and crashes. "No sequence, no cluster" is the only defined answer.
+    if (sequenNumber == 0)
+      return new int[] {0};
 
     if (identities == null)
       calculateSeqIdentity();

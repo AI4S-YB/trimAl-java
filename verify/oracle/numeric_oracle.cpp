@@ -1,3 +1,28 @@
+/* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+ ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+
+    trimAl v1.5.1 (Java 11 port): a tool for automated trimming of multiple
+    sequence alignments, together with its readAl and statal companions.
+
+    This file is part of the trimAl Java port, a derivative work of trimAl
+    (https://github.com/inab/trimal).
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** */
+
 // Compile against the unmodified trimAl implementations; no alignment/main dependency.
 #include <bits/stdc++.h>
 #define private public
@@ -111,6 +136,20 @@ int main() {
            << "|expDouble=" << bits((float) exp((double) v))
            << "|log10Double=" << bits((float) log10((double) v))
            << "|floatOverloads=" << is_same<decltype(exp(v)), float>::value;
+    } else if (cmd == "W") {
+      // The two places where the port calls double pow(): the similarity cut point of
+      // the strict method (alignment.cpp:1068-1072) and the standard deviation of the
+      // column identities (autAlignment.cpp:438). Input: site, two float bit patterns.
+      int site; uint32_t a, b; in >> site >> a >> b;
+      if (site == 1) {
+        float first20Point = asFloat(a), last80Point = asFloat(b);
+        double inic = log10(first20Point), fin = log10(last80Point);
+        double vlr = ((inic - fin) / 10) + fin;
+        cout << "|simcut=" << bits((float) pow(10, vlr));
+      } else {
+        float colIdentity = asFloat(a), avg = asFloat(b);
+        cout << "|term=" << bits((float) pow((colIdentity - avg), 2));
+      }
     } else if (cmd == "I") {
       string hex, s; in >> hex;
       for (size_t i = 0; i < hex.size(); i += 2) s.push_back(stoul(hex.substr(i, 2), nullptr, 16));

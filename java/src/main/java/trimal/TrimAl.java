@@ -1069,6 +1069,17 @@ public final class TrimAl {
     }
 
     /* Files Comparison Methods */
+    if ((compareset != -1) && (!appearErrors) && (numfiles == 0) && (forceFile == null)) {
+      // Without -forceselect the reference goes on with a zero-element array and
+      // dereferences its first element. There is nothing to compare, so report that
+      // instead. (With -forceselect an empty set is harmless and stays accepted.)
+      try (CppOut err = CppOut.toStderr()) {
+        err.endl().p("ERROR: The comparison set \"").p(args[compareset])
+            .p("\" does not list any alignment.").endl().endl();
+      }
+      appearErrors = true;
+    }
+
     if ((compareset != -1) && (!appearErrors)) {
 
       compAlig = new Alignment[numfiles];
@@ -1225,9 +1236,17 @@ public final class TrimAl {
     if ((strict) || (strictplus) || (automated1) || (simThreshold != -1.0) || (scc == true) || (sct == true)) {
       similMatrix = new SimilarityMatrix();
 
-      if (matrix != null)
-        similMatrix.loadSimMatrix(matrix);
-      else if (alternative_matrix != -1) {
+      if (matrix != null) {
+        // The reference ignores a failed load and dereferences the empty matrix as
+        // soon as a method needs it. statAl reports the failure with this message.
+        if (!similMatrix.loadSimMatrix(matrix)) {
+          try (CppOut err = CppOut.toStderr()) {
+            err.endl().p("ERROR: Similarity Matrix not loaded: \"").p(matrix)
+                .p("\" Check input file content.").endl().endl();
+          }
+          return -1;
+        }
+      } else if (alternative_matrix != -1) {
         alignDataType = origAlig.getTypeAlignment();
         similMatrix.alternativeSimilarityMatrices(alternative_matrix, alignDataType);
       } else {
@@ -1410,7 +1429,11 @@ public final class TrimAl {
       origAlig = null;
     }
 
-    if ((outhtml != null) && (!appearErrors))
+    // When a method returned nothing the reference has just moved origAlig into
+    // singleAlig and nulled origAlig; with -htmlout it dereferences that null pointer
+    // and crashes, without -htmlout it goes on with the untrimmed alignment. Do the
+    // latter in both cases.
+    if ((outhtml != null) && (!appearErrors) && (origAlig != null))
       if (!origAlig.alignmentSummaryHTML(outhtml, singleAlig.getNumAminos(), singleAlig.getNumSpecies(),
           singleAlig.getCorrespResidues(), singleAlig.getCorrespSequences(), compareVect)) {
         try (CppOut err = CppOut.toStderr()) {

@@ -1,3 +1,28 @@
+/* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+ ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+
+    trimAl v1.5.1 (Java 11 port): a tool for automated trimming of multiple
+    sequence alignments, together with its readAl and statal companions.
+
+    This file is part of the trimAl Java port, a derivative work of trimAl
+    (https://github.com/inab/trimal).
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** */
+
 package trimal.stat;
 
 import java.io.BufferedReader;
@@ -104,6 +129,20 @@ public final class NumericProbe {
            .append("|sqrt=").append(bits((float) Math.sqrt(v)))
            .append("|expDouble=").append(bits((float) Math.exp(v)))
            .append("|log10Double=").append(bits((float) Math.log10(v))).append("|floatOverloads=1");
+        break;
+      }
+      case "W": {
+        // double pow() at the port's two call sites: the strict method's similarity cut
+        // (Alignment.cleanCombMethods) and the standard deviation of the column identities.
+        int site = Integer.parseInt(in.nextToken());
+        float a = asFloat(in.nextToken()), b = asFloat(in.nextToken());
+        if (site == 1) {
+          double inic = Utils.log10f(a), fin = Utils.log10f(b);
+          double vlr = ((inic - fin) / 10) + fin;
+          out.append("|simcut=").append(bits((float) Math.pow(10, vlr)));
+        } else {
+          out.append("|term=").append(bits((float) Math.pow((a - b), 2)));
+        }
         break;
       }
       case "I": {

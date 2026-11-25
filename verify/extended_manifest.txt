@@ -474,3 +474,318 @@ SKIP:orig-segv -in verify/corpus/extended/edge_dupnames.fa -clusters 3 -out $OUT
 -in verify/corpus/extended/edge_1seq.fa -gappyout -out $OUT
 -in verify/corpus/extended/edge_1seq.fa -gt 0.5 -out $OUT
 -in verify/corpus/extended/edge_1seq.fa -htmlout $HTML -out $OUT
+-nogaps -out $OUT
+SKIP:orig-segv -nogaps -htmlout $HTML -out $OUT
+-nogaps -gt 0.5 -out $OUT
+-nogaps -st 0.5 -out $OUT
+-nogaps -ct 0.5 -out $OUT
+-nogaps -cons 60 -out $OUT
+-nogaps -maxidentity 0.7 -out $OUT
+-nogaps -resoverlap 0.8 -seqoverlap 50 -out $OUT
+-nogaps -clusters 3 -out $OUT
+-nogaps -w 2 -out $OUT
+-nogaps -gw 2 -out $OUT
+-nogaps -sw 2 -out $OUT
+-nogaps -cw 2 -out $OUT
+-nogaps -block 3 -out $OUT
+-nogaps -sgc -out $OUT
+-nogaps -sgt -out $OUT
+-nogaps -ssc -out $OUT
+-nogaps -sst -out $OUT
+-nogaps -sident -out $OUT
+-nogaps -soverlap -out $OUT
+-nogaps -sfc -out $OUT
+-nogaps -sft -out $OUT
+-nogaps -fasta -out $OUT
+-nogaps -fasta_m10 -out $OUT
+-nogaps -clustal -out $OUT
+-nogaps -phylip -out $OUT
+-nogaps -phylip_m10 -out $OUT
+-nogaps -phylip_paml -out $OUT
+-nogaps -phylip_paml_m10 -out $OUT
+-nogaps -nexus -out $OUT
+-nogaps -nbrf -out $OUT
+-nogaps -mega -out $OUT
+-nogaps -complementary -out $OUT
+-nogaps -colnumbering -out $OUT
+-nogaps -terminalonly -out $OUT
+-nogaps -keepseqs -out $OUT
+-nogaps -keepheader -out $OUT
+-in verify/corpus/empty.fasta -nogaps -out $OUT
+-in verify/corpus/one_seq.fasta -nogaps -out $OUT
+-noallgaps -out $OUT
+SKIP:orig-segv -noallgaps -htmlout $HTML -out $OUT
+-noallgaps -gt 0.5 -out $OUT
+-noallgaps -st 0.5 -out $OUT
+-noallgaps -ct 0.5 -out $OUT
+-noallgaps -cons 60 -out $OUT
+-noallgaps -maxidentity 0.7 -out $OUT
+-noallgaps -resoverlap 0.8 -seqoverlap 50 -out $OUT
+-noallgaps -clusters 3 -out $OUT
+-noallgaps -w 2 -out $OUT
+-noallgaps -gw 2 -out $OUT
+-noallgaps -sw 2 -out $OUT
+-noallgaps -cw 2 -out $OUT
+-noallgaps -block 3 -out $OUT
+-noallgaps -sgc -out $OUT
+-noallgaps -sgt -out $OUT
+-noallgaps -ssc -out $OUT
+-noallgaps -sst -out $OUT
+-noallgaps -sident -out $OUT
+-noallgaps -soverlap -out $OUT
+-noallgaps -sfc -out $OUT
+-noallgaps -sft -out $OUT
+-noallgaps -fasta -out $OUT
+-noallgaps -fasta_m10 -out $OUT
+-noallgaps -clustal -out $OUT
+-noallgaps -phylip -out $OUT
+-noallgaps -phylip_m10 -out $OUT
+-noallgaps -phylip_paml -out $OUT
+-noallgaps -phylip_paml_m10 -out $OUT
+-noallgaps -nexus -out $OUT
+-noallgaps -nbrf -out $OUT
+-noallgaps -mega -out $OUT
+-noallgaps -complementary -out $OUT
+-noallgaps -colnumbering -out $OUT
+-noallgaps -terminalonly -out $OUT
+-noallgaps -keepseqs -out $OUT
+-noallgaps -keepheader -out $OUT
+-in verify/corpus/empty.fasta -noallgaps -out $OUT
+-in verify/corpus/one_seq.fasta -noallgaps -out $OUT
+-gappyout -out $OUT
+SKIP:orig-segv -gappyout -htmlout $HTML -out $OUT
+-gappyout -gt 0.5 -out $OUT
+-gappyout -st 0.5 -out $OUT
+-gappyout -ct 0.5 -out $OUT
+-gappyout -cons 60 -out $OUT
+-gappyout -maxidentity 0.7 -out $OUT
+-gappyout -resoverlap 0.8 -seqoverlap 50 -out $OUT
+-gappyout -clusters 3 -out $OUT
+-gappyout -w 2 -out $OUT
+-gappyout -gw 2 -out $OUT
+-gappyout -sw 2 -out $OUT
+-gappyout -cw 2 -out $OUT
+-gappyout -block 3 -out $OUT
+-gappyout -sgc -out $OUT
+-gappyout -sgt -out $OUT
+-gappyout -ssc -out $OUT
+-gappyout -sst -out $OUT
+-gappyout -sident -out $OUT
+-gappyout -soverlap -out $OUT
+-gappyout -sfc -out $OUT
+-gappyout -sft -out $OUT
+-gappyout -fasta -out $OUT
+-gappyout -fasta_m10 -out $OUT
+-gappyout -clustal -out $OUT
+-gappyout -phylip -out $OUT
+-gappyout -phylip_m10 -out $OUT
+-gappyout -phylip_paml -out $OUT
+-gappyout -phylip_paml_m10 -out $OUT
+-gappyout -nexus -out $OUT
+-gappyout -nbrf -out $OUT
+-gappyout -mega -out $OUT
+-gappyout -complementary -out $OUT
+-gappyout -colnumbering -out $OUT
+-gappyout -terminalonly -out $OUT
+-gappyout -keepseqs -out $OUT
+-gappyout -keepheader -out $OUT
+-in verify/corpus/empty.fasta -gappyout -out $OUT
+-in verify/corpus/one_seq.fasta -gappyout -out $OUT
+-strict -out $OUT
+SKIP:orig-segv -strict -htmlout $HTML -out $OUT
+-strict -gt 0.5 -out $OUT
+-strict -st 0.5 -out $OUT
+-strict -ct 0.5 -out $OUT
+-strict -cons 60 -out $OUT
+-strict -maxidentity 0.7 -out $OUT
+-strict -resoverlap 0.8 -seqoverlap 50 -out $OUT
+-strict -clusters 3 -out $OUT
+-strict -w 2 -out $OUT
+-strict -gw 2 -out $OUT
+-strict -sw 2 -out $OUT
+-strict -cw 2 -out $OUT
+-strict -block 3 -out $OUT
+-strict -sgc -out $OUT
+-strict -sgt -out $OUT
+-strict -ssc -out $OUT
+-strict -sst -out $OUT
+-strict -sident -out $OUT
+-strict -soverlap -out $OUT
+-strict -sfc -out $OUT
+-strict -sft -out $OUT
+-strict -fasta -out $OUT
+-strict -fasta_m10 -out $OUT
+-strict -clustal -out $OUT
+-strict -phylip -out $OUT
+-strict -phylip_m10 -out $OUT
+-strict -phylip_paml -out $OUT
+-strict -phylip_paml_m10 -out $OUT
+-strict -nexus -out $OUT
+-strict -nbrf -out $OUT
+-strict -mega -out $OUT
+-strict -complementary -out $OUT
+-strict -colnumbering -out $OUT
+-strict -terminalonly -out $OUT
+-strict -keepseqs -out $OUT
+-strict -keepheader -out $OUT
+-in verify/corpus/empty.fasta -strict -out $OUT
+-in verify/corpus/one_seq.fasta -strict -out $OUT
+-strictplus -out $OUT
+SKIP:orig-segv -strictplus -htmlout $HTML -out $OUT
+-strictplus -gt 0.5 -out $OUT
+-strictplus -st 0.5 -out $OUT
+-strictplus -ct 0.5 -out $OUT
+-strictplus -cons 60 -out $OUT
+-strictplus -maxidentity 0.7 -out $OUT
+-strictplus -resoverlap 0.8 -seqoverlap 50 -out $OUT
+-strictplus -clusters 3 -out $OUT
+-strictplus -w 2 -out $OUT
+-strictplus -gw 2 -out $OUT
+-strictplus -sw 2 -out $OUT
+-strictplus -cw 2 -out $OUT
+-strictplus -block 3 -out $OUT
+-strictplus -sgc -out $OUT
+-strictplus -sgt -out $OUT
+-strictplus -ssc -out $OUT
+-strictplus -sst -out $OUT
+-strictplus -sident -out $OUT
+-strictplus -soverlap -out $OUT
+-strictplus -sfc -out $OUT
+-strictplus -sft -out $OUT
+-strictplus -fasta -out $OUT
+-strictplus -fasta_m10 -out $OUT
+-strictplus -clustal -out $OUT
+-strictplus -phylip -out $OUT
+-strictplus -phylip_m10 -out $OUT
+-strictplus -phylip_paml -out $OUT
+-strictplus -phylip_paml_m10 -out $OUT
+-strictplus -nexus -out $OUT
+-strictplus -nbrf -out $OUT
+-strictplus -mega -out $OUT
+-strictplus -complementary -out $OUT
+-strictplus -colnumbering -out $OUT
+-strictplus -terminalonly -out $OUT
+-strictplus -keepseqs -out $OUT
+-strictplus -keepheader -out $OUT
+-in verify/corpus/empty.fasta -strictplus -out $OUT
+-in verify/corpus/one_seq.fasta -strictplus -out $OUT
+-automated1 -out $OUT
+SKIP:orig-segv -automated1 -htmlout $HTML -out $OUT
+-automated1 -gt 0.5 -out $OUT
+-automated1 -st 0.5 -out $OUT
+-automated1 -ct 0.5 -out $OUT
+-automated1 -cons 60 -out $OUT
+-automated1 -maxidentity 0.7 -out $OUT
+-automated1 -resoverlap 0.8 -seqoverlap 50 -out $OUT
+-automated1 -clusters 3 -out $OUT
+-automated1 -w 2 -out $OUT
+-automated1 -gw 2 -out $OUT
+-automated1 -sw 2 -out $OUT
+-automated1 -cw 2 -out $OUT
+-automated1 -block 3 -out $OUT
+-automated1 -sgc -out $OUT
+-automated1 -sgt -out $OUT
+-automated1 -ssc -out $OUT
+-automated1 -sst -out $OUT
+-automated1 -sident -out $OUT
+-automated1 -soverlap -out $OUT
+-automated1 -sfc -out $OUT
+-automated1 -sft -out $OUT
+-automated1 -fasta -out $OUT
+-automated1 -fasta_m10 -out $OUT
+-automated1 -clustal -out $OUT
+-automated1 -phylip -out $OUT
+-automated1 -phylip_m10 -out $OUT
+-automated1 -phylip_paml -out $OUT
+-automated1 -phylip_paml_m10 -out $OUT
+-automated1 -nexus -out $OUT
+-automated1 -nbrf -out $OUT
+-automated1 -mega -out $OUT
+-automated1 -complementary -out $OUT
+-automated1 -colnumbering -out $OUT
+-automated1 -terminalonly -out $OUT
+-automated1 -keepseqs -out $OUT
+-automated1 -keepheader -out $OUT
+-in verify/corpus/empty.fasta -automated1 -out $OUT
+-in verify/corpus/one_seq.fasta -automated1 -out $OUT
+-gt 0.5 -out $OUT
+-st 0.5 -out $OUT
+-ct 0.5 -out $OUT
+-cons 60 -out $OUT
+SKIP:orig-segv -maxidentity 0.7 -out $OUT
+-resoverlap 0.8 -seqoverlap 50 -out $OUT
+-clusters 3 -out $OUT
+-w 2 -out $OUT
+-gw 2 -out $OUT
+-sw 2 -out $OUT
+-cw 2 -out $OUT
+-block 3 -out $OUT
+-sgc -out $OUT
+-sgt -out $OUT
+-ssc -out $OUT
+-sst -out $OUT
+-sident -out $OUT
+-soverlap -out $OUT
+-sfc -out $OUT
+-sft -out $OUT
+-fasta -out $OUT
+-fasta_m10 -out $OUT
+-clustal -out $OUT
+-phylip -out $OUT
+-phylip_m10 -out $OUT
+-phylip_paml -out $OUT
+-phylip_paml_m10 -out $OUT
+-nexus -out $OUT
+-nbrf -out $OUT
+-mega -out $OUT
+-complementary -out $OUT
+-colnumbering -out $OUT
+-terminalonly -out $OUT
+-keepseqs -out $OUT
+-keepheader -out $OUT
+-in verify/corpus/empty.fasta -sgc -out $OUT
+-in verify/corpus/empty.fasta -sgt -out $OUT
+-in verify/corpus/empty.fasta -ssc -out $OUT
+-in verify/corpus/empty.fasta -sst -out $OUT
+-in verify/corpus/empty.fasta -sident -out $OUT
+-in verify/corpus/empty.fasta -soverlap -out $OUT
+-in verify/corpus/empty.fasta -sfc -out $OUT
+-in verify/corpus/empty.fasta -sft -out $OUT
+-in verify/corpus/empty.fasta -fasta -out $OUT
+-in verify/corpus/empty.fasta -fasta_m10 -out $OUT
+-in verify/corpus/empty.fasta -clustal -out $OUT
+-in verify/corpus/empty.fasta -phylip -out $OUT
+-in verify/corpus/empty.fasta -phylip_m10 -out $OUT
+-in verify/corpus/empty.fasta -phylip_paml -out $OUT
+-in verify/corpus/empty.fasta -phylip_paml_m10 -out $OUT
+-in verify/corpus/empty.fasta -nexus -out $OUT
+-in verify/corpus/empty.fasta -nbrf -out $OUT
+-in verify/corpus/empty.fasta -mega -out $OUT
+-in verify/corpus/empty.fasta -complementary -out $OUT
+-in verify/corpus/empty.fasta -colnumbering -out $OUT
+-in verify/corpus/empty.fasta -terminalonly -out $OUT
+-in verify/corpus/empty.fasta -keepseqs -out $OUT
+-in verify/corpus/empty.fasta -keepheader -out $OUT
+-in verify/corpus/one_seq.fasta -sgc -out $OUT
+-in verify/corpus/one_seq.fasta -sgt -out $OUT
+-in verify/corpus/one_seq.fasta -ssc -out $OUT
+-in verify/corpus/one_seq.fasta -sst -out $OUT
+-in verify/corpus/one_seq.fasta -sident -out $OUT
+-in verify/corpus/one_seq.fasta -soverlap -out $OUT
+-in verify/corpus/one_seq.fasta -sfc -out $OUT
+-in verify/corpus/one_seq.fasta -sft -out $OUT
+-in verify/corpus/one_seq.fasta -fasta -out $OUT
+-in verify/corpus/one_seq.fasta -fasta_m10 -out $OUT
+-in verify/corpus/one_seq.fasta -clustal -out $OUT
+-in verify/corpus/one_seq.fasta -phylip -out $OUT
+-in verify/corpus/one_seq.fasta -phylip_m10 -out $OUT
+-in verify/corpus/one_seq.fasta -phylip_paml -out $OUT
+-in verify/corpus/one_seq.fasta -phylip_paml_m10 -out $OUT
+-in verify/corpus/one_seq.fasta -nexus -out $OUT
+-in verify/corpus/one_seq.fasta -nbrf -out $OUT
+-in verify/corpus/one_seq.fasta -mega -out $OUT
+-in verify/corpus/one_seq.fasta -complementary -out $OUT
+-in verify/corpus/one_seq.fasta -colnumbering -out $OUT
+-in verify/corpus/one_seq.fasta -terminalonly -out $OUT
+-in verify/corpus/one_seq.fasta -keepseqs -out $OUT
+-in verify/corpus/one_seq.fasta -keepheader -out $OUT

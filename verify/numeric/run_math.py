@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
 """Broad fixed-seed float overload validation, including all boundary bit patterns."""
 import collections
 import json
 import random
 import subprocess
 import run_numeric as numeric
+import toolchain
 
 OUT = numeric.OUT
 SEED = numeric.SEED + 1
@@ -22,13 +29,31 @@ def main():
                    numeric.fbits(-float.fromhex('0x1.9fe368p6'))]:
         raws += [(center + i) & 0xffffffff for i in range(-512, 513)]
     all_cases = [('T', f'T T_{i:06d} {raw}') for i, raw in enumerate(raws)]
+
+    # double pow() at the port's two call sites. Site 1 (the strict method's similarity
+    # cut) receives the windowed conservation values of two columns, i.e. floats in
+    # [0, 1]; site 2 (the standard deviation of the column identities) receives a
+    # column identity k / sequences and the float average of such identities.
+    units = [0.0, 1.0, 1e-45, 1.17549435e-38, 1.1920929e-07, 0.5, 0.99999994, 0.1, 0.2, 0.25, 0.33333334]
+    pairs = []
+    for i in range(100000):
+        a = rng.choice(units) if i % 4 == 0 else rng.uniform(0, 1)
+        b = rng.choice(units) if i % 8 == 1 else rng.uniform(0, 1)
+        pairs.append(('W1', f'W W1_{i:06d} 1 {numeric.fbits(a)} {numeric.fbits(b)}'))
+    for i in range(100000):
+        n, k = rng.randrange(1, 200), None
+        identity = rng.randrange(0, n + 1) / n
+        avg = (rng.randrange(0, n + 1) / n) if i % 2 else rng.uniform(0, 1)
+        pairs.append(('W2', f'W W2_{i:06d} 2 {numeric.fbits(identity)} {numeric.fbits(avg)}'))
+    all_cases += pairs
     payload = '\n'.join(line for _, line in all_cases) + '\n'
-    (OUT / 'math.cases.txt').write_text(payload)
+    run = numeric.run_dir('math')
+    (run / 'cases.txt').write_text(payload)
     cpp = subprocess.run([str(OUT / 'numeric_oracle')], input=payload, text=True, capture_output=True, timeout=120)
-    java = subprocess.run(['/usr/bin/java', '-XX:-UsePerfData', '-cp', str(OUT / 'classes'), 'trimal.stat.NumericProbe'],
+    java = subprocess.run([toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', str(OUT / 'classes'), 'trimal.stat.NumericProbe'],
                           input=payload, text=True, capture_output=True, timeout=120)
-    (OUT / 'math.cpp.txt').write_text(cpp.stdout)
-    (OUT / 'math.java.txt').write_text(java.stdout)
+    (run / 'cpp.txt').write_text(cpp.stdout)
+    (run / 'java.txt').write_text(java.stdout)
     result = numeric.compare(all_cases, numeric.parse_lines(cpp.stdout), numeric.parse_lines(java.stdout))
     result['seed'] = SEED
     result['exit_codes'] = {'cpp': cpp.returncode, 'java': java.returncode}
@@ -45,8 +70,9 @@ def main():
     result['diagnostic_differences_not_gates'] = dict(diagnostic)
     result['production_mismatches'] = len(result['differences'])
     result['skipped_cases'] = 0
-    (OUT / 'math.results.json').write_text(json.dumps(result, indent=2))
+    (run / 'results.json').write_text(json.dumps(result, indent=2))
     print(json.dumps({k: v for k, v in result.items() if k != 'differences'}, indent=2))
+    print('REPORT ' + str(run / 'results.json'))
     print('mismatches', len(result['differences']))
     for d in result['differences'][:20]:
         print(json.dumps(d))
