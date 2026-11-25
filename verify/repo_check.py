@@ -24,9 +24,10 @@ sees):
 
 1. every file under java/src/test/resources/ that exists on disk is tracked;
 2. the launchers, shell scripts and the Maven wrapper carry mode 100755;
-3. no tracked tool file names a machine of its own (/mnt/<drive>, a home directory,
+3. no text file is stored with CRLF line endings;
+4. no tracked tool file names a machine of its own (/mnt/<drive>, a home directory,
    a checked-out path);
-4. the workflow files are valid (verify/workflow_check.py).
+5. the workflow files are valid (verify/workflow_check.py).
 """
 from pathlib import Path
 import subprocess
@@ -73,6 +74,17 @@ def executable_bits(problems):
             problems.append("mode %s, expected 100755: %s" % (modes[relative], relative))
 
 
+def stored_line_endings(problems):
+    """Text files are stored with LF, whatever a checkout makes of them (.gitattributes).
+    A commit that stores CRLF shows up as modified in every clean checkout, which is
+    how CI's "runners left every tracked file untouched" step once failed on a
+    dependency update. Files marked -text (byte-exact test fixtures) are exempt."""
+    for line in git("ls-files", "--eol").stdout.splitlines():
+        fields = line.split()
+        if len(fields) >= 3 and fields[0] in ("i/crlf", "i/mixed") and "-text" not in fields[2]:
+            problems.append("stored with CRLF, expected LF: " + fields[-1])
+
+
 def machine_markers(problems):
     # this file spells out the patterns it searches for
     found = git("grep", "-n", "-I", "-e", "ClaudeCodeDev", "-e", "/mnt/[a-z]/", "-e", "/home/",
@@ -86,6 +98,7 @@ def main():
     problems = []
     resources_tracked(problems)
     executable_bits(problems)
+    stored_line_endings(problems)
     machine_markers(problems)
     for path in sorted((ROOT / ".github" / "workflows").glob("*.yml")):
         problems += workflow_check.check(path)

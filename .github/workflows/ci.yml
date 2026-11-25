@@ -97,7 +97,13 @@ jobs:
         run: python3 verify/threading_test.py
 
       - name: The runners left every tracked file untouched
-        run: test -z "$(git status --porcelain)"
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "tracked files were modified:"
+            git status --porcelain
+            git diff --stat
+            exit 1
+          fi
 
       - name: Reports
         if: always()
