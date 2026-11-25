@@ -1,0 +1,11 @@
+#mega
+Title lowercase sequential;
+
+#seq_00_of_long_name0,tag:0
+ACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT
+#seq_01_of_long_name1,tag:1
+-TTCA-TGGCATTCGCTCGAA-GAAGT-ACATTCG-TCG-
+#seq_02_of_long_name2,tag:2
+-A--CGCC-T-T-CT-CTGAGTC--CA-AGTC-C-A-CA-
+#seq_03_of_long_name3,tag:3
+G-CAA-ACAAGCCTT---CC--GCTGG-TT-A-CATGCC-

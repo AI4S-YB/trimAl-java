@@ -37,6 +37,8 @@ import java.nio.charset.StandardCharsets;
  * Emulation of std::cout state machine: sticky precision / fixed / left-right flags,
  * one-shot setw field width, endl that flushes. Bytes are written verbatim with an
  * ISO-8859-1 mapping so every byte 0-255 stays transparent (C++ writes bytes).
+ * The standard streams are reached through FileDescriptor.out / .err, not System.out:
+ * the descriptors are what the reference process writes to.
  */
 public final class CppOut implements AutoCloseable {
 
@@ -51,27 +53,50 @@ public final class CppOut implements AutoCloseable {
   private int width = 0;
 
   private static final class StandardStreams {
-    private static final CppOut STDOUT = new CppOut(
-        new BufferedOutputStream(new FileOutputStream(FileDescriptor.out), 1 << 16), true);
-    private static final CppOut STDERR = new CppOut(new FileOutputStream(FileDescriptor.err), true);
+    private static CppOut stdout = openStdout();
+    private static CppOut stderr = openStderr();
 
-    static {
+    private static CppOut openStdout() {
+      CppOut stream = new CppOut(
+          new BufferedOutputStream(new FileOutputStream(FileDescriptor.out), 1 << 16), true);
       // C++ std::cout flushes on every endl even when redirected, which costs one
       // write syscall per line on slow filesystems. Keep per-line flushing on an
       // interactive console and batch when redirected — the byte sequence is the same.
       if (System.console() == null)
-        STDOUT.flushOnEndl = false;
+        stream.flushOnEndl = false;
+      return stream;
+    }
+
+    private static CppOut openStderr() {
+      return new CppOut(new FileOutputStream(FileDescriptor.err), true);
     }
   }
 
   /** Formatting flags persist across callers, just as they do on std::cout. */
   public static CppOut toStdout() throws IOException {
-    return StandardStreams.STDOUT;
+    return StandardStreams.stdout;
   }
 
   /** Closing a standard stream wrapper flushes it without closing its descriptor. */
   public static CppOut toStderr() throws IOException {
-    return StandardStreams.STDERR;
+    return StandardStreams.stderr;
+  }
+
+  /**
+   * Test seam, used by GoldenCliTest only: send the standard streams to other sinks.
+   * The fresh wrappers start in the state a new process starts in (precision 6, no
+   * fixed or left flag), so commands run one after another in the same JVM are
+   * formatted exactly as they would be in separate processes.
+   */
+  public static void redirectStandard(OutputStream stdout, OutputStream stderr) {
+    StandardStreams.stdout = new CppOut(new BufferedOutputStream(stdout, 1 << 16), true);
+    StandardStreams.stderr = new CppOut(stderr, true);
+  }
+
+  /** Test seam: put the real standard streams back after redirectStandard(). */
+  public static void restoreStandard() {
+    StandardStreams.stdout = StandardStreams.openStdout();
+    StandardStreams.stderr = StandardStreams.openStderr();
   }
 
   /**

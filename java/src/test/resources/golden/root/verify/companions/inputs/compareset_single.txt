@@ -1,0 +1,1 @@
+verify/companions/inputs/dna.fa

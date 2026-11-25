@@ -6,11 +6,19 @@
 
   <groupId>io.github.cj-chen</groupId>
   <artifactId>trimal-java</artifactId>
-  <version>0.1.0</version>
+  <!-- The number of the trimAl release this port reproduces. -->
+  <version>1.5.1</version>
   <packaging>jar</packaging>
 
   <name>trimal-java</name>
   <description>Java 11 port of trimAl 1.5.1, with differential tests against the reference C++ implementation</description>
+  <url>https://github.com/AI4S-YB/trimAl-java</url>
+
+  <scm>
+    <url>https://github.com/AI4S-YB/trimAl-java</url>
+    <connection>scm:git:https://github.com/AI4S-YB/trimAl-java.git</connection>
+    <developerConnection>scm:git:git@github.com:AI4S-YB/trimAl-java.git</developerConnection>
+  </scm>
 
   <licenses>
     <license>
@@ -24,6 +32,10 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>11</maven.compiler.release>
+    <!-- Fixed timestamp: two builds of one commit produce the same JAR bytes, so a
+         verification record can name the exact JAR by SHA-256. The date is the build
+         date the reference trimAl v1.5.rev1 reports on the command line. -->
+    <project.build.outputTimestamp>2025-11-25T00:00:00Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -49,6 +61,12 @@
       </resource>
     </resources>
     <plugins>
+      <!-- Pinned so that two builds, on whatever Maven runs them, use the same plugins. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -73,6 +91,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
+        <configuration>
+          <!-- GoldenCliTest runs the command lines on repository-relative paths: its
+               working directory is the recorded copy of the input files. -->
+          <workingDirectory>${project.build.testOutputDirectory}/golden/root</workingDirectory>
+        </configuration>
       </plugin>
     </plugins>
   </build>

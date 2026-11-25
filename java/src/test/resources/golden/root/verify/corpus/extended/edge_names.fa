@@ -1,0 +1,12 @@
+>  leading_space_name
+ACGTACGTAC
+>	tab_name
+ACGT---TAC
+>comma,name
+ACGTACG--
+>colon:name
+ACGTACGTA
+>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+ACGTA-GTA
+>ab;misleading
+ACGTT-GTA

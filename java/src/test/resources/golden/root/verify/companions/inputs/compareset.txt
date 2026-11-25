@@ -1,0 +1,3 @@
+verify/companions/inputs/dna.fa
+verify/companions/inputs/dna_alternative.fa
+verify/companions/inputs/dna_alternative_order.fa

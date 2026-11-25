@@ -1,0 +1,15 @@
+#NEXUS
+BEGIN DATA;
+ DIMENSIONS NTAX=3 NCHAR=16;
+FORMAT DATATYPE=DNA INTERLEAVE=yes GAP=-;
+[Name: alpha_long_name    Len: 16]
+[Name: beta_long_name     Len: 16]
+[Name: gamma_long_name    Len: 16]
+
+MATRIX
+alpha_long_name     ACTGACTG-- ACGT--
+beta_long_name      ACT-A-TGGT ACG-T-
+gamma_long_name     ACTGAC-G-T ACGT--
+
+;
+END;

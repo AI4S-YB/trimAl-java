@@ -1,0 +1,2 @@
+verify/companions/inputs/dna.fa
+verify/companions/inputs/unaligned.fa

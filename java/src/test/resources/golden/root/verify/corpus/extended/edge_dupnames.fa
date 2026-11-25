@@ -1,0 +1,8 @@
+>dup
+ACGTACGTAC
+>other
+ACG--GTAC
+>dup
+ACGT---TAC
+>last
+ACGTACG--
