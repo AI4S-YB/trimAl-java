@@ -18,22 +18,28 @@ inputs—not an unconditional guarantee for every possible input or reference bu
 - Oracle: Linux x86-64, `g++ 11.4.0`, `-Wall -O2`.
 
 All 24 acquired C++ source/header/makefile blobs match the pinned tag. Exact source
-fingerprints and the tag comparison are in `verify/reference*.json`.
+fingerprints and the tag comparison are in `verify/reference*.json`, and CI re-checks
+the blobs on every run.
 
-This project follows the behavior-first, oracle-driven method described in the
-provided tracy-java experience report. In particular, algorithms retain the
-original float/double promotion points, unstable quicksort permutations and output
-stream state. glibc `expf/log10f` behavior is ported explicitly rather than assumed
-to match Java double arithmetic followed by a float cast.
+The port is built and verified by a behavior-first, oracle-driven method, written up
+in [docs/method.md](docs/method.md): algorithms retain the original float/double
+promotion points, unstable quicksort permutations and output stream state, and glibc
+`expf/log10f` behavior is ported explicitly rather than assumed to match Java double
+arithmetic followed by a float cast.
 
 ## Build and run
 
-Java 11+ and Maven are required for building:
+A JDK 11 or newer is required; Maven is not, the build goes through the Maven
+wrapper:
 
 ```bash
-mvn -f java/pom.xml package
+java/mvnw -f java/pom.xml package        # Windows: java\mvnw.cmd -f java/pom.xml package
 java -jar java/target/trimal.jar --version
 ```
+
+`package` also runs the unit tests, a golden gate of about 1,400 recorded reference
+cases among them; skip them with `-DskipTests`. Two builds of one commit produce the
+same JAR bytes.
 
 Linux, WSL or Git Bash launchers:
 
@@ -82,121 +88,170 @@ this pinned reference and are rejected rather than added as compatibility aliase
 
 ## Verification
 
-The verification scripts preserve raw stdout, stderr, exit status and **every**
-produced file. No whitespace or line-ending normalization is used. Complete results
-and artifact SHA-256 values are saved locally under `verify/results/` and each
-independent suite's directory.
+Equality here means equality of everything a run produces: exit status, stdout,
+stderr and every written file, compared byte for byte. No whitespace, precision or
+line-ending normalization is applied anywhere.
+
+### One driver, one record
 
 ```bash
 bash verify/run_all.sh
 ```
 
-This command builds with unit tests enabled, runs the generated quick, extended and
-legacy matrices and the companion-tool suite (`--scale` adds the slow conservation
-jobs). A real test failure or timeout fails the run;
-known native undefined-behavior cases are reported separately, never counted as
-byte-identical PASS. See [verify/README.md](verify/README.md) for prerequisites,
-reference setup, manifests and individual runners.
+builds the JAR with the unit tests enabled and runs `verify/run_full.py`, which
+sequences every gate on that one build. Before the first gate the driver records the
+commit, whether the tree was clean, the JAR's SHA-256, the reference binaries'
+SHA-256 and versions and the toolchain; per gate it keeps the log, the exit status,
+the seconds and the system load. `verify/validation_summary.py` turns that record into
+[verify/validation-summary.json](verify/validation-summary.json) and renders the
+tables below from it, so a number in them is never typed by hand. The summary refuses
+a run made in a dirty tree, a run that mixes commits or JARs, and any run with a
+failure. [verify/README.md](verify/README.md) lists every gate and shows how to run
+one on its own.
 
-The integrated counts of the October 16 run are recorded in
-[verify/validation-summary.json](verify/validation-summary.json); the other rows come from
-their own run directories (see [Evidence provenance](#evidence-provenance)). No completed
-run has an actual failure:
+### Results
 
-| Suite | Strict byte/bit matches | Separately recorded differences |
-|---|---:|---:|
-| Main `trimal` CLI — quick matrix | 502 / 508 | 6 native UB/crash paths |
-| Main `trimal` CLI — extended matrix | 471 / 475 | 4 native UB/crash paths |
-| Main `trimal` CLI — legacy baseline | 113 / 117 | 4 native UB/crash paths |
-| Main `trimal` CLI — scale (3,583-seq real data + 4×60,000-col wide) | 8 / 8 | None |
-| `readal` / `statal` CLI | 474 / 475 | 1 native double-free |
-| Boundary/alignment audit | 480 / 605 | 125 native UB/crash paths |
-| Loader fuzz (seed 90210, 180 mutations) | 180 / 180 | None (75 cases load and write; 105 exercise rejection paths) |
-| Downloaded real data: Pfam-A.seed top-10 families | 40 / 40 | None |
-| Downloaded real data: 8 eggNOG5 Bacteria clusters (4K-10K seqs) | 32 / 32 | None |
-| Downloaded real data: Pfam-A.full mega-families (79K–366K seqs) | 30 / 30 | None |
-| Companions on downloaded clusters (readal conversions / statal stats) | 64 / 64 | None |
-| Thread determinism (4 workloads × 6 configs) | all byte-identical | None |
-| Windows: full quick matrix (Windows Java vs Linux ref) | 498 / 502, plus 8 / 8 in a rerun of the affected cases | 4 harness-path failures in the full run (passed in the rerun) |
-| Windows: full extended matrix (Windows Java vs Linux ref) | 471 / 474 | 3 native UB (same signature as Linux) |
-| Windows: CLI smoke + companions | 96 / 96 | None |
-| Numeric module oracle | 8,219 / 8,219 | None in the production fields |
-| Independent float math oracle | 292,300 / 292,300 | None in the production fields |
-| Integrated JUnit | 33 / 33 | None |
+<!-- verification-table:start -->
+| Suite | Strict byte/bit matches | Separately recorded differences | Reference accepted / rejected |
+|---|---:|---|---|
+| Main `trimal` CLI — quick matrix | 502 / 508 | 6 native UB/crash paths | 441 / 67 |
+| Main `trimal` CLI — extended matrix | 779 / 790 | 11 native UB/crash paths | 657 / 133 |
+| Main `trimal` CLI — legacy baseline | 113 / 117 | 4 native UB/crash paths | 76 / 41 |
+| Main `trimal` CLI — scale (3,583-sequence real data + 4×60,000-column wide) | 8 / 8 † | None | 8 / 0 |
+| `readal` / `statal` CLI | 474 / 475 | 1 native UB/crash path | — |
+| Boundary/alignment audit (parse, writers, edge shapes, round trips) | 480 / 605 | 125 native UB/crash paths | — |
+| Direct-source probes (matrix order, locale, 96 identity alignments) | 3 / 3 | None | — |
+| Loader fuzz (three labels × 180 mutations) | 540 / 540 | None | 379 / 161 |
+| CLI argument fuzz (two random labels and one accepted-shape label, 400 vectors each) | 1,111 / 1,200 | 89 native UB/crash paths | 307 / 804 |
+| Downloaded real data: Pfam-A.seed top-10 families | pending † | — | — |
+| Downloaded real data: 8 eggNOG5 Bacteria clusters + 1 truncated member | pending † | — | — |
+| Downloaded real data: Pfam-A.full mega-families (up to 366K sequences) | 30 / 30 † | None | 30 / 0 |
+| Companions on downloaded clusters (readal conversions / statal stats) | 90 / 90 † (readal only) | None | 84 / 6 |
+| Thread determinism (4 workloads × 6 thread settings) | all byte-identical | None | — |
+| Windows: full quick matrix (Windows Java vs Linux reference) | 499 / 502 in the full run, plus 3 / 3 rerun in isolation † | 3 load-induced failures in the full run (passed in isolation) | — |
+| Windows: full extended matrix (Windows Java vs Linux reference) | 471 / 474 † | 3 native UB/crash paths | — |
+| Windows: CLI smoke + companions (Windows Java vs Linux reference) | 96 / 96 † | None | — |
+| Numeric module oracle (bit-level, incl. parallel paths) | 8,219 / 8,219 | None | — |
+| Float math oracle (bit-level: the float overloads and the two double pow() sites) | 492,300 / 492,300 | None | — |
+| Native undefined-behaviour observations (repeated native runs vs Java) | 18 / 18 | 15 native UB/crash paths | — |
+| Reference coverage check (reachable methods and CLI options) | 140 / 140 | None | — |
+| Golden CLI gate: recorded reference output, port run in-process in `mvn test` | 1,432 / 1,432 | None | — |
+| Integrated JUnit (`mvn package`), the golden gate included | 1,466 / 1,466 | None | — |
+<!-- verification-table:end -->
 
-The main CLI now covers **1,100 differential cases** (quick + extended + legacy) with
-zero actual failures, plus **180 loader-fuzz mutations** (seed 90210). The same quick
-matrix was also run **cross-platform** with Windows Temurin Java against the Linux
-reference binary: 498 of 502 cases matched in the full run, and the four remaining
-cases — whose input lists the harness had not mapped to the Windows path — matched in
-a rerun after the harness fix. A single full run on the current commit is pending. The
-extended matrix adds full
-input×output format grids,
-manual-threshold/window/block/boundary/selection/cluster parameter sweeps, custom and
-alternative similarity matrices, backtranslation codon variants, five-alignment
-consistency sets, and edge-shape alignments (1 sequence, 1–2 columns, gapless,
-50% gaps, clustering ties, duplicate names, 80-character headers, CRLF, missing
-final newline, PIR-lookalike FASTA). It caught and fixed two real Java bugs
-(a missing C++ `std::string::operator[]` null-character semantic and a null
-sequence-mapping write on unaligned clustering input); the audit also completed
-**18/18 actual writer-to-parser round trips** and three direct-method probes
-(including 96 column-identity alignments at precision 9).
-The suites overlap; counts are reported separately rather than added into one
-inflated coverage number. Native crashes/UB are not included as successful matches.
+Rows without a mark come from runs of the current sources. Rows marked † are the
+last completed run of that gate, which predates them: the scale gate (2026-10-16),
+the Pfam-A.full gate (2026-11-21), the Windows suites (2026-10-23 and 2026-11-18)
+and the `readal` half of the companions on downloaded clusters (2026-11-25, before
+the last fixes). The Pfam-A.seed and eggNOG gates have not yet been run on a corpus
+the reference accepts. A full run of every gate on one commit, with the commit and
+the JAR hash recorded, is in progress and will replace this table.
 
-Additional reports:
+### How to read the table
 
-- `verify/numeric/`: real C++ module and single-precision math bit comparisons.
-- `verify/alignment_audit/`: boundary cases, format round trips, direct-method probes.
-- `verify/companions/`: readAl/statAl byte comparisons and Windows smoke tests.
-- `java/target/surefire-reports/`: JUnit results.
+- A *strict match* is a case whose reference run and port run produced the same exit
+  status, the same stdout and stderr and the same files, byte for byte.
+- *Native UB/crash paths* are cases in which the reference reads past an array or
+  crashes. What the port does there is a defined behaviour, listed under
+  [safety divergences](#safety-divergences-not-byte-compatible-successes); it is not
+  a match and is never counted as one. A vector carries its crash tag only for as
+  long as the reference really crashes on it: on a run where it exits normally, the
+  vector is compared strictly.
+- For the fuzz suites the table also states how many vectors the reference accepted.
+  Every differential report carries that count. A suite on which the reference never
+  exits 0 would compare error messages only, so it fails unless that is declared on
+  the command line. That guard found three gates that had been recorded as passing
+  while the reference rejected every case: the Pfam-A.seed corpus had been written
+  without its gaps, so trimAl saw unaligned sequences, and two companion manifests
+  used options the tools do not have.
+- The suites overlap; the counts are reported per suite and never summed into one
+  coverage figure.
+
+### What the gates are
+
+- **Differential matrices.** `trimal` on generated and reference inputs. The quick
+  matrix keeps the original error-path baseline and adds every valid option; the
+  extended matrix adds full input×output format grids, parameter sweeps, custom and
+  alternative similarity matrices, backtranslation codon variants, five-alignment
+  consistency sets and edge-shape alignments (1 sequence, 1–2 columns, gapless, 50 %
+  gaps, clustering ties, duplicate names, 80-character headers, CRLF, missing final
+  newline), and finally every method, statistic, format and modifier without an input
+  alignment and on files with no and with one sequence.
+- **Fuzz.** Three labels of 180 mutated real files (truncations, byte flips, line
+  surgery, CRLF, control bytes, and load-preserving edits such as rewrapped sequences
+  and edited headers) and three labels of 400 argument vectors. Rejected inputs
+  matter as much as accepted ones: their error messages are compared byte for byte.
+- **Golden CLI gate.** The reference's own output for the strictly matching cases is
+  recorded under `java/src/test/resources/golden/`, and `mvn test` runs the port
+  in-process on the same arguments. It needs neither the reference binaries nor
+  Linux, which is what makes the port testable on platforms the reference cannot be
+  built for; CI runs it on Linux, Windows and macOS with JDK 11, 17 and 21.
+- **Oracles.** Bit-level comparisons against the real C++ modules, the float
+  overloads of `expf`/`log10f` over 292,300 values, and the two places where the
+  port calls double `pow()` over 200,000.
+- **Coverage.** A machine check that every method the reference defines and can
+  reach, and every CLI option of the three tools, has a counterpart in the port.
+- **Real data.** Pfam-A.seed families, eggNOG5 Bacteria clusters and the
+  mega-families of a Pfam-A.full window, each corpus pinned by the SHA-256 of its
+  files.
 
 ### Scale validation
 
 The four heaviest jobs — `strict`, `strictplus`, `automated1` and
 `gappyout -htmlout` on a 3,583-sequence, ~7,400-column real EggNOG alignment
 (O(sequence-count² × columns) conservation plus the HTML column walk) — are kept out
-of the quick suite and run separately:
+of the quick matrix and run on their own:
 
 ```bash
-bash verify/run_all.sh --scale
+python3 verify/run_full.py --only scale
 ```
 
-All four have been completed **byte-identical** against the reference, and the Java
-build is substantially faster on every one of them: strict 4.9 s vs 57.1 s,
-strictplus 5.1 s vs 58.1 s, automated1 7.7 s vs 86.6 s, gappyout -htmlout 6.3 s vs
-468.4 s (11–74×; totals ≈ 24 s vs ≈ 11 min; `scale_timings` in
-[verify/validation-summary.json](verify/validation-summary.json), run
-`scale_manifest-20261016-184943`). Three changes deliver this while keeping every
-output byte identical: the O(sequence-count² × columns) statistics loops run in
-parallel across rows/columns with per-unit serial accumulation order (`-Dtrimal.threads=1`
-forces the plain serial loop), the HTML writers precompute each column once per
-output block, and file-backed writers batch their writes instead of issuing one
-flush syscall per line the way C++ `endl` does. Timings are recorded in
-`scale_timings` in [verify/validation-summary.json](verify/validation-summary.json).
-These jobs are excluded from the quick gate purely for runtime; a timeout still
-counts as a failure.
+They are excluded from the quick gate purely for runtime; a timeout still counts as a
+failure.
+
+<!-- scale-table:start -->
+| Job | Reference | Java | Speed-up |
+|---|---:|---:|---:|
+| `example.014.AA.EggNOG.COG0591.fasta -strict` | 57.1 s | 4.9 s | 12× |
+| `example.014.AA.EggNOG.COG0591.fasta -strictplus` | 58.1 s | 5.1 s | 11× |
+| `example.014.AA.EggNOG.COG0591.fasta -automated1` | 86.6 s | 7.7 s | 11× |
+| `example.014.AA.EggNOG.COG0591.fasta -gappyout -htmlout` | 468.4 s | 6.3 s | 74× |
+| `wide_60k.fa -sst` | 0.5 s | 0.1 s | 4× |
+| `wide_60k.fa -sgt` | 0.5 s | 0.1 s | 5× |
+| `wide_60k.fa -fasta` | 0.4 s | 0.1 s | 4× |
+| `wide_60k.fa -phylip` | 0.6 s | 0.1 s | 7× |
+| **total** | **672 s** | **24 s** | **28×** |
+<!-- scale-table:end -->
+
+Three changes deliver this while keeping every output byte identical: the
+O(sequence-count² × columns) statistics loops run in parallel across rows/columns
+with per-unit serial accumulation order (`-Dtrimal.threads=1` forces the plain serial
+loop), the HTML writers precompute each column once per output block, and file-backed
+writers batch their writes instead of issuing one flush syscall per line the way C++
+`endl` does. The thread determinism gate is the proof that they change no byte.
 
 ### Mega-family scale (Pfam-A.full, up to 366,230 sequences)
 
-The ultimate stress tier streams a 500 MB prefix window of **Pfam-A.full** (the
-40.5 GB official alignment archive) and extracts six mega-families — the largest,
-`7tm_1` (GPCR), holds **366,230 sequences × 3,489 columns ≈ 1.28 billion cells**,
-34× larger than the biggest eggNOG cluster. Only O(n × L) methods apply here (the
-O(n²) identity matrix is infeasible at this scale in *both* implementations):
+The largest tier streams a 500 MB prefix window of **Pfam-A.full** (the 40.5 GB
+official alignment archive) and extracts six mega-families — the largest, `7tm_1`
+(GPCR), holds **366,230 sequences × 3,489 columns ≈ 1.28 billion cells**, 34× larger
+than the biggest eggNOG cluster. Only O(n × L) methods apply here (the O(n²) identity
+matrix is infeasible at this scale in *both* implementations):
 
-| Family | Sequences × Columns | Native | Java |
-|---|---|---:|---:|
-| `7tm_1` — gappyout | 366,230 × 3,489 | 1,513 s | **56 s (27×)** |
-| `7tm_1` — noallgaps | 366,230 × 3,489 | 1,517 s | **60 s (25×)** |
-| `2_Hacid_dh_C` — gappyout | 126,849 × 1,500 | 226 s | **7 s (32×)** |
-| all 30 mega cases | up to 366K seqs | **189 min total** | **5 min total (38×)** |
+<!-- mega-table:start -->
+| Family — method | Reference | Java | Speed-up |
+|---|---:|---:|---:|
+| `pffull_01_7tm_1.fasta -gappyout` | 1513 s | 56 s | 27× |
+| `pffull_01_7tm_1.fasta -noallgaps` | 1517 s | 60 s | 25× |
+| `pffull_01_7tm_1.fasta -fasta` | 1520 s | 28 s | 54× |
+| `pffull_01_7tm_1.fasta -sgc` | 1519 s | 30 s | 52× |
+| `pffull_01_7tm_1.fasta -sgt` | 1542 s | 30 s | 51× |
+| all 30 cases, up to 366K sequences | 189 min | 5 min | 38× |
+<!-- mega-table:end -->
 
-All 30 cases are **byte-identical** in the completed run
-`pffull_manifest-20261121-114055` (`pffull_manifest.txt`, extracted by
-`pffull_extract.py`). At this scale the reference spends 25 minutes and a sluggish
-per-column `std::string` walk on `7tm_1` gappyout, while the port finishes in 56
-seconds — and both write identical 1.3 GB outputs.
+At this scale the reference spends 25 minutes and a sluggish per-column `std::string`
+walk on `7tm_1` gappyout, while the port finishes in 56 seconds — and both write
+identical 1.3 GB outputs.
 
 ## Preserved quirks and explicit differences
 
@@ -219,58 +274,48 @@ seconds — and both write identical 1.3 GB outputs.
 
 ### Safety divergences, not byte-compatible successes
 
-1. **Non-FASTA/PIR trimming can crash the original.** Its `seqsInfo` pointer is NULL,
-   but gap filtering/sequence selection/clustering dereferences it. Java uses safe
-   empty auxiliary headers instead of reproducing a segmentation fault. Normal
-   reference-success cases remain subject to strict comparisons.
+Where the reference reads unallocated memory or dereferences a null pointer, the
+port does something defined instead. These inputs are recorded as known divergences
+with their exit status, streams and files kept, and are never counted as matches.
+
+1. **Trimming a CLUSTAL, MEGA or PHYLIP input can crash the original.** Its `seqsInfo`
+   pointer is NULL, but gap filtering, sequence selection, clustering and overlap
+   filtering dereference it. The port uses empty auxiliary headers and goes on.
 2. **Empty-alignment `-colnumbering` prints an arbitrary native integer.** The original
-   reads beyond a zero-length array; Java prints an empty `#ColumnsMap` line. This
+   reads beyond a zero-length array; the port prints an empty `#ColumnsMap` line. This
    narrowly defined difference is separately classified with rc/stderr/files checked.
-3. **Malformed CRLF compare lists can trigger a native double-free.** Java retains
+3. **Malformed CRLF compare lists can trigger a native double-free.** The port retains
    the same failed-load message but returns a defined error rather than adding a
    glibc abort diagnostic. The companion suite records this separately.
-4. Zero-column slope/short-alignment/CDS edge cases avoid unsafe Java indexing where
-   the source would perform undefined C++ memory accesses. The boundary audit
-   records the actual native observations and Java result without counting them as
-   successful byte matches.
+4. **An empty comparison set, without `-forceselect`.** The original runs its
+   comparison on a zero-element array and crashes; the port reports that the set
+   lists no alignment and exits.
+5. **A similarity matrix that did not load.** `trimal` ignores the failed load and
+   dereferences the empty matrix as soon as a method needs it. The port reports the
+   failure with the message `statal` uses for it and exits.
+6. **`-htmlout` after a method returned nothing** (for example with contradictory
+   manual boundaries). The original dereferences a null pointer; the port goes on as
+   it does without `-htmlout`.
+7. **Options with no input alignment, or with no sequence left to cluster.** The
+   original indexes empty arrays: a consistency threshold, `-maxidentity`, a method
+   with `-htmlout`. The port prints the reference's warning where the reference has
+   one for the neighbouring case, and exits.
+8. Zero-column slope, short-alignment and CDS edge cases avoid unsafe Java indexing
+   where the source would perform undefined C++ memory accesses. The boundary audit
+   records the actual native observations and the port's result without counting them
+   as successful byte matches.
 
-These cases and their evidence are visible in the result reports; there is no
-blanket normalization or SKIP rule hiding native-success/Java-missing-output bugs.
-
-### Evidence provenance
-
-The rows of the verification table were not all produced by the same code revision:
-
-- **Re-validated on every push by CI** ([ci.yml](.github/workflows/ci.yml)): the quick,
-  extended and legacy matrices, the `readal`/`statal` companions, the numeric module
-  oracle, thread determinism and the seed-90210 loader fuzz.
-- **Last run on 2026-10-16, before the loader fixes of commit `bd7d642` (2026-11-18)**:
-  the scale gate (`scale_manifest-20261016-184943`), the boundary/alignment audit
-  (`alignment_audit/results_final-review`), the independent float math oracle, and the
-  Windows smoke and companion suites.
-- **Last run on 2026-10-23/24, also before `bd7d642`**: the Windows quick matrix (full
-  run `windows-matrix/20261023-232313` plus the 8-case rerun `20261023-232657` that
-  followed the harness path fix), the Pfam-A.seed gate
-  (`pfam_manifest-20261024-012205`) and the eggNOG gate
-  (`eggnog_manifest-20261024-015135`).
-- **Run at or after `bd7d642`**: companions on downloaded clusters
-  (`readal_big_manifest-20261118-085938`, `statal_big_manifest-20261118-090822`), the
-  Windows extended matrix (`windows-matrix/20261118-085948`) and the Pfam-A.full
-  mega-families (`pffull_manifest-20261121-114055`).
-- `verify/validation-summary.json` is the October 16 integrated snapshot; it does not
-  include the fuzz, downloaded-data, thread-determinism or full Windows rows, and its
-  recorded JAR predates the current build.
-
-A single re-verification of every row on the current commit, with the commit and JAR
-hashes recorded per row, is in progress; until it lands, read each row together with
-its date.
+There is no blanket normalization or SKIP rule hiding a reference-success versus
+port-missing-output bug: a tagged vector is compared strictly on every run in which
+the reference does not crash, and a difference on a vector without a tag fails its
+gate.
 
 ## Project layout
 
 ```text
-java/       Maven project, source, JUnit tests and launchers
-verify/     pinned reference metadata, fixtures, differential runners and oracles
-docs/       initial source-archaeology reports (with implementation corrections)
+java/       Maven project, source, JUnit tests, recorded reference output and launchers
+verify/     pinned reference metadata, fixtures, differential runners, fuzz gates and oracles
+docs/       the method (method.md) and the initial source-archaeology reports
 licenses/   retained third-party licenses
 upstream/   local reference source/data snapshot; ignored by Git
 ```
