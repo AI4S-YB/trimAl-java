@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
-"""Run owned JUnit tests in verify/numeric/classes using cached Maven jars."""
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
+"""Run the JUnit compatibility tests with the classes built by the numeric oracle.
+
+The numeric oracle compiles the main sources it covers into verify/numeric/classes.
+This runner compiles the matching test classes against them and runs them through a
+small launcher, so the golden-constant tests can be repeated without Maven.
+"""
 import argparse
 import json
 import os
@@ -7,6 +18,10 @@ from pathlib import Path
 import re
 import subprocess
 import run_numeric as numeric
+import toolchain
+
+TESTS = ['util/CppFormatTest', 'util/CppOutTest', 'util/UtilsQuicksortTest', 'util/UtilsTest',
+         'stat/SimilarityMatrixTest', 'stat/StatisticsGapsTest', 'stat/StatisticsConservationTest']
 
 
 def main():
@@ -22,7 +37,7 @@ def main():
                  ('org/apiguardian', 'apiguardian-api', '1.1.2'),
                  ('org/opentest4j', 'opentest4j', '1.3.0')]
     candidates = ([options.m2_repository] if options.m2_repository else
-                  [Path.home() / '.m2/repository'] + list(Path('/mnt/c/Users').glob('*/.m2/repository')))
+                  [Path.home() / '.m2/repository'])
     cache = next((candidate for candidate in candidates if all(
         (candidate / group / artifact / version / f'{artifact}-{version}.jar').is_file()
         for group, artifact, version in artifacts)), None)
@@ -31,20 +46,23 @@ def main():
                          'or pass --m2-repository PATH')
     jars = [cache / group / artifact / version / f'{artifact}-{version}.jar' for group, artifact, version in artifacts]
     classpath = ':'.join([str(numeric.OUT / 'classes')] + list(map(str, jars)))
-    tests = ['util/CppFormatTest', 'util/UtilsQuicksortTest', 'util/UtilsTest',
-             'stat/SimilarityMatrixTest', 'stat/StatisticsGapsTest', 'stat/StatisticsConservationTest']
-    subprocess.run(['/usr/bin/javac', '--release', '11', '-encoding', 'UTF-8', '-cp', classpath,
+    subprocess.run([toolchain.java_tool('javac'), '--release', '11', '-encoding', 'UTF-8', '-cp', classpath,
                     '-d', str(numeric.OUT / 'classes')]
-                   + [str(numeric.ROOT / ('java/src/test/java/trimal/' + t + '.java')) for t in tests]
+                   + [str(numeric.ROOT / ('java/src/test/java/trimal/' + t + '.java')) for t in TESTS]
                    + [str(numeric.OUT / 'NumericJUnit.java')], check=True)
-    run = subprocess.run(['/usr/bin/java', '-XX:-UsePerfData', '-cp', classpath, 'NumericJUnit'], capture_output=True, text=True)
-    (numeric.OUT / 'junit.results.txt').write_text(run.stdout + run.stderr)
-    summary = {'exit_code': run.returncode, 'tests': tests}
-    for name, count in re.findall(r'\[\s*(\d+) tests (found|started|successful|failed)\s*\]', run.stdout):
-        summary[count] = int(name)
-    (numeric.OUT / 'junit.results.json').write_text(json.dumps(summary, indent=2))
+    run = subprocess.run([toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', classpath, 'NumericJUnit']
+                         + ['trimal.' + test.replace('/', '.') for test in TESTS],
+                         capture_output=True, text=True)
+    out = numeric.run_dir('junit')
+    (out / 'results.txt').write_text(run.stdout + run.stderr)
+    summary = {'exit_code': run.returncode, 'test_classes': len(TESTS)}
+    for count, kind in re.findall(r'\[\s*(\d+) tests (found|started|successful|failed)\s*\]', run.stdout):
+        summary[kind] = int(count)
+    (out / 'results.json').write_text(json.dumps(summary, indent=2))
     print(run.stdout + run.stderr)
+    print('REPORT ' + str(out / 'results.json'))
     return run.returncode
+
 
 if __name__ == '__main__':
     raise SystemExit(main())

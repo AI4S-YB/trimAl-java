@@ -1,3 +1,5 @@
+# eggNOG5 Bacteria clusters: 9 alignments x 4 methods
+# COG0037.trimmed_alg.prefix.faa is the first 12,083,206 bytes of COG0037: the truncated member an earlier extractor saved when the download window cut it.
 -in verify/corpus/eggnog/COG0006.trimmed_alg.faa -gappyout -out $OUT
 -in verify/corpus/eggnog/COG0006.trimmed_alg.faa -automated1 -out $OUT
 -in verify/corpus/eggnog/COG0006.trimmed_alg.faa -strict -fasta -out $OUT
@@ -30,3 +32,7 @@
 -in verify/corpus/eggnog/COG0037.trimmed_alg.faa -automated1 -out $OUT
 -in verify/corpus/eggnog/COG0037.trimmed_alg.faa -strict -fasta -out $OUT
 -in verify/corpus/eggnog/COG0037.trimmed_alg.faa -sgc -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.prefix.faa -gappyout -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.prefix.faa -automated1 -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.prefix.faa -strict -fasta -out $OUT
+-in verify/corpus/eggnog/COG0037.trimmed_alg.prefix.faa -sgc -out $OUT

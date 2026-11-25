@@ -1,181 +1,181 @@
-# fuzz2 seed=90210+1 multi-base
--in verify/corpus/fuzz2/example.001.AA_000_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_001_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_002_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_003_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_004_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_005_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_006_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_007_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_008_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_009_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_010_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_011_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_012_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_013_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_014_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_015_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_016_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_017_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_018_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_019_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_020_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_021_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_022_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_023_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_024_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_025_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_026_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_027_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_028_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_029_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_030_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_031_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_032_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_033_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_034_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_035_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_036_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_037_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_038_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_039_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_040_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_041_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_042_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_043_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_044_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_045_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_046_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_047_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_048_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_049_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_050_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_051_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_052_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_053_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_054_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_055_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.001.AA_056_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.001.AA_057_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.001.AA_058_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.001.AA_059_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.002.AA_060_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.002.AA_061_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.002.AA_062_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.002.AA_063_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.002.AA_064_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.002.AA_065_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.002.AA_066_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.002.AA_067_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.002.AA_068_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.002.AA_069_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.002.AA_070_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.002.AA_071_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.002.AA_072_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.002.AA_073_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.002.AA_074_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.002.AA_075_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.002.AA_076_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.002.AA_077_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.002.AA_078_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.002.AA_079_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.004.AA_080_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.004.AA_081_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.004.AA_082_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.004.AA_083_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.004.AA_084_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.004.AA_085_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.004.AA_086_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.004.AA_087_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.004.AA_088_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.004.AA_089_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.004.AA_090_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.004.AA_091_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.004.AA_092_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.004.AA_093_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.004.AA_094_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.004.AA_095_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.004.AA_096_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.004.AA_097_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.004.AA_098_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.004.AA_099_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.006.AA_100_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.006.AA_101_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.006.AA_102_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.006.AA_103_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.006.AA_104_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.006.AA_105_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.006.AA_106_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.006.AA_107_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.006.AA_108_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.006.AA_109_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.006.AA_110_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.006.AA_111_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.006.AA_112_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.006.AA_113_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.006.AA_114_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.006.AA_115_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.006.AA_116_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.006.AA_117_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.006.AA_118_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.006.AA_119_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.007.AA_120_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.007.AA_121_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.007.AA_122_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.007.AA_123_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.007.AA_124_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.007.AA_125_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.007.AA_126_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.007.AA_127_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.007.AA_128_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.007.AA_129_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.007.AA_130_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.007.AA_131_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.007.AA_132_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.007.AA_133_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.007.AA_134_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.007.AA_135_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.007.AA_136_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.007.AA_137_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.007.AA_138_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.007.AA_139_19.bin -sgt -out 
--in verify/corpus/fuzz2/example.094.DNADeg_140_00.bin -fasta -out 
--in verify/corpus/fuzz2/example.094.DNADeg_141_01.bin -phylip -out 
--in verify/corpus/fuzz2/example.094.DNADeg_142_02.bin -clustal -out 
--in verify/corpus/fuzz2/example.094.DNADeg_143_03.bin -sgt -out 
--in verify/corpus/fuzz2/example.094.DNADeg_144_04.bin -fasta -out 
--in verify/corpus/fuzz2/example.094.DNADeg_145_05.bin -phylip -out 
--in verify/corpus/fuzz2/example.094.DNADeg_146_06.bin -clustal -out 
--in verify/corpus/fuzz2/example.094.DNADeg_147_07.bin -sgt -out 
--in verify/corpus/fuzz2/example.094.DNADeg_148_08.bin -fasta -out 
--in verify/corpus/fuzz2/example.094.DNADeg_149_09.bin -phylip -out 
--in verify/corpus/fuzz2/example.094.DNADeg_150_10.bin -clustal -out 
--in verify/corpus/fuzz2/example.094.DNADeg_151_11.bin -sgt -out 
--in verify/corpus/fuzz2/example.094.DNADeg_152_12.bin -fasta -out 
--in verify/corpus/fuzz2/example.094.DNADeg_153_13.bin -phylip -out 
--in verify/corpus/fuzz2/example.094.DNADeg_154_14.bin -clustal -out 
--in verify/corpus/fuzz2/example.094.DNADeg_155_15.bin -sgt -out 
--in verify/corpus/fuzz2/example.094.DNADeg_156_16.bin -fasta -out 
--in verify/corpus/fuzz2/example.094.DNADeg_157_17.bin -phylip -out 
--in verify/corpus/fuzz2/example.094.DNADeg_158_18.bin -clustal -out 
--in verify/corpus/fuzz2/example.094.DNADeg_159_19.bin -sgt -out 
--in verify/corpus/fuzz2/ext_in_160_00.bin -fasta -out 
--in verify/corpus/fuzz2/ext_in_161_01.bin -phylip -out 
--in verify/corpus/fuzz2/ext_in_162_02.bin -clustal -out 
--in verify/corpus/fuzz2/ext_in_163_03.bin -sgt -out 
--in verify/corpus/fuzz2/ext_in_164_04.bin -fasta -out 
--in verify/corpus/fuzz2/ext_in_165_05.bin -phylip -out 
--in verify/corpus/fuzz2/ext_in_166_06.bin -clustal -out 
--in verify/corpus/fuzz2/ext_in_167_07.bin -sgt -out 
--in verify/corpus/fuzz2/ext_in_168_08.bin -fasta -out 
--in verify/corpus/fuzz2/ext_in_169_09.bin -phylip -out 
--in verify/corpus/fuzz2/ext_in_170_10.bin -clustal -out 
--in verify/corpus/fuzz2/ext_in_171_11.bin -sgt -out 
--in verify/corpus/fuzz2/ext_in_172_12.bin -fasta -out 
--in verify/corpus/fuzz2/ext_in_173_13.bin -phylip -out 
--in verify/corpus/fuzz2/ext_in_174_14.bin -clustal -out 
--in verify/corpus/fuzz2/ext_in_175_15.bin -sgt -out 
--in verify/corpus/fuzz2/ext_in_176_16.bin -fasta -out 
--in verify/corpus/fuzz2/ext_in_177_17.bin -phylip -out 
--in verify/corpus/fuzz2/ext_in_178_18.bin -clustal -out 
--in verify/corpus/fuzz2/ext_in_179_19.bin -sgt -out 
+# Generated by verify/fuzz_suite.py, seed=90211 soft_ratio=0.5
+-in verify/corpus/fuzz2/example.001.AA_00_00_consens.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_01_01.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_02_02_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_03_03_clwspace.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_04_04.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_05_05_consens.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_06_06.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_07_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_08_08_consens.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_09_09.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_10_10_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_11_11_clwhead.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_12_12.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_13_13_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_14_14.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_15_15_clwspace.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_16_16_clwhead.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_17_17_clwspace.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_18_18_clwhead.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_19_19.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_20_00_wrap.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_21_01_wrap.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_22_02_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_23_03_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_24_04_tail.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_25_05_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_26_06_wrap.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_27_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_28_08_tail.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_29_09_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_30_10_wrap.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_31_11.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_32_12.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_33_13_wrap.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_34_14_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_35_15.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_36_16_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_37_17_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_38_18.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_39_19_tail.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_40_00_tail.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_41_01.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_42_02_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_43_03.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_44_04_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_45_05.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_46_06.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_47_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_48_08_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_49_09_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_50_10_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_51_11_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_52_12.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_53_13.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_54_14_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_55_15_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_56_16.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_57_17_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_58_18.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.001.AA_59_19_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_60_00.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_61_01.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_62_02_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_63_03.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_64_04.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_65_05_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_66_06_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_67_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_68_08.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_69_09.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_70_10_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_71_11.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_72_12.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_73_13_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_74_14_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_75_15_tail.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_76_16.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_77_17.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_78_18_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.002.AA_79_19_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_80_00_trailsp.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_81_01_case.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_82_02.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_83_03.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_84_04_trailsp.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_85_05.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_86_06_case.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_87_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_88_08_duprec.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_89_09.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_90_10.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_91_11_duprec.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_92_12.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_93_13_wrap.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_94_14_trailsp.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_95_15.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_96_16_wrap.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_97_17.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_98_18_trailsp.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.004.AA_99_19.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_100_00_tail.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_101_01.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_102_02.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_103_03_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_104_04.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_105_05_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_106_06_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_107_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_108_08.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_109_09_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_110_10.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_111_11.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_112_12_pirhead.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_113_13.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_114_14.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_115_15_wrap.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_116_16.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_117_17_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_118_18_wrap.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.006.AA_119_19_pirhead.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_120_00_case.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_121_01.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_122_02.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_123_03.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_124_04.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_125_05_wrap.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_126_06.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_127_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_128_08.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_129_09_case.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_130_10.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_131_11.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_132_12_duprec.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_133_13.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_134_14_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_135_15_tail.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_136_16_case.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_137_17_trailsp.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_138_18_case.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.007.AA_139_19_case.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_140_00_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_141_01_blank.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_142_02_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_143_03_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_144_04_tail.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_145_05_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_146_06_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_147_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_148_08.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_149_09.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_150_10_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_151_11_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_152_12_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_153_13_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_154_14_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_155_15_tail.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_156_16_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_157_17.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_158_18_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/example.094.DNADeg_159_19_blank.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/ext_in_160_00.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/ext_in_161_01.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/ext_in_162_02_pirhead.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/ext_in_163_03.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/ext_in_164_04_blank.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/ext_in_165_05.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/ext_in_166_06_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/ext_in_167_07.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/ext_in_168_08_pirhead.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/ext_in_169_09_tail.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/ext_in_170_10_tail.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/ext_in_171_11_wrap.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/ext_in_172_12_wrap.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/ext_in_173_13_pirhead.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/ext_in_174_14.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/ext_in_175_15.bin -sgt -out $OUT
+-in verify/corpus/fuzz2/ext_in_176_16_pirhead.bin -fasta -out $OUT
+-in verify/corpus/fuzz2/ext_in_177_17.bin -phylip -out $OUT
+-in verify/corpus/fuzz2/ext_in_178_18_blank.bin -clustal -out $OUT
+-in verify/corpus/fuzz2/ext_in_179_19_blank.bin -sgt -out $OUT

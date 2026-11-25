@@ -4,7 +4,13 @@
 # This file is part of the trimAl Java port verification tooling
 # (https://github.com/inab/trimal, GPL-3.0-or-later).
 #
-"""Compare native trimAl and Java byte-for-byte. Runs on Linux/WSL, Python 3.8+."""
+"""Compare native trimAl and Java byte-for-byte. Runs on Linux/WSL, Python 3.8+.
+
+Besides PASS/FAIL counts every report records how much of the suite the reference
+actually executed: a suite in which the reference never exits 0 compares error paths
+only, which is a legitimate test of the error messages but not of the trimming
+logic. Such a suite fails unless --allow-no-reference-success is given explicitly.
+"""
 import argparse
 import concurrent.futures
 import hashlib
@@ -19,6 +25,38 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# Options whose value is the following argv token. A case that ends on one of them
+# never reaches the loader: trimAl reports an unrecognised/incomplete argument.
+VALUE_OPTIONS = {
+    "-in", "-out", "-htmlout", "-matrix", "--alternative_matrix", "-compareset",
+    "-forceselect", "-backtrans", "-gapthreshold", "-gt", "-simthreshold", "-st",
+    "-conthreshold", "-ct", "-cons", "-resoverlap", "-seqoverlap", "-maxidentity",
+    "-clusters", "-w", "-gw", "-sw", "-cw", "-block",
+}
+
+
+def relative(path):
+    """Repo-relative posix path for reports, so evidence is not tied to one machine."""
+    try:
+        return Path(os.path.relpath(Path(path).resolve(), ROOT)).as_posix()
+    except ValueError:  # different drives on Windows
+        return str(path)
+
+
+# Which executable and entry class a manifest exercises.
+MAIN_CLASS = {"trimal": "trimal.TrimAl", "readal": "trimal.ReadAl", "statal": "trimal.StatAl"}
+
+
+def manifest_tool(path):
+    """A manifest may name its CLI with a first line `# tool: readal`; the default is
+    trimAl. Explicit --orig / --main arguments take precedence."""
+    with open(path, encoding="utf-8") as handle:
+        first = handle.readline().strip()
+    tool = first[len("# tool:"):].strip() if first.startswith("# tool:") else "trimal"
+    if tool not in MAIN_CLASS:
+        raise SystemExit("unknown tool in manifest header: " + tool)
+    return tool
 
 
 def run(command, timeout):
@@ -129,7 +167,9 @@ def one_case(index, case, work, options):
     row["status"] = "PASS" if not errors else "FAIL"
     # A known native crash is NOT a blanket permission to hide arbitrary output errors.
     if errors and reason == "orig-segv" and not orig["timeout"] and not java["timeout"]:
-        if orig["rc"] in (-11, -6, 11, 139, 134):
+        # -11/-6/-7/-8 are the signals as a waited child reports them; 139/134/135/136
+        # are the same crashes as a shell reports them.
+        if orig["rc"] in (-11, -6, -7, -8, 139, 134, 135, 136):
             row["status"] = "KNOWN_DIVERGENCE"
             row["classification"] = "reference crashed; Java uses defined memory-safe behavior"
     elif errors and "empty-map-oob-integer" in errors:
@@ -153,13 +193,20 @@ def main():
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--jar", default=str(ROOT / "java/target/trimal.jar"))
     parser.add_argument("--classes")
-    parser.add_argument("--main", default="trimal.TrimAl")
-    parser.add_argument("--orig", default=str(ROOT / "verify/bin/trimal"))
+    parser.add_argument("--main")
+    parser.add_argument("--orig")
     parser.add_argument("--java", default="java")
     parser.add_argument("--timeout", type=float, default=60)
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--work", type=Path)
+    parser.add_argument("--allow-no-reference-success", action="store_true",
+                        help="accept a suite on which the reference never exits 0 "
+                             "(error-path-only manifests)")
     options = parser.parse_args()
+    # Defaults follow the CLI the manifest names: verify/bin/<tool> and its entry class.
+    tool = manifest_tool(options.manifest)
+    options.orig = options.orig or str(ROOT / "verify" / "bin" / tool)
+    options.main = options.main or MAIN_CLASS[tool]
     cases = read_manifest(options.manifest.resolve())
     if not cases:
         raise SystemExit("manifest contains no cases")
@@ -180,13 +227,34 @@ def main():
     results.sort(key=lambda item: item["case"])
     summary = {status.lower(): sum(row["status"] == status for row in results)
                for status in ("PASS", "FAIL", "SKIP", "KNOWN_DIVERGENCE")}
-    summary.update({"total": len(results), "manifest": str(options.manifest.resolve()),
-                    "work": str(work), "java": options.java, "main": options.main})
+    # How much of the suite the reference really executed.
+    succeeded = [row for row in results if row["orig"]["rc"] == 0 and not row["orig"]["timeout"]]
+    vacuity = {
+        "reference_ok": len(succeeded),
+        "reference_ok_with_output": sum(
+            any(item["orig_bytes"] for item in row["files"].values()) for row in succeeded),
+        "error_path_only": len(results) - len(succeeded),
+        "dangling_option_args": sum(
+            bool(row["args"]) and row["args"][-1] in VALUE_OPTIONS for row in results),
+    }
+    summary.update({"total": len(results), "manifest": relative(options.manifest),
+                    "work": relative(work), "java": options.java, "main": options.main,
+                    "vacuity": vacuity})
     report = {"summary": summary, "cases": results}
     (work / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print("TOTAL pass={pass} fail={fail} skip={skip} known_divergence={known_divergence} total={total}".format(**summary), flush=True)
+    print("VACUITY reference_ok={reference_ok} reference_ok_with_output={reference_ok_with_output} "
+          "error_path_only={error_path_only} dangling_option_args={dangling_option_args}".format(**vacuity),
+          flush=True)
     print("REPORT " + str(work / "report.json"), flush=True)
-    return 1 if summary["fail"] else 0
+    if summary["fail"]:
+        return 1
+    if not vacuity["reference_ok"] and not options.allow_no_reference_success:
+        print("VACUOUS: the reference exits non-zero on every case; this suite compares "
+              "error paths only (pass --allow-no-reference-success to accept that)",
+              file=sys.stderr)
+        return 2
+    return 0
 
 
 if __name__ == "__main__":

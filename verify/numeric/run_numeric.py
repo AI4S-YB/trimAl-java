@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Fixed-seed bit oracle. Run with WSL /usr/bin/python3; no Maven or verify/work."""
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
+"""Fixed-seed bit oracle. Run on Linux/WSL with Python 3 and a JDK (JAVA_HOME or
+PATH); no Maven and no verify/work directory needed."""
 import argparse
 import collections
 import json
@@ -12,8 +19,19 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'verify'))
 OUT = ROOT / 'verify/numeric'
 SEED = 15120261005
+
+import toolchain  # noqa: E402
+
+
+def run_dir(label):
+    """Per-run output directory (ignored by Git); nothing overwrites a tracked file."""
+    path = OUT / 'runs' / label
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
 
 def fbits(v):
     return struct.unpack('<I', struct.pack('<f', v))[0]
@@ -23,14 +41,14 @@ def dbits(v):
 
 def build():
     cpp = ['utils', 'similarityMatrix', 'statisticsGaps', 'statisticsConservation']
-    command = ['g++', '-std=c++11', '-Wall', '-O2', '-I' + str(ROOT / 'upstream/source'),
+    command = [toolchain.tool('g++'), '-std=c++11', '-Wall', '-O2', '-I' + str(ROOT / 'upstream/source'),
                str(ROOT / 'verify/oracle/numeric_oracle.cpp')]
     command += [str(ROOT / ('upstream/source/' + f + '.cpp')) for f in cpp]
     subprocess.run(command + ['-o', str(OUT / 'numeric_oracle')], check=True)
     (OUT / 'classes').mkdir(exist_ok=True)
     names = ['util/CppFormat', 'util/CppOut', 'util/Parallel', 'util/Utils', 'util/Values',
              'stat/SimilarityMatrix', 'stat/StatisticsGaps', 'stat/StatisticsConservation']
-    subprocess.run(['/usr/bin/javac', '--release', '11', '-encoding', 'UTF-8', '-d', str(OUT / 'classes')]
+    subprocess.run([toolchain.java_tool('javac'), '--release', '11', '-encoding', 'UTF-8', '-d', str(OUT / 'classes')]
                    + [str(ROOT / ('java/src/main/java/trimal/' + f + '.java')) for f in names]
                    + [str(OUT / 'NumericProbe.java')], check=True)
 
@@ -186,14 +204,15 @@ def main():
         build()
     all_cases = cases()
     payload = '\n'.join(line for _, line in all_cases) + '\n'
-    (OUT / 'cases.txt').write_text(payload)
+    run = run_dir(args.label)
+    (run / 'cases.txt').write_text(payload)
     cpp = subprocess.run([str(OUT / 'numeric_oracle')], input=payload, text=True, capture_output=True, timeout=120)
-    java = subprocess.run(['/usr/bin/java', '-XX:-UsePerfData', '-cp', str(OUT / 'classes'), 'trimal.stat.NumericProbe'],
+    java = subprocess.run([toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', str(OUT / 'classes'), 'trimal.stat.NumericProbe'],
                           input=payload, text=True, capture_output=True, timeout=120)
-    (OUT / f'{args.label}.cpp.txt').write_text(cpp.stdout)
-    (OUT / f'{args.label}.java.txt').write_text(java.stdout)
-    (OUT / f'{args.label}.cpp.stderr.txt').write_text(cpp.stderr)
-    (OUT / f'{args.label}.java.stderr.txt').write_text(java.stderr)
+    (run / 'cpp.txt').write_text(cpp.stdout)
+    (run / 'java.txt').write_text(java.stdout)
+    (run / 'cpp.stderr.txt').write_text(cpp.stderr)
+    (run / 'java.stderr.txt').write_text(java.stderr)
     result = compare(all_cases, parse_lines(cpp.stdout), parse_lines(java.stdout))
     result['exit_codes'] = {'cpp': cpp.returncode, 'java': java.returncode}
     native_rows, java_rows = parse_lines(cpp.stdout), parse_lines(java.stdout)
@@ -207,10 +226,11 @@ def main():
     result['diagnostic_double_differences_not_gates'] = dict(diagnostic)
     result['production_mismatches'] = len(result['differences'])
     result['skipped_cases'] = 0
-    (OUT / f'{args.label}.json').write_text(json.dumps(result, indent=2))
+    (run / 'results.json').write_text(json.dumps(result, indent=2))
     summary = {k: v for k, v in result.items() if k != 'differences'}
     summary['difference_fields'] = dict(collections.Counter(f for d in result['differences'] for f in d['fields']))
     print(json.dumps(summary, indent=2))
+    print('REPORT ' + str(run / 'results.json'))
     return 1 if result['differences'] or cpp.returncode != 0 or java.returncode != 0 else 0
 
 if __name__ == '__main__':

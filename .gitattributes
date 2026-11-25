@@ -7,3 +7,14 @@ java/statal text eol=lf
 *.cmd text eol=crlf
 *.fa text eol=lf
 *.fasta text eol=lf
+# The verification compares bytes: its inputs, corpora and recorded golden outputs
+# must not depend on the line-ending settings of the checkout that reads them.
+verify/corpus/** -text
+java/src/test/resources/** -text
+verify/corpus_manifests/** text eol=lf
+verify/*_manifest.txt text eol=lf
+verify/baseline_manifest.txt text eol=lf
+# The Maven wrapper scripts are read by a shell on every platform.
+java/mvnw text eol=lf
+java/mvnw.cmd text eol=crlf
+java/.mvn/** text eol=lf

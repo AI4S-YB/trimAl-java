@@ -1,14 +1,33 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
 """Compare Windows Java main entrypoints against Linux native tools via WSL."""
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / 'verify' / 'companions'
+
+
+def windows_java():
+    """The Windows JVM reachable from WSL: TRIMAL_WINDOWS_JAVA, or java.exe on PATH."""
+    executable = os.environ.get('TRIMAL_WINDOWS_JAVA')
+    if executable is None:
+        result = subprocess.run(['bash', '-c', 'command -v java.exe'], capture_output=True, text=True)
+        executable = result.stdout.strip()
+    if not executable:
+        raise SystemExit('no Windows java.exe found; set TRIMAL_WINDOWS_JAVA')
+    return executable
 
 
 def run(command):
@@ -21,9 +40,13 @@ def run(command):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--java-exe', type=Path, default=Path('/mnt/c/Program Files/Eclipse Adoptium/jdk-21.0.11.10-hotspot/bin/java.exe'))
-    parser.add_argument('--java-jar', type=Path, default=BASE / 'companions.jar')
+    parser.add_argument('--java-exe', default=windows_java())
+    parser.add_argument('--java-jar', type=Path, default=ROOT / 'java' / 'target' / 'trimal.jar')
+    parser.add_argument('--out-dir', type=Path,
+                        help='where the report is written (default: a new directory under verify/companions/runs/)')
     options = parser.parse_args()
+    out_dir = options.out_dir or BASE / 'runs' / time.strftime('%Y%m%d-%H%M%S')
+    out_dir.mkdir(parents=True, exist_ok=True)
     java_jar = subprocess.run(['wslpath', '-w', str(options.java_jar.resolve())], check=True,
                               capture_output=True).stdout.decode('utf-8').strip()
     dna = 'verify/companions/inputs/dna.fa'
@@ -106,11 +129,12 @@ def main():
     report = {'suite': 'Windows Java CLI entrypoints vs Linux native byte-for-byte',
               'java_exe': str(options.java_exe),
               'java_version': run([str(options.java_exe), '-XX:-UsePerfData', '-version'])['stderr'].decode('utf-8', errors='replace'),
-              'java_jar': str(options.java_jar.resolve().relative_to(ROOT)),
+              'java_jar': options.java_jar.resolve().relative_to(ROOT).as_posix(),
               'java_jar_sha256': hashlib.sha256(options.java_jar.read_bytes()).hexdigest(),
               'summary': summary, 'cases': results}
-    (BASE / 'result_windows.json').write_text(json.dumps(report, indent=2, ensure_ascii=True) + '\n', encoding='utf-8')
+    (out_dir / 'result_windows.json').write_text(json.dumps(report, indent=2, ensure_ascii=True) + '\n', encoding='utf-8')
     print(json.dumps(summary, indent=2), flush=True)
+    print('REPORT ' + (out_dir / 'result_windows.json').relative_to(ROOT).as_posix(), flush=True)
     return 0 if summary['failed'] == 0 else 1
 
 

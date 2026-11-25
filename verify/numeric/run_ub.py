@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
 """Observe UB separately: original output is never silently counted as a crash/skip."""
 import collections
 import hashlib
@@ -6,6 +12,7 @@ import json
 import os
 import subprocess
 import run_numeric as numeric
+import toolchain
 
 OUT = numeric.OUT
 ROOT = numeric.ROOT
@@ -21,7 +28,7 @@ def invoke(binary, payload, env=None):
 def main():
     numeric.build()
     cpp = [str(OUT / 'numeric_oracle')]
-    java = ['/usr/bin/java', '-XX:-UsePerfData', '-cp', str(OUT / 'classes'), 'trimal.stat.NumericProbe']
+    java = [toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', str(OUT / 'classes'), 'trimal.stat.NumericProbe']
     result = {'seed': numeric.SEED, 'aa_alternative': {}, 'all_threshold': {}, 'empty_gaps': {}}
     payload = 'A alternative_aa\n'
     natives = [invoke(cpp, payload) for _ in range(12)]
@@ -75,10 +82,12 @@ def main():
     result['counts']['known_ub_output_differences'] = len(result['known_ub_output_differences'])
     result['counts']['sanitizer_confirmed_ub_categories'] = sum(
         r.get('rc', 0) != 0 for r in result.get('sanitizers', {}).values())
-    (OUT / 'ub.results.json').write_text(json.dumps(result, indent=2))
-    (OUT / 'ub.cases.txt').write_text('\n'.join(cases) + '\n')
+    run = numeric.run_dir('ub')
+    (run / 'results.json').write_text(json.dumps(result, indent=2))
+    (run / 'cases.txt').write_text('\n'.join(cases) + '\n')
     print(json.dumps(result['counts'], indent=2))
     print('Sanitizers', {k: v.get('rc') for k, v in result.get('sanitizers', {}).items()})
+    print('REPORT ' + str(run / 'results.json'))
     # Empty-gap outputs are intentionally recorded as UB, not matched/ignored
     # defined cases. Gate the measured AA layout, fallback and sanitizer evidence.
     failed = result['aa_alternative']['exact_matches'] != 12 or result['all_threshold']['exact_matches'] != 6

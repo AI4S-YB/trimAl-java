@@ -79,9 +79,21 @@ def main():
     if options.filter:
         cases = [c for c in cases if options.filter in " ".join(c)]
 
-    work = ROOT / "verify/windows-matrix" / time.strftime("%Y%m%d-%H%M%S")
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    work = ROOT / "verify/windows-matrix" / stamp
+    serial = 0
+    while True:  # two runs started in the same second must not share a directory
+        try:
+            work.mkdir(parents=True)
+            break
+        except FileExistsError:
+            serial += 1
+            work = ROOT / "verify/windows-matrix" / ("%s-%d" % (stamp, serial))
     print("manifest=%s cases=%d" % (options.manifest, len(cases)), flush=True)
-    work.mkdir(parents=True)
+    # Paths as Windows Java sees them: derived from this checkout's location, so the
+    # gate is not tied to one machine's drive and directory names.
+    repo_win = wslpath_windows(ROOT)
+    work_win = wslpath_windows(work)
     results = []
 
     def one_case(index, arguments):
@@ -94,10 +106,10 @@ def main():
         native_args = [a.replace("$OUT", str(native_dir / "o.aln"))
                         .replace("$HTML", str(native_dir / "o.html"))
                         .replace("$IN", str(ROOT)) for a in arguments]
-        windows_dir_win = "J:\\ClaudeCodeDev\\trimal\\verify\\windows-matrix\\" + work.name + "\\" + name + "\\windows"
+        windows_dir_win = work_win + "\\" + name + "\\windows"
         windows_args = [a.replace("$OUT", windows_dir_win + "\\o.aln")
                           .replace("$HTML", windows_dir_win + "\\o.html")
-                          .replace("$IN", "J:\\ClaudeCodeDev\\trimal")
+                          .replace("$IN", repo_win)
                         for a in arguments]
         native_result = run_side([NATIVE] + native_args, native_dir, options.timeout)
         command = [executable, "-XX:-UsePerfData", "-cp", jar_windows, "trimal.TrimAl"] + windows_args
@@ -149,7 +161,7 @@ def main():
                "passed": sum(r["status"] == "PASS" for r in results),
                "failed": sum(r["status"] == "FAIL" for r in results),
                "known_divergence": sum(r["status"] == "KNOWN_DIVERGENCE" for r in results)}
-    report = {"suite": "Windows Java vs Linux reference, full quick matrix",
+    report = {"suite": "Windows Java vs Linux reference: " + manifest_path.name,
               "java_exe": executable, "jar": options.jar, "summary": summary,
               "cases": results}
     (work / "report.json").write_text(json.dumps(report, indent=2) + "\n")

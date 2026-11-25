@@ -1,0 +1,14 @@
+# corpus: verify/corpus/pfam
+# corpus of the Pfam-A.seed gate
+# source: verify/downloads/Pfam-A.seed.gz; 10 largest families with at least 500 sequences
+# 10 file(s), SHA-256, path relative to the repository root
+292114fc512eb4ccf9ca6845f73d35a5165b152806269e480f9d688fde66f9bc  verify/corpus/pfam/pfam_01_GFO_IDH_MocA_C3.fasta
+0f314100b07b1c0b0cfeade8421e7ad60ff1b70eebddb950e465788ae41513df  verify/corpus/pfam/pfam_02_ILVD_EDD_N.fasta
+af41ac3abdea4e3d254fd519ed340bff0c3ba20f1f1adeb59fa15190b326a1df  verify/corpus/pfam/pfam_03_PGK.fasta
+c937890207dabe55b72b372d37b9ace2505beeed549503c5a629ab0ff4eaafab  verify/corpus/pfam/pfam_04_ACP_PD.fasta
+f431ff18145429113864f0478b282af1f5fccacb6ae2c83399876728059e570c  verify/corpus/pfam/pfam_05_SecY.fasta
+755e241a3ac08747d2d89213c18fbbb1ba63f810e1aca187cd23e86e339267ca  verify/corpus/pfam/pfam_06_ATP_synt.fasta
+1dc29c01a86bb8ca32ac21ebe58628a0c7d2a4a7c6582cb7579568d726ac5493  verify/corpus/pfam/pfam_07_Peptidase_M17.fasta
+cd71715ae6782af39070c2508b5ab1530458405b97f787823fcef8d5e0a83655  verify/corpus/pfam/pfam_08_PHO4.fasta
+ad98ac7735ff2b0e4c9e407902edc4a47f820ff465c8dbb18aead5a125f99a38  verify/corpus/pfam/pfam_09_Prenyltransf.fasta
+d3524a50021926ef42f179417ae8c0bcae2a99071b3d99f46c5e812ba309ce1e  verify/corpus/pfam/pfam_10_Pantoate_transf.fasta

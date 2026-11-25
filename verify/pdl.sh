@@ -4,8 +4,10 @@
 # This file is part of the trimAl Java port verification tooling
 # (https://github.com/inab/trimal, GPL-3.0-or-later).
 #
-# Parallel ranged downloader for servers that throttle per connection (~10KB/s each).
-# Usage: pdl.sh <url> <size> <outfile> <parts> <workdir>
+# Parallel ranged downloader, for servers that throttle each connection. The range is
+# split into <parts> chunks that are fetched concurrently and resumed where they
+# stopped; the chunks are then assembled into <outfile>, whose size is checked.
+# Usage: pdl.sh <url> <size-in-bytes> <outfile> <parts> <workdir>
 set -u
 URL="$1"; SIZE="$2"; OUTFILE="$3"; N="$4"; WORK="$5"
 mkdir -p "$WORK"
@@ -14,7 +16,7 @@ CHUNK=$(( (SIZE + N - 1) / N ))
 dl_chunk() {
   i=$1; S=$((i * CHUNK)); E=$((S + CHUNK - 1))
   if [ "$E" -ge "$SIZE" ]; then E=$((SIZE - 1)); fi
-  OUT="$WORK/part_$(printf %03d $i)"
+  OUT="$WORK/part_$(printf %03d "$i")"
   EXPECT=$((E - S + 1))
   for try in 1 2 3 4 5 6 7 8 9 10; do
     SZ=$(stat -c %s "$OUT" 2>/dev/null || echo 0)
@@ -29,13 +31,14 @@ for i in $(seq 0 $((N - 1))); do
 done
 wait
 
-TOTAL=0
+total=0
 for i in $(seq 0 $((N - 1))); do
-  SZ=$(stat -c %s "$WORK/part_$(printf %03d $i)" 2>/dev/null || echo 0)
-  TOTAL=$((TOTAL + SZ))
+  part="$WORK/part_$(printf %03d "$i")"
+  total=$((total + $(stat -c %s "$part" 2>/dev/null || echo 0)))
 done
-echo "downloaded=$TOTAL / $SIZE"
-if [ "$TOTAL" -eq "$SIZE" ]; then
-  cat "$WORK"/part_* > "$OUTFILE"
-  echo "ASSEMBLED $OUTFILE"
+if [ "$total" -ne "$SIZE" ]; then
+  echo "incomplete download: $total of $SIZE bytes under $WORK" >&2
+  exit 1
 fi
+cat "$WORK"/part_* > "$OUTFILE"
+echo "ASSEMBLED $OUTFILE ($SIZE bytes)"

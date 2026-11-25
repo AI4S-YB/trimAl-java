@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Independent small byte-differential audit. Run with WSL Python; no Maven/shared work."""
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
+"""Independent small byte-differential audit. Run on Linux/WSL with Python 3 and a JDK
+(JAVA_HOME or PATH); no Maven and no shared work directory."""
 import argparse
 import concurrent.futures
 import hashlib
@@ -12,9 +19,12 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'verify'))
 AUDIT = ROOT / 'verify/alignment_audit'
 CORPUS = AUDIT / 'corpus'
 SEED = 1511011
+
+import toolchain  # noqa: E402
 
 
 def write(name, content):
@@ -175,7 +185,7 @@ def generate():
         dnafile = write('small_cds_%d.fa' % count, formats(['alpha01', 'beta02'], ['GCT' * count] * 2)['fasta'])
         for op in [['-strict'], ['-strictplus'], ['-nogaps']]:
             case('small_backtrans_%d_%s' % (count, op[0][1:]), file, op + ['-backtrans', dnafile, '-fasta'], 'backtrans')
-    (AUDIT / 'cases.json').write_text(json.dumps(dict(seed=SEED, cases=cases), indent=2), encoding='utf8')
+    (CORPUS / 'cases.json').write_text(json.dumps(dict(seed=SEED, cases=cases), indent=2), encoding='utf8')
     return cases
 
 
@@ -193,8 +203,8 @@ def run_one(case, classes, results):
     record = dict(case, args=args)
     artifacts = [ROOT / replacements['{OUT}'], ROOT / replacements['{HTML}']]
     values = []
-    for impl, prefix in [('cpp', ['/usr/bin/timeout', '--signal=KILL', '3s', str(ROOT / 'verify/bin/trimal')]),
-                         ('java', ['/usr/bin/java', '-XX:-UsePerfData', '-cp', str(classes.relative_to(ROOT)), 'trimal.TrimAl'])]:
+    for impl, prefix in [('cpp', [toolchain.tool('timeout'), '--signal=KILL', '3s', str(ROOT / 'verify/bin/trimal')]),
+                         ('java', [toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', str(classes.relative_to(ROOT)), 'trimal.TrimAl'])]:
         for artifact in artifacts:
             if artifact.exists():
                 artifact.unlink()
@@ -268,7 +278,7 @@ def main():
     classes.mkdir(parents=True, exist_ok=True)
     results.mkdir(parents=True, exist_ok=True)
     sources = sorted((ROOT / 'java/src/main/java').rglob('*.java'))
-    proc = subprocess.run(['/usr/bin/javac', '--release', '11', '-encoding', 'UTF-8', '-d', str(classes)] + [str(p) for p in sources],
+    proc = subprocess.run([toolchain.java_tool('javac'), '--release', '11', '-encoding', 'UTF-8', '-d', str(classes)] + [str(p) for p in sources],
                           cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
     (results / 'javac.stdout').write_bytes(proc.stdout)
     (results / 'javac.stderr').write_bytes(proc.stderr)
@@ -292,6 +302,7 @@ def main():
                    roundtrip_executed=sum(r['roundtrip_executed'] for r in records), records=records)
     (results / 'summary.json').write_text(json.dumps(summary, indent=2), encoding='utf8')
     print(json.dumps({k:v for k,v in summary.items() if k != 'records'}, indent=2))
+    print('REPORT ' + (results / 'summary.json').relative_to(ROOT).as_posix())
     for r in records:
         if not r['match']:
             print(r['name'], r['classification'], 'cpp', r['cpp']['rc'], 'java', r['java']['rc'], ','.join(r['diff']))

@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
+
 """Direct-source probes for matrix ordering, float stats and locale-neutral parsing."""
 import hashlib
 import json
@@ -10,7 +16,10 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'verify'))
 AUDIT = ROOT / 'verify/alignment_audit'
+
+import toolchain  # noqa: E402
 
 
 def main():
@@ -23,9 +32,9 @@ def main():
     cpp = AUDIT / 'audit_probe_cpp'
     objects = ['alignment', 'sequencesMatrix', 'similarityMatrix', 'statisticsConservation', 'statisticsGaps', 'utils']
     commands = [
-        ['/usr/bin/g++', '-std=c++11', '-I', str(ROOT / 'upstream/source'), str(AUDIT / 'audit_probe.cpp')]
+        [toolchain.tool('g++'), '-std=c++11', '-I', str(ROOT / 'upstream/source'), str(AUDIT / 'audit_probe.cpp')]
         + [str(ROOT / ('upstream/source/' + obj + '.o')) for obj in objects] + ['-o', str(cpp)],
-        ['/usr/bin/javac', '--release', '11', '-encoding', 'UTF-8', '-cp', str(classes.relative_to(ROOT)), '-d', str(classes), str(AUDIT / 'AuditProbe.java')]
+        [toolchain.java_tool('javac'), '--release', '11', '-encoding', 'UTF-8', '-cp', str(classes.relative_to(ROOT)), '-d', str(classes), str(AUDIT / 'AuditProbe.java')]
     ]
     for idx, command in enumerate(commands):
         proc = subprocess.run(command, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=30)
@@ -39,8 +48,8 @@ def main():
         directory = results / name
         directory.mkdir(exist_ok=True)
         observed = []
-        commands = [(['/usr/bin/timeout', '--signal=KILL', '4s', str(cpp)] + cpp_args),
-                    ['/usr/bin/java', '-XX:-UsePerfData', '-cp', str(classes.relative_to(ROOT)), 'trimal.AuditProbe'] + (java_args or cpp_args)]
+        commands = [([toolchain.tool('timeout'), '--signal=KILL', '4s', str(cpp)] + cpp_args),
+                    [toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', str(classes.relative_to(ROOT)), 'trimal.AuditProbe'] + (java_args or cpp_args)]
         for impl, command in zip(['cpp', 'java'], commands):
             proc = subprocess.run(command, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=8)
             for stream, data in [('stdout', proc.stdout), ('stderr', proc.stderr)]:
@@ -62,7 +71,7 @@ def main():
         file.write_text(''.join('>identity%03d\n%s\n' % (i, ''.join(rng.choice('ACGTNN--acgt') for _ in range(length))) for i in range(n)), encoding='ascii')
         files.append(str(file.relative_to(ROOT)))
     run('identity_96_alignments_precision9', ['identity'] + files)
-    contracts = subprocess.run(['/usr/bin/java', '-XX:-UsePerfData', '-cp', str(classes.relative_to(ROOT)), 'trimal.AuditProbe', 'contracts',
+    contracts = subprocess.run([toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', str(classes.relative_to(ROOT)), 'trimal.AuditProbe', 'contracts',
                                 'verify/alignment_audit/corpus/does_not_exist.fa'], cwd=ROOT,
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=8)
     (results / 'contracts.stdout').write_bytes(contracts.stdout)
@@ -70,7 +79,8 @@ def main():
     summary = dict(differential_calls=len(records), identity_alignments=96, match=sum(r['match'] for r in records),
                    contracts_pass=contracts.returncode == 0, records=records)
     (results / 'summary.json').write_text(json.dumps(summary, indent=2), encoding='utf8')
-    print(json.dumps(summary, indent=2))
+    print(json.dumps({k: v for k, v in summary.items() if k != 'records'}, indent=2))
+    print('REPORT ' + (results / 'summary.json').relative_to(ROOT).as_posix())
     return int(summary['match'] != summary['differential_calls'] or not summary['contracts_pass'])
 
 

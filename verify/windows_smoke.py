@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import time
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -17,6 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--java-exe", default=os.environ.get("TRIMAL_WINDOWS_JAVA"))
+    parser.add_argument("--jar", help="JAR to test (default: java/target/trimal.jar)")
     options = parser.parse_args()
     executable = options.java_exe
     if executable is None:
@@ -24,10 +26,11 @@ def main():
         executable = result.stdout.strip()
     if not executable:
         raise SystemExit("set TRIMAL_WINDOWS_JAVA to the Windows java.exe path reachable from WSL")
-    path = ROOT / "java/target/trimal.jar"
+    path = Path(options.jar) if options.jar else ROOT / "java/target/trimal.jar"
     jar_windows = subprocess.check_output(["wslpath", "-w", str(path)], text=True).strip()
-    output = ROOT / "verify/windows-main"
-    output.mkdir(exist_ok=True)
+    run_dir = ROOT / "verify/windows-main" / ("run-" + time.strftime("%Y%m%d-%H%M%S"))
+    output = run_dir / "cases"
+    output.mkdir(parents=True)
     commands = [
         [], ["--version"], ["-h"], ["--unknown"],
         ["-in", "verify/corpus/generated/protein.fasta", "-backtrans", "verify/corpus/generated/coding.fasta", "-fasta"],
@@ -61,8 +64,9 @@ def main():
                "failed": sum(not r["passed"] for r in records)}
     report = {"suite": "Windows main CLI vs Linux reference", "java": executable,
               "summary": summary, "cases": records}
-    (output / "result.json").write_text(json.dumps(report, indent=2) + "\n")
+    (run_dir / "result.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(summary))
+    print("REPORT " + str(run_dir / "result.json"))
     return int(summary["failed"] > 0)
 
 

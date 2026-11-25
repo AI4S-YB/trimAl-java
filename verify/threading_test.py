@@ -10,7 +10,7 @@ For conservation/HTML-heavy workloads, run the Java build with several
 -Dtrimal.threads values (including 1 = plain serial loop) and require every
 stdout/stderr/exit status/output file to be byte-identical to the reference
 binary. Repeated default-thread runs additionally guard against scheduling
-nondeterminism. Run on Linux/WSL: python3 verify/threading_test.py
+nondeterminism. Run on Linux/WSL: python3 verify/threading_test.py [--jar <build>]
 """
 import concurrent.futures
 import hashlib
@@ -22,9 +22,14 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "verify"))
 OUT = ROOT / "verify/threading"
 CONFIGS = ["1", "2", "7", "0"]  # 0 = JVM default (no property)
 REPEATS_DEFAULT = 2
+# the JAR under test; `--jar <path>` selects another build
+jar = str(ROOT / "java/target/trimal.jar")
+
+import toolchain  # noqa: E402
 
 
 def run(command, timeout):
@@ -48,8 +53,10 @@ def snapshot(directory):
 
 
 def main():
+    global jar
+    if "--jar" in sys.argv:
+        jar = sys.argv[sys.argv.index("--jar") + 1]
     native_bin = str(ROOT / "verify/bin/trimal")
-    jar = str(ROOT / "java/target/trimal.jar")
     work = OUT / ("run-" + time.strftime("%Y%m%d-%H%M%S"))
     work.mkdir(parents=True, exist_ok=True)
 
@@ -90,7 +97,7 @@ def main():
                              .replace("$HTML", str(java_dir / "o.html"))
                              for argument in template]
                 native_result = run([native_bin] + native_args, timeout)
-                command = ["java", "-XX:-UsePerfData"]
+                command = [toolchain.java_tool("java"), "-XX:-UsePerfData"]
                 if config != "0":
                     command += ["-Dtrimal.threads=" + config]
                 command += ["-jar", jar] + java_args
@@ -127,10 +134,11 @@ def main():
                     print("MISMATCH %s threads=%s rc=%s/%s" % (name, r["threads"],
                           r["java_rc"], r["native_rc"]), file=sys.stderr)
 
-    report = {"suite": "thread-count determinism", "work": str(work),
+    report = {"suite": "thread-count determinism", "work": work.relative_to(ROOT).as_posix(),
               "results": results, "passed": all(r["passed"] for r in results)}
     (OUT / "results.json").write_text(json.dumps(report, indent=2) + "\n")
     print("THREADING", "PASS" if report["passed"] else "FAIL")
+    print("REPORT " + str(OUT / "results.json"))
     return 0 if report["passed"] else 1
 
 

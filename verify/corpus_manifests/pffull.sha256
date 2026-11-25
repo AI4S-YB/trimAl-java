@@ -1,0 +1,10 @@
+# corpus: verify/corpus/pffull
+# corpus of the Pfam-A.full mega-family gate
+# source: verify/downloads/pffull_window.gz; 6 largest families with at least 15000 sequences
+# 6 file(s), SHA-256, path relative to the repository root
+932d6a4a2dbe4ac4a4af972c9e54b6b1b2b06a361cc79ba4b16cfe0204b33a67  verify/corpus/pffull/pffull_01_7tm_1.fasta
+3ba482b1c618cc6f44e4e41cde43f9b581a8e8a110d823c4a79a72a72ebc98e1  verify/corpus/pffull/pffull_02_2_Hacid_dh_C.fasta
+4a1e1f9cd366fe20a0d157e7ac948e28aff0e304c0d2cbf045168423c25d719c  verify/corpus/pffull/pffull_03_2_Hacid_dh.fasta
+2a390a9a8016c02c2efa65b037ee790f078abac08b97e3516e3c7b27ef314885  verify/corpus/pffull/pffull_04_4HBT.fasta
+3e9b9c5144fd3681d341f483b0e21673c6f70cf3a8b3bcad023142528728ee0f  verify/corpus/pffull/pffull_05_2OG_FeII_Oxy.fasta
+0d3089665be28da30e5734fef1e13d5446cf92956ac7c2beeb59260f266f8046  verify/corpus/pffull/pffull_06_3HCDH.fasta

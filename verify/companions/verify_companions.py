@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+# This file is part of the trimAl Java port verification tooling
+# (https://github.com/inab/trimal, GPL-3.0-or-later).
+#
 """Dedicated readAl/statAl byte-for-byte differential suite, run inside WSL."""
 import argparse
 import collections
@@ -13,9 +18,11 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'verify'))
 BASE = ROOT / 'verify' / 'companions'
 INPUTS = BASE / 'inputs'
 OUTPUTS = BASE / 'outputs'
+RUNS = BASE / 'runs'
 CLASSES = BASE / 'classes'
 JAR = BASE / 'companions.jar'
 NATIVE = ROOT / 'verify' / 'bin'
@@ -23,6 +30,8 @@ STATS = ['-sgc', '-sgt', '-ssc', '-sst', '-sident', '-scolidentt']
 FORMATS = ['-clustal', '-fasta', '-fasta_m10', '-nbrf', '-nexus', '-mega',
            '-phylip3.2', '-phylip3.2_m10', '-phylip', '-phylip_m10',
            '-phylip_paml', '-phylip_paml_m10', '-html', '-onlyseqs']
+
+import toolchain  # noqa: E402
 
 
 def repo_path(path):
@@ -65,8 +74,12 @@ def main():
     parser.add_argument('--no-compile', action='store_true')
     parser.add_argument('--java-jar', type=Path, help='Use an existing integrated jar and skip compilation')
     parser.add_argument('--filter', default='')
+    parser.add_argument('--out-dir', type=Path,
+                        help='where the report is written (default: a new directory under verify/companions/runs/)')
     options = parser.parse_args()
     java_jar = options.java_jar.resolve() if options.java_jar else JAR
+    out_dir = options.out_dir or RUNS / time.strftime('%Y%m%d-%H%M%S')
+    out_dir.mkdir(parents=True, exist_ok=True)
     start = time.time()
     INPUTS.mkdir(parents=True, exist_ok=True)
     OUTPUTS.mkdir(parents=True, exist_ok=True)
@@ -75,14 +88,14 @@ def main():
             shutil.rmtree(CLASSES)
         CLASSES.mkdir(parents=True)
         sources = sorted((ROOT / 'java' / 'src' / 'main' / 'java').rglob('*.java'))
-        result = subprocess.run(['javac', '--release', '11', '-encoding', 'UTF-8', '-d', str(CLASSES)]
+        result = subprocess.run([toolchain.java_tool('javac'), '--release', '11', '-encoding', 'UTF-8', '-d', str(CLASSES)]
                                 + [str(p) for p in sources], cwd=ROOT, capture_output=True)
         (BASE / 'compile.stdout').write_bytes(result.stdout)
         (BASE / 'compile.stderr').write_bytes(result.stderr)
         if result.returncode:
             sys.stderr.buffer.write(result.stderr)
             return result.returncode
-        subprocess.run(['jar', '--create', '--file', str(JAR), '-C', str(CLASSES), '.'], check=True, cwd=ROOT)
+        subprocess.run([toolchain.tool('jar'), '--create', '--file', str(JAR), '-C', str(CLASSES), '.'], check=True, cwd=ROOT)
 
     dna = write_fasta('dna', ['ACTGACTG--ACGT--', 'ACT-A-TGGTACG-T-', 'ACTGAC-G-TACGT--'])
     aa = write_fasta('aa', ['ARNDCQEGHILKMFPSTWYV--', 'AR-DCEEGH-LKMFP-TWYVAA', 'ARNDCQEGHIL-MF-STWY---'])
@@ -276,7 +289,7 @@ def main():
             destination = case_dir / 'output.aln'
             args += ['-out', repo_path(destination)]
         native_command = [repo_path(NATIVE / case['tool'])] + args
-        java_command = ['java', '-XX:-UsePerfData', '-cp', repo_path(java_jar), 'trimal.' + ('ReadAl' if case['tool'] == 'readal' else 'StatAl')] + args
+        java_command = [toolchain.java_tool('java'), '-XX:-UsePerfData', '-cp', repo_path(java_jar), 'trimal.' + ('ReadAl' if case['tool'] == 'readal' else 'StatAl')] + args
         side_results = {}
         for side, command in [('native', native_command), ('java', java_command)]:
             if destination and destination.exists():
@@ -334,15 +347,16 @@ def main():
                            for tool in ['readal', 'statal']},
                'elapsed_seconds': round(time.time() - start, 2)}
     report = {'suite': 'readAl/statAl v1.5.1 byte-for-byte differential', 'summary': summary,
-              'java_version': subprocess.run(['java', '-XX:-UsePerfData', '-version'], capture_output=True).stderr.decode('utf-8'),
+              'java_version': subprocess.run([toolchain.java_tool('java'), '-XX:-UsePerfData', '-version'], capture_output=True).stderr.decode('utf-8'),
               'compile': None if options.no_compile or options.java_jar is not None else
                          'javac --release 11 -encoding UTF-8 -d verify/companions/classes <all current Java sources>',
               'native_version': {tool: run_process([repo_path(NATIVE / tool), '--version'])[1].decode('latin1') for tool in ['readal', 'statal']},
               'java_jar': repo_path(java_jar), 'java_jar_sha256': digest(java_jar.read_bytes()),
               'seed': 151, 'independent_random_datasets': 30, 'cases': results}
     report_name = 'result.json' if not options.filter else 'result_' + options.filter.replace(':', '_') + '.json'
-    (BASE / report_name).write_text(json.dumps(report, indent=2, ensure_ascii=True) + '\n', encoding='utf-8')
+    (out_dir / report_name).write_text(json.dumps(report, indent=2, ensure_ascii=True) + '\n', encoding='utf-8')
     print(json.dumps(summary, indent=2), flush=True)
+    print('REPORT ' + repo_path(out_dir / report_name), flush=True)
     return 0 if summary['failed'] == 0 else 1
 
 
