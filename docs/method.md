@@ -87,7 +87,7 @@ Each layer can fail alone, and none is derived from another:
 | Loader fuzz | mutated real files: truncation, byte flips, CRLF, control bytes, rewrapping | 3 × 180 |
 | Argument fuzz | random and accepted-shaped argument vectors | 3 × 400 |
 | Boundary audit | edge shapes, every writer read back by every parser, direct method probes | 605 + 3 |
-| Golden CLI gate | the port run in-process against recorded reference output, in `mvn test` | 1,432 cases, any OS and JDK |
+| Golden CLI gate | the port run in-process against recorded reference output, in `mvn test` | 1,740 cases, any OS and JDK |
 | Real data | Pfam-A.seed families, eggNOG clusters (and the truncated head of one of them), Pfam-A.full mega-families, companions on them | 262 cases |
 | Cross-platform | Windows Java against the Linux reference | 1,000+ cases |
 | Determinism | 1, 2, 7 and default thread counts against each other and the reference | 4 workloads |

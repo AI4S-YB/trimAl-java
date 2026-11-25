@@ -45,7 +45,7 @@ java/mvnw -f java/pom.xml package        # Windows: java\mvnw.cmd -f java/pom.xm
 java -jar java/target/trimal.jar --version
 ```
 
-`package` also runs the unit tests, a golden gate of about 1,400 recorded reference
+`package` also runs the unit tests, a golden gate of about 1,700 recorded reference
 cases among them; skip them with `-DskipTests`. Two builds of one commit produce the
 same JAR bytes.
 

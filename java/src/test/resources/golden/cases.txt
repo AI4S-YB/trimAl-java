@@ -8874,6 +8874,1993 @@ arg $HTML
 arg -out
 arg $OUT
 end
+case extended/case_0476 trimal 0
+arg -nogaps
+arg -out
+arg $OUT
+end
+case extended/case_0478 trimal 255
+arg -nogaps
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0479 trimal 255
+arg -nogaps
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0480 trimal 0
+arg -nogaps
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0481 trimal 255
+arg -nogaps
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0482 trimal 255
+arg -nogaps
+arg -maxidentity
+arg 0.7
+arg -out
+arg $OUT
+end
+case extended/case_0483 trimal 0
+arg -nogaps
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0484 trimal 255
+arg -nogaps
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0485 trimal 255
+arg -nogaps
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0486 trimal 255
+arg -nogaps
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0487 trimal 255
+arg -nogaps
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0488 trimal 0
+arg -nogaps
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0489 trimal 255
+arg -nogaps
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0490 trimal 0
+arg -nogaps
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0491 trimal 0
+arg -nogaps
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0492 trimal 0
+arg -nogaps
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0493 trimal 0
+arg -nogaps
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0494 trimal 0
+arg -nogaps
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0495 trimal 0
+arg -nogaps
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0496 trimal 0
+arg -nogaps
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0497 trimal 0
+arg -nogaps
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0498 trimal 0
+arg -nogaps
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0499 trimal 0
+arg -nogaps
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0500 trimal 0
+arg -nogaps
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0501 trimal 0
+arg -nogaps
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0502 trimal 0
+arg -nogaps
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0503 trimal 0
+arg -nogaps
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0504 trimal 0
+arg -nogaps
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0505 trimal 0
+arg -nogaps
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0506 trimal 0
+arg -nogaps
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0507 trimal 0
+arg -nogaps
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0508 trimal 0
+arg -nogaps
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0509 trimal 0
+arg -nogaps
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0510 trimal 0
+arg -nogaps
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0511 trimal 0
+arg -nogaps
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0512 trimal 0
+arg -nogaps
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0513 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -nogaps
+arg -out
+arg $OUT
+end
+case extended/case_0514 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -nogaps
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0515 trimal 0
+arg -noallgaps
+arg -out
+arg $OUT
+end
+case extended/case_0517 trimal 255
+arg -noallgaps
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0518 trimal 255
+arg -noallgaps
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0519 trimal 0
+arg -noallgaps
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0520 trimal 255
+arg -noallgaps
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0521 trimal 255
+arg -noallgaps
+arg -maxidentity
+arg 0.7
+arg -out
+arg $OUT
+end
+case extended/case_0522 trimal 0
+arg -noallgaps
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0523 trimal 255
+arg -noallgaps
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0524 trimal 255
+arg -noallgaps
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0525 trimal 255
+arg -noallgaps
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0526 trimal 255
+arg -noallgaps
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0527 trimal 0
+arg -noallgaps
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0528 trimal 255
+arg -noallgaps
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0529 trimal 0
+arg -noallgaps
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0530 trimal 0
+arg -noallgaps
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0531 trimal 0
+arg -noallgaps
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0532 trimal 0
+arg -noallgaps
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0533 trimal 0
+arg -noallgaps
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0534 trimal 0
+arg -noallgaps
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0535 trimal 0
+arg -noallgaps
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0536 trimal 0
+arg -noallgaps
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0537 trimal 0
+arg -noallgaps
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0538 trimal 0
+arg -noallgaps
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0539 trimal 0
+arg -noallgaps
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0540 trimal 0
+arg -noallgaps
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0541 trimal 0
+arg -noallgaps
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0542 trimal 0
+arg -noallgaps
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0543 trimal 0
+arg -noallgaps
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0544 trimal 0
+arg -noallgaps
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0545 trimal 0
+arg -noallgaps
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0546 trimal 0
+arg -noallgaps
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0547 trimal 0
+arg -noallgaps
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0548 trimal 0
+arg -noallgaps
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0549 trimal 0
+arg -noallgaps
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0550 trimal 0
+arg -noallgaps
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0551 trimal 0
+arg -noallgaps
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0552 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -noallgaps
+arg -out
+arg $OUT
+end
+case extended/case_0553 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -noallgaps
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0554 trimal 0
+arg -gappyout
+arg -out
+arg $OUT
+end
+case extended/case_0556 trimal 255
+arg -gappyout
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0557 trimal 255
+arg -gappyout
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0558 trimal 0
+arg -gappyout
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0559 trimal 255
+arg -gappyout
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0560 trimal 255
+arg -gappyout
+arg -maxidentity
+arg 0.7
+arg -out
+arg $OUT
+end
+case extended/case_0561 trimal 0
+arg -gappyout
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0562 trimal 255
+arg -gappyout
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0563 trimal 255
+arg -gappyout
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0564 trimal 255
+arg -gappyout
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0565 trimal 255
+arg -gappyout
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0566 trimal 0
+arg -gappyout
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0567 trimal 0
+arg -gappyout
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0568 trimal 0
+arg -gappyout
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0569 trimal 0
+arg -gappyout
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0570 trimal 0
+arg -gappyout
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0571 trimal 0
+arg -gappyout
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0572 trimal 0
+arg -gappyout
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0573 trimal 0
+arg -gappyout
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0574 trimal 0
+arg -gappyout
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0575 trimal 0
+arg -gappyout
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0576 trimal 0
+arg -gappyout
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0577 trimal 0
+arg -gappyout
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0578 trimal 0
+arg -gappyout
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0579 trimal 0
+arg -gappyout
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0580 trimal 0
+arg -gappyout
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0581 trimal 0
+arg -gappyout
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0582 trimal 0
+arg -gappyout
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0583 trimal 0
+arg -gappyout
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0584 trimal 0
+arg -gappyout
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0585 trimal 0
+arg -gappyout
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0586 trimal 0
+arg -gappyout
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0587 trimal 0
+arg -gappyout
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0588 trimal 0
+arg -gappyout
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0589 trimal 0
+arg -gappyout
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0590 trimal 0
+arg -gappyout
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0591 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -gappyout
+arg -out
+arg $OUT
+end
+case extended/case_0592 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -gappyout
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0593 trimal 0
+arg -strict
+arg -out
+arg $OUT
+end
+case extended/case_0595 trimal 255
+arg -strict
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0596 trimal 255
+arg -strict
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0597 trimal 0
+arg -strict
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0598 trimal 255
+arg -strict
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0599 trimal 255
+arg -strict
+arg -maxidentity
+arg 0.7
+arg -out
+arg $OUT
+end
+case extended/case_0600 trimal 0
+arg -strict
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0601 trimal 255
+arg -strict
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0602 trimal 255
+arg -strict
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0603 trimal 255
+arg -strict
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0604 trimal 255
+arg -strict
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0605 trimal 0
+arg -strict
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0606 trimal 0
+arg -strict
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0607 trimal 0
+arg -strict
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0608 trimal 0
+arg -strict
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0609 trimal 0
+arg -strict
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0610 trimal 0
+arg -strict
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0611 trimal 0
+arg -strict
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0612 trimal 0
+arg -strict
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0613 trimal 0
+arg -strict
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0614 trimal 0
+arg -strict
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0615 trimal 0
+arg -strict
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0616 trimal 0
+arg -strict
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0617 trimal 0
+arg -strict
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0618 trimal 0
+arg -strict
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0619 trimal 0
+arg -strict
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0620 trimal 0
+arg -strict
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0621 trimal 0
+arg -strict
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0622 trimal 0
+arg -strict
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0623 trimal 0
+arg -strict
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0624 trimal 0
+arg -strict
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0625 trimal 0
+arg -strict
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0626 trimal 0
+arg -strict
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0627 trimal 0
+arg -strict
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0628 trimal 0
+arg -strict
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0629 trimal 0
+arg -strict
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0630 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -strict
+arg -out
+arg $OUT
+end
+case extended/case_0631 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -strict
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0632 trimal 0
+arg -strictplus
+arg -out
+arg $OUT
+end
+case extended/case_0634 trimal 255
+arg -strictplus
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0635 trimal 255
+arg -strictplus
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0636 trimal 0
+arg -strictplus
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0637 trimal 255
+arg -strictplus
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0638 trimal 255
+arg -strictplus
+arg -maxidentity
+arg 0.7
+arg -out
+arg $OUT
+end
+case extended/case_0639 trimal 0
+arg -strictplus
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0640 trimal 255
+arg -strictplus
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0641 trimal 255
+arg -strictplus
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0642 trimal 255
+arg -strictplus
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0643 trimal 255
+arg -strictplus
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0644 trimal 0
+arg -strictplus
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0645 trimal 0
+arg -strictplus
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0646 trimal 0
+arg -strictplus
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0647 trimal 0
+arg -strictplus
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0648 trimal 0
+arg -strictplus
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0649 trimal 0
+arg -strictplus
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0650 trimal 0
+arg -strictplus
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0651 trimal 0
+arg -strictplus
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0652 trimal 0
+arg -strictplus
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0653 trimal 0
+arg -strictplus
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0654 trimal 0
+arg -strictplus
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0655 trimal 0
+arg -strictplus
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0656 trimal 0
+arg -strictplus
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0657 trimal 0
+arg -strictplus
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0658 trimal 0
+arg -strictplus
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0659 trimal 0
+arg -strictplus
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0660 trimal 0
+arg -strictplus
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0661 trimal 0
+arg -strictplus
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0662 trimal 0
+arg -strictplus
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0663 trimal 0
+arg -strictplus
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0664 trimal 0
+arg -strictplus
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0665 trimal 0
+arg -strictplus
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0666 trimal 0
+arg -strictplus
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0667 trimal 0
+arg -strictplus
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0668 trimal 0
+arg -strictplus
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0669 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -strictplus
+arg -out
+arg $OUT
+end
+case extended/case_0670 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -strictplus
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0671 trimal 0
+arg -automated1
+arg -out
+arg $OUT
+end
+case extended/case_0673 trimal 255
+arg -automated1
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0674 trimal 255
+arg -automated1
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0675 trimal 0
+arg -automated1
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0676 trimal 255
+arg -automated1
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0677 trimal 255
+arg -automated1
+arg -maxidentity
+arg 0.7
+arg -out
+arg $OUT
+end
+case extended/case_0678 trimal 0
+arg -automated1
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0679 trimal 255
+arg -automated1
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0680 trimal 255
+arg -automated1
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0681 trimal 255
+arg -automated1
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0682 trimal 255
+arg -automated1
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0683 trimal 0
+arg -automated1
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0684 trimal 0
+arg -automated1
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0685 trimal 0
+arg -automated1
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0686 trimal 0
+arg -automated1
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0687 trimal 0
+arg -automated1
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0688 trimal 0
+arg -automated1
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0689 trimal 0
+arg -automated1
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0690 trimal 0
+arg -automated1
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0691 trimal 0
+arg -automated1
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0692 trimal 0
+arg -automated1
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0693 trimal 0
+arg -automated1
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0694 trimal 0
+arg -automated1
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0695 trimal 0
+arg -automated1
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0696 trimal 0
+arg -automated1
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0697 trimal 0
+arg -automated1
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0698 trimal 0
+arg -automated1
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0699 trimal 0
+arg -automated1
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0700 trimal 0
+arg -automated1
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0701 trimal 0
+arg -automated1
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0702 trimal 0
+arg -automated1
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0703 trimal 0
+arg -automated1
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0704 trimal 0
+arg -automated1
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0705 trimal 0
+arg -automated1
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0706 trimal 0
+arg -automated1
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0707 trimal 0
+arg -automated1
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0708 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -automated1
+arg -out
+arg $OUT
+end
+case extended/case_0709 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -automated1
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0710 trimal 0
+arg -gt
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0711 trimal 0
+arg -st
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0712 trimal 0
+arg -ct
+arg 0.5
+arg -out
+arg $OUT
+end
+case extended/case_0713 trimal 0
+arg -cons
+arg 60
+arg -out
+arg $OUT
+end
+case extended/case_0715 trimal 0
+arg -resoverlap
+arg 0.8
+arg -seqoverlap
+arg 50
+arg -out
+arg $OUT
+end
+case extended/case_0716 trimal 0
+arg -clusters
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0717 trimal 0
+arg -w
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0718 trimal 0
+arg -gw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0719 trimal 0
+arg -sw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0720 trimal 0
+arg -cw
+arg 2
+arg -out
+arg $OUT
+end
+case extended/case_0721 trimal 0
+arg -block
+arg 3
+arg -out
+arg $OUT
+end
+case extended/case_0722 trimal 0
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0723 trimal 0
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0724 trimal 0
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0725 trimal 0
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0726 trimal 0
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0727 trimal 0
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0728 trimal 0
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0729 trimal 0
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0730 trimal 0
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0731 trimal 0
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0732 trimal 0
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0733 trimal 0
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0734 trimal 0
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0735 trimal 0
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0736 trimal 0
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0737 trimal 0
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0738 trimal 0
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0739 trimal 0
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0740 trimal 255
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0741 trimal 255
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0742 trimal 255
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0743 trimal 0
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0744 trimal 0
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0745 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -sgc
+arg -out
+arg $OUT
+end
+case extended/case_0746 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -sgt
+arg -out
+arg $OUT
+end
+case extended/case_0747 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -ssc
+arg -out
+arg $OUT
+end
+case extended/case_0748 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -sst
+arg -out
+arg $OUT
+end
+case extended/case_0749 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -sident
+arg -out
+arg $OUT
+end
+case extended/case_0750 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -soverlap
+arg -out
+arg $OUT
+end
+case extended/case_0751 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0752 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0753 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -fasta
+arg -out
+arg $OUT
+end
+case extended/case_0754 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -fasta_m10
+arg -out
+arg $OUT
+end
+case extended/case_0755 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -clustal
+arg -out
+arg $OUT
+end
+case extended/case_0756 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -phylip
+arg -out
+arg $OUT
+end
+case extended/case_0757 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -phylip_m10
+arg -out
+arg $OUT
+end
+case extended/case_0758 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -phylip_paml
+arg -out
+arg $OUT
+end
+case extended/case_0759 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+end
+case extended/case_0760 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -nexus
+arg -out
+arg $OUT
+end
+case extended/case_0761 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -nbrf
+arg -out
+arg $OUT
+end
+case extended/case_0762 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -mega
+arg -out
+arg $OUT
+end
+case extended/case_0763 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0764 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0765 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0766 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -keepseqs
+arg -out
+arg $OUT
+end
+case extended/case_0767 trimal 255
+arg -in
+arg verify/corpus/empty.fasta
+arg -keepheader
+arg -out
+arg $OUT
+end
+case extended/case_0768 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -sgc
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0769 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -sgt
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0770 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -ssc
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0771 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -sst
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0772 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -sident
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0773 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -soverlap
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0774 trimal 255
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -sfc
+arg -out
+arg $OUT
+end
+case extended/case_0775 trimal 255
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -sft
+arg -out
+arg $OUT
+end
+case extended/case_0776 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -fasta
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0777 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -fasta_m10
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0778 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -clustal
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0779 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -phylip
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0780 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -phylip_m10
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0781 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -phylip_paml
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0782 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -phylip_paml_m10
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0783 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -nexus
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0784 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -nbrf
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0785 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -mega
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0786 trimal 255
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -complementary
+arg -out
+arg $OUT
+end
+case extended/case_0787 trimal 255
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -colnumbering
+arg -out
+arg $OUT
+end
+case extended/case_0788 trimal 255
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -terminalonly
+arg -out
+arg $OUT
+end
+case extended/case_0789 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -keepseqs
+arg -out
+arg $OUT
+file o.aln
+end
+case extended/case_0790 trimal 0
+arg -in
+arg verify/corpus/one_seq.fasta
+arg -keepheader
+arg -out
+arg $OUT
+file o.aln
+end
 case companions/readal_no_arguments readal 0
 end
 case companions/readal_help readal 0
