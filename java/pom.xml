@@ -90,7 +90,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
+        <version>3.6.1</version>
         <configuration>
           <!-- GoldenCliTest runs the command lines on repository-relative paths: its
                working directory is the recorded copy of the input files. -->
