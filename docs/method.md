@@ -139,8 +139,12 @@ reference. `-Dtrimal.threads=1` selects the plain serial loop.
 
 ## 7. The record
 
-`verify/run_full.py` runs every gate on one build and writes one record per gate;
+`verify/run_full.py` runs every gate on one build and writes one record per gate:
+what was verified (commit, clean or dirty tree, JAR hash, reference hashes,
+toolchain) and what came out (exit status, seconds, load, log, report).
 `verify/validation_summary.py` turns the record into `verify/validation-summary.json`
 and renders the README tables from it. A number in those tables is never typed by
-hand. The summary refuses a run made in a dirty tree, a run that mixes commits or
-JARs, and any run with a failure.
+hand. The summary refuses a run made in a dirty tree, runs that verified different
+JARs or different reference binaries, and any run with a failure. It accepts runs of
+several commits when the build is the same — after a change to a corpus, say, only
+the gates that read it are re-run — and every gate then names its commit.

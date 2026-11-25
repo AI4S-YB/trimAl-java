@@ -113,9 +113,12 @@ SHA-256 and versions and the toolchain; per gate it keeps the log, the exit stat
 the seconds and the system load. `verify/validation_summary.py` turns that record into
 [verify/validation-summary.json](verify/validation-summary.json) and renders the
 tables below from it, so a number in them is never typed by hand. The summary refuses
-a run made in a dirty tree, a run that mixes commits or JARs, and any run with a
-failure. [verify/README.md](verify/README.md) lists every gate and shows how to run
-one on its own.
+a run made in a dirty tree, runs that verified different JARs or different reference
+binaries, and any run with a failure. It does accept runs of several commits when the
+build is the same — after a change to a corpus, say, only the gates that read it are
+re-run — and then every gate names the commit and the run it comes from.
+[verify/README.md](verify/README.md) lists every gate and shows how to run one on its
+own.
 
 ### Results
 
