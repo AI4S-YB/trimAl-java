@@ -5,8 +5,10 @@
 *.jar
 *.o
 
-# Reference source/data snapshot, the reference build and downloaded archives
-upstream/
+# Reference source/data snapshot, the reference build and downloaded archives.
+# Anchored: the golden test resources hold a committed copy of some dataset files
+# under java/src/test/resources/golden/root/upstream/.
+/upstream/
 *.seed.gz
 *.tar.gz
 verify/bin/

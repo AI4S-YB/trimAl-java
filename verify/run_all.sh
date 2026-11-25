@@ -26,7 +26,9 @@ fi
 if [[ "${TRIMAL_SKIP_BUILD:-0}" != 1 ]]; then
   java/mvnw -B -f java/pom.xml package
 fi
-# An invalid workflow file fails every CI run in zero seconds, with no job and no
-# log; this is the only place that can catch it before a push.
-python3 verify/workflow_check.py
+# The repository checks: every test resource is tracked, scripts carry their
+# executable bit, no tool names one machine, and the workflow files are valid. An
+# invalid workflow fails every CI run in zero seconds, with no job and no log, so
+# this is the only place that can catch it before a push.
+python3 verify/repo_check.py
 python3 verify/run_full.py "$@"

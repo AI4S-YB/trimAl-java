@@ -35,6 +35,8 @@ the recording caught a moving target.
 import argparse
 import json
 from pathlib import Path
+import re
+import subprocess
 import sys
 import zipfile
 
@@ -188,9 +190,11 @@ def main():
     print("exit status of the reference among recorded cases:", sorted(by_status.items()))
     print("largest expected:", sorted(((sum(len(d) for d in c["expected"].values() if d), c["id"])
                                       for c in cases), reverse=True)[:5])
-    absolute = [c["id"] for c in cases if any(b"/mnt/" in (d or b"") or b"C:\\\\" in (d or b"")
-                                              for d in c["expected"].values())]
-    print("cases whose expected output contains an absolute path:", absolute[:10], len(absolute))
+    # any absolute location of one machine (a mounted drive, a home directory)
+    absolute = re.compile(rb"/(?:mnt|home|Users|media)/|\\\\")
+    leaking = [case["id"] for case in cases
+               if any(absolute.search(data or b"") for data in case["expected"].values())]
+    print("cases whose expected output contains an absolute path:", leaking[:10], len(leaking))
     if options.stats:
         return 0
 
@@ -234,6 +238,17 @@ def main():
                   if name not in ("stdout", "stderr") and case["expected"][name] is not None]
         lines.append("end")
     (GOLDEN / "cases.txt").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    # Every written file has to be committable. An ignore pattern once kept the
+    # inputs under upstream/ out of Git: the tests passed on the machine that made
+    # the recording and failed on every clean checkout.
+    ignored = subprocess.run(["git", "status", "--porcelain", "--ignored", "--",
+                              "java/src/test/resources/golden"], cwd=ROOT,
+                             capture_output=True, text=True).stdout
+    ignored = [line[3:] for line in ignored.splitlines() if line.startswith("!!")]
+    if ignored:
+        for line in ignored:
+            print("IGNORED BY GIT " + line, file=sys.stderr)
+        raise SystemExit("the recording just wrote files that Git ignores (see above)")
     print("WROTE %s (%d cases, zip %d bytes, inputs %d bytes)"
           % (GOLDEN.relative_to(ROOT).as_posix(), len(cases), archive.stat().st_size, input_total))
     return 0

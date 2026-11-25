@@ -35,6 +35,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Repository checks (test resources tracked, executable bits, workflows)
+        run: python3 verify/repo_check.py
+
       - name: Build the reference trimAl v1.5.1 from the pinned source
         run: |
           git clone --branch v1.5.1 --depth 1 https://github.com/inab/trimal upstream
@@ -129,6 +132,8 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: maven
+      - name: Repository checks (test resources tracked, executable bits, workflows)
+        run: python3 verify/repo_check.py
       - name: Build and run every unit test (incl. the golden CLI gate)
         working-directory: java
         shell: bash

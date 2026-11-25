@@ -60,12 +60,22 @@ the downloaded-data gates need their corpora under `verify/corpus/`, the `window
 gates need a Windows `java.exe`, `numeric_junit` a Maven repository. With
 `--skip-missing` such gates are recorded as skipped instead.
 
-Before the driver starts, `run_all.sh` runs `verify/workflow_check.py` on the
-workflow files. GitHub validates a workflow before it starts anything: an invalid
-file fails every run in zero seconds, with no job and no log, on every branch at
-once, so nothing inside CI can report it. (A typo in an expression once did exactly
-that.) The script parses each workflow and checks the expressions, the step keys,
-and every `matrix` reference.
+Before the driver starts, `run_all.sh` runs `verify/repo_check.py`; CI runs it
+first as well. It checks the repository the way a clean checkout sees it, not the
+way the developer's disk does:
+
+- every file under `java/src/test/resources/` on disk is tracked. An unanchored
+  `upstream/` in `.gitignore` once kept the golden inputs out of Git: the tests
+  passed where the recording was made and failed on every clean checkout;
+- the launchers, the shell scripts and the Maven wrapper carry mode 100755 in the
+  index. On Windows `core.filemode` is off, so no script had ever received its
+  executable bit, and `./mvnw` was refused on macOS;
+- no tracked tool file names a machine of its own (a mounted drive, a home
+  directory, a checked-out path);
+- the workflow files are valid (`verify/workflow_check.py`). GitHub validates a
+  workflow before it starts anything: an invalid file fails every run in zero
+  seconds, with no job and no log, on every branch at once. A typo in an expression
+  once did exactly that.
 
 Before the first gate the driver records what it is about to verify: the commit,
 whether the tree is clean, the JAR's SHA-256, the reference binaries' SHA-256 and
