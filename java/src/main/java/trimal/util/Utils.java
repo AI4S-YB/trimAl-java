@@ -102,6 +102,25 @@ public final class Utils {
     return (int) number;
   }
 
+  /** The quiet NaN an invalid float operation produces on the x86-64 reference:
+   *  sign bit set, printed by the reference as "-nan". */
+  private static final float X86_INDEFINITE_NAN = Float.intBitsToFloat(0xFFC00000);
+
+  /**
+   * float division with the NaN of the x86-64 reference. An invalid division with no
+   * NaN operand (0/0, inf/inf) yields that platform's "indefinite" quiet NaN there,
+   * while the JVM leaves the sign of such a NaN to the CPU - and ARM's default NaN
+   * is positive, so the port would print "nan" where the reference prints "-nan".
+   * A NaN operand propagates unchanged, as it does on both. On x86 this is the
+   * hardware result anyway.
+   */
+  public static float x86Div(float a, float b) {
+    float q = a / b;
+    if (q != q && a == a && b == b)
+      return X86_INDEFINITE_NAN;
+    return q;
+  }
+
   /**
    * std::string operator[] semantics for column-indexed reads: index == size() is
    * defined in C++11 and yields the null character. main() only allows

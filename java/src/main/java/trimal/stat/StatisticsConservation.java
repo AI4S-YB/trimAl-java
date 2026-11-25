@@ -98,7 +98,8 @@ public final class StatisticsConservation {
         } else if ((cj != '-') && (cj != indet))
           length++;
       }
-      float value = (float) (100.0 - ((float) sum / length) * 100.0);
+      // a pair without one valid position is 0/0: keep the reference's x86 NaN ("-nan")
+      float value = (float) (100.0 - (Utils.x86Div((float) sum, length)) * 100.0);
       matrixIdentity[j * sequences + i] = value;
       matrixIdentity[i * sequences + j] = value;
     }

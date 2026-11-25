@@ -118,4 +118,22 @@ public class UtilsTest {
     assertEquals(0x7fc00000, Float.floatToRawIntBits(Utils.log10f(-1)));
     assertEquals(0xffc01234, Float.floatToRawIntBits(Utils.log10f(Float.intBitsToFloat(0xffc01234))));
   }
+
+  @Test
+  public void x86DivYieldsTheReferenceNanOnEveryCpu() {
+    // The reference prints 0/0 and inf/inf as "-nan": the x86 "indefinite" NaN. Left
+    // to the JVM, the sign of such a NaN is the CPU's default, which is positive on
+    // ARM (the macOS CI runners), so the port printed "nan" there.
+    assertEquals(0xffc00000, Float.floatToRawIntBits(Utils.x86Div(0.0f, 0.0f)));
+    assertEquals(0xffc00000, Float.floatToRawIntBits(
+        Utils.x86Div(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)));
+    // a NaN operand keeps its own sign, as on both CPUs
+    assertEquals(0x80000000, Float.floatToRawIntBits(
+        Utils.x86Div(Float.intBitsToFloat(0xffc00001), 2.0f)) & 0x80000000);
+    assertEquals(0, Float.floatToRawIntBits(
+        Utils.x86Div(Float.intBitsToFloat(0x7fc00001), 2.0f)) & 0x80000000);
+    assertEquals(2.5f, Utils.x86Div(5.0f, 2.0f), 0.0f);
+    assertEquals(Float.POSITIVE_INFINITY, Utils.x86Div(1.0f, 0.0f));
+    assertEquals(Float.NEGATIVE_INFINITY, Utils.x86Div(-1.0f, 0.0f));
+  }
 }

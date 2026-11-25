@@ -3330,8 +3330,9 @@ public class Alignment {
       maxs[i][1] = pos;
     }
 
-    avgSeq = avgSeq / sequenNumber;
-    maxAvgSeq = maxAvgSeq / sequenNumber;
+    // 0/0 with no sequence: the reference's NaN is the x86 one ("-nan")
+    avgSeq = Utils.x86Div(avgSeq, sequenNumber);
+    maxAvgSeq = Utils.x86Div(maxAvgSeq, sequenNumber);
 
     for (i = 0, maxLongName = 0; i < sequenNumber; i++)
       maxLongName = Utils.max(maxLongName, seqsName[i].length());
@@ -3404,8 +3405,9 @@ public class Alignment {
       maxs[i][1] = pos;
     }
 
-    avgSeq = avgSeq / sequenNumber;
-    maxAvgSeq = maxAvgSeq / sequenNumber;
+    // 0/0 with no sequence: the reference's NaN is the x86 one ("-nan")
+    avgSeq = Utils.x86Div(avgSeq, sequenNumber);
+    maxAvgSeq = Utils.x86Div(maxAvgSeq, sequenNumber);
 
     for (i = 0, maxLongName = 0; i < sequenNumber; i++)
       maxLongName = Utils.max(maxLongName, seqsName[i].length());
@@ -3950,7 +3952,7 @@ public class Alignment {
     file.p("## Total sequences\t").p(sequenNumber).endl();
     if (isFileAligned())
       file.p("## Alignment length\t").p(residNumber).endl();
-    file.p("## Avg. sequence length\t").p((float) total_res / sequenNumber).endl()
+    file.p("## Avg. sequence length\t").p(Utils.x86Div((float) total_res, sequenNumber)).endl()
         .p("## Longest seq. name\t'").p(seqsName[max_pos]).p("'").endl()
         .p("## Longest seq. length\t").p(max).endl()
         .p("## Shortest seq. name\t'").p(seqsName[min_pos]).p("'").endl()
@@ -4013,13 +4015,14 @@ public class Alignment {
         positions += 1;
       }
     }
-    avg /= positions;
+    // With no valid column both are 0/0: the reference's NaN is the x86 one ("-nan")
+    avg = Utils.x86Div(avg, positions);
 
     for (i = 0, std = 0; i < residNumber; i++)
       if (colIdentities[i] != -1)
         // C++ float += pow(float-difference, int) adds in double, then narrows.
         std = (float) (std + Math.pow((colIdentities[i] - avg), 2));
-    std = (float) Math.sqrt(std / positions);
+    std = (float) Math.sqrt(Utils.x86Div(std, positions));
 
     try (CppOut cout = CppOut.toStdout()) {
       cout.p("#maxColIdentity\t").p(max).endl();

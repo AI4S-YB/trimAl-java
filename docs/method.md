@@ -47,6 +47,7 @@ unit with its own bit-level oracle:
 | float `expf` / `log10f` from glibc (tables and polynomials) | `Utils.expf`, `Utils.log10f` |
 | `atoi`, `atof`, `is_number` of the C library | `Utils.atoi`, `Utils.atof`, `Utils.isNumber` |
 | conversion of NaN and out-of-range doubles to `int` on x86 | `Utils.x86IntCast` |
+| the sign of a NaN the reference generates: an invalid float operation (`0/0`) yields the x86 "indefinite" NaN, printed `-nan`; the JVM leaves that sign to the CPU, and ARM's default NaN is positive | `Utils.x86Div` |
 | `main` returning `-1`, which the shell reports as 255 | entry classes normalise the status |
 
 Nothing is inferred from "what the tool should do". Where the reference prints a
