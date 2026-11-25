@@ -74,8 +74,10 @@ def executable_bits(problems):
 
 
 def machine_markers(problems):
+    # this file spells out the patterns it searches for
     found = git("grep", "-n", "-I", "-e", "ClaudeCodeDev", "-e", "/mnt/[a-z]/", "-e", "/home/",
-                "-e", "[A-Z]:\\\\", "-e", "Program Files", "--", *TOOL_PATHS)
+                "-e", "[A-Z]:\\\\", "-e", "Program Files", "--", *TOOL_PATHS,
+                ":(exclude)verify/repo_check.py")
     for line in found.stdout.splitlines():
         problems.append("names a machine: " + line[:160])
 
