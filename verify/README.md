@@ -340,19 +340,31 @@ not have.
 
 ## CI runner environment
 
-The `verify` job is pinned to **ubuntu-22.04**. This matters: the float bits of the
-C++ reference oracle's `expf`/`log10f` (used directly by `statisticsConservation` for
-MDK and probed by the T cases) are relative to the build environment's libm. The
-first CI run on `ubuntu-latest` (24.04, glibc 2.39) produced 1,906 bit-level
-mismatches against the port — the same seed passes 8,219/8,219 on the documented
-reference environment (Ubuntu 22.04, glibc 2.35, GCC 11, `-Wall -O2`), which is the
-baseline the pure-Java `expf`/`log10f` ports target. Pinning the runner keeps the
-oracle environment identical to that baseline.
+The `verify` job is pinned to **ubuntu-22.04**. The reference's float bits are
+relative to the environment it was built in, and that dependence is measured, not
+assumed: `.github/workflows/numeric-env.yml` builds the C++ oracle on several
+images, runs it there, and compares its own output with what it printed on
+ubuntu-22.04, field by field (`verify/numeric/compare_env.py`; the port is not
+involved in that comparison). The record is
+[reference-environments.json](reference-environments.json):
 
-`.github/workflows/numeric-env.yml` measures that dependence instead of assuming it.
-On demand it builds the reference on ubuntu-22.04 and ubuntu-24.04, runs both
-oracles, and compares what the C++ oracle printed in the two environments field by
-field (`verify/numeric/compare_env.py`) — the port is not involved. The comparison
-is written to the job log and uploaded as an artifact. It changes nothing: a
-reference built outside the documented environment is a different oracle, and the
-port does not claim to match it.
+| Image | glibc / GCC | Port against the oracle (8,219 + 492,300 probes) | Oracle against 22.04 |
+|---|---|---|---|
+| ubuntu-22.04 | 2.35 / 11.4 | 0 mismatches | — |
+| ubuntu-24.04 | 2.39 / 13.3 | 0 mismatches | identical |
+| ubuntu-latest (26.04) | 2.43 / 15.2 | 1,906 + 167,023 mismatches | `log10f` and the Q statistic differ |
+
+Two things change on 26.04. `log10f` was replaced by a correctly rounded
+implementation: 3,672 of 128,776 positive probes differ by one or two ulps, and on
+every sampled one the new value is the correctly rounded float and the old one is
+not (for negative inputs only the sign of the returned NaN differs; the reference
+passes `log10f` non-negative conservation values only). And GCC 15 compiles the
+`num += identity * distance` accumulation of `statisticsConservation::calculateVectors`
+with multiply-add contraction, where GCC 11 and 13 keep the sequential float32
+accumulation of the source; this was checked on every one of the 1,250 differing Q
+values. The reference executable is built with the image's own g++, so on such an
+image its Q, MDK and column selection differ from the baseline reference as well.
+
+The port is the reference built on Ubuntu 22.04, and the same bits on 24.04. A
+reference built on 26.04 is a different oracle, which the port does not claim to
+reproduce. Pinning the runner keeps the oracle at the baseline.

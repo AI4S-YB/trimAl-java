@@ -23,7 +23,8 @@ env:
 
 jobs:
   scale:
-    # Same runner as ci.yml: the float bits of the reference are libm-relative.
+    # Same runner as ci.yml: the reference's float bits are relative to the image's
+    # glibc and compiler (verify/reference-environments.json).
     runs-on: ubuntu-22.04
     timeout-minutes: 120
     steps:

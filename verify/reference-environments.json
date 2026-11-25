@@ -1,0 +1,44 @@
+{
+  "what": "How the reference's own float bits depend on the environment the reference was built in",
+  "measured": "2026-11-25",
+  "workflow": ".github/workflows/numeric-env.yml",
+  "run": 45597043230,
+  "method": "Build the C++ oracles (verify/oracle/numeric_oracle.cpp with the pinned upstream sources) on each image, run them there, and compare their own output with what they printed on the baseline image, field by field (verify/numeric/compare_env.py). The port's output on each image is compared with the oracle's as well (run_numeric.py, run_math.py). All three jobs ran on CPUs exposing fma, avx2 and avx512f, so glibc selected the same expf/logf implementations everywhere: the CPU is not what differs.",
+  "baseline": {
+    "image": "ubuntu-22.04",
+    "os": "Ubuntu 22.04.5 LTS",
+    "glibc": "2.35",
+    "gpp": "11.4.0",
+    "port_against_oracle": {"module_probes": 8219, "module_mismatches": 0,
+                            "float_probes": 492300, "float_mismatches": 0}
+  },
+  "environments": [
+    {
+      "image": "ubuntu-24.04",
+      "os": "Ubuntu 24.04.5 LTS",
+      "glibc": "2.39",
+      "gpp": "13.3.0",
+      "port_against_oracle": {"module_mismatches": 0, "float_mismatches": 0},
+      "oracle_against_baseline": {"module_probes_differing": 0, "float_probes_differing": 0}
+    },
+    {
+      "image": "ubuntu-latest",
+      "os": "Ubuntu 26.04.1 LTS",
+      "glibc": "2.43",
+      "gpp": "15.2.0",
+      "port_against_oracle": {"module_mismatches": 1906, "float_mismatches": 167023},
+      "oracle_against_baseline": {
+        "module": {"S": {"cases_differing": 544, "fields": {"window": 459, "q": 544, "mdk": 490, "conscut": 75, "window2": 92}},
+                   "T": {"cases_differing": 1362, "fields": {"log10": 1362}},
+                   "unchanged": "A, F, I, M, Q, R in full; the exp and sqrt fields of T"},
+        "float": {"T": {"cases_differing": 157347, "fields": {"log10": 157347}},
+                  "W": {"cases_differing": 9676, "fields": {"simcut": 9676}, "note": "follows from log10f"}}
+      },
+      "explained": {
+        "log10f": "glibc 2.43 rounds log10f differently. Of 128,776 positive normal probes, 3,672 differ (3,661 by 1 ulp, 11 by 2 ulp, none further); on 1,224 sampled differing probes the 2.43 value was the correctly rounded float in every case and the 2.35 value in none. For the 153,431 negative probes only the sign of the returned NaN differs (0x7fc00000 against 0xffc00000); the reference calls log10f on non-negative conservation values only. expf is unchanged.",
+        "q": "GCC 15 compiles `num += matrixIdentity[j][k] * getDistance(a, b)` of statisticsConservation::calculateVectors with multiply-add contraction, GCC 11 and 13 as the sequential float32 accumulation of the source. Checked on the 1,250 differing q values of 105 amino-acid cases: the 2.35 / GCC 11 oracle equals the sequential model in every value, the 2.43 / GCC 15 oracle equals the contracted model in every value. The reference executable itself is built with the image's default g++ flags (-Wall -O2), so on such an image its Q, MDK and column selection differ from the baseline reference as well."
+      }
+    }
+  ],
+  "conclusion": "The port is the reference built on Ubuntu 22.04, and the same bits on Ubuntu 24.04. A reference built on Ubuntu 26.04 is a different oracle, which the port does not claim to reproduce."
+}

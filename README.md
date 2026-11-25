@@ -15,11 +15,19 @@ inputs—not an unconditional guarantee for every possible input or reference bu
 - Pinned tag: `v1.5.1`
 - Commit: `d637091abe33595775f40480970d1a18d87a7bcb`
 - CLI version: `trimAl v1.5.rev1 build[2025-11-25]`
-- Oracle: Linux x86-64, `g++ 11.4.0`, `-Wall -O2`.
+- Oracle: Linux x86-64, `g++ 11.4.0`, `-Wall -O2` on Ubuntu 22.04.
 
 All 24 acquired C++ source/header/makefile blobs match the pinned tag. Exact source
 fingerprints and the tag comparison are in `verify/reference*.json`, and CI re-checks
 the blobs on every run.
+
+The reference's float bits are relative to the environment it was built in, and that
+was measured ([verify/reference-environments.json](verify/reference-environments.json)):
+a reference built on Ubuntu 24.04 (glibc 2.39, GCC 13) prints the same bits as one
+built on 22.04, and the port matches both, probe for probe. On Ubuntu 26.04 (glibc
+2.43, GCC 15) it does not: `log10f` became a correctly rounded implementation, and
+GCC 15 contracts one accumulation into a fused multiply-add. The port is the 22.04
+reference, which is also the 24.04 one, and CI is pinned to that image.
 
 The port is built and verified by a behavior-first, oracle-driven method, written up
 in [docs/method.md](docs/method.md): algorithms retain the original float/double

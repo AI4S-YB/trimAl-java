@@ -14,11 +14,14 @@ algorithm as described in a paper:
 - all 24 source, header and makefile blobs verified against the tag's tree by Git
   blob hash (`verify/identify_reference.py`), in CI on every run.
 
-The build environment is part of the oracle. The float overloads of `expf` and
-`log10f` return bits that depend on the libm they come from, and the reference uses
-them directly in its conservation statistic. The same C++ oracle that matches the
-port on glibc 2.35 disagrees on 1,906 of 8,219 probes on glibc 2.39. So the
-environment is recorded with every result, and CI runs on the same image.
+The build environment is part of the oracle, and that was measured rather than
+assumed (`verify/reference-environments.json`): the same C++ oracle prints
+identical bits on Ubuntu 22.04 (glibc 2.35, GCC 11) and on 24.04 (glibc 2.39,
+GCC 13), and the port matches it on both, probe for probe. On 26.04 (glibc 2.43,
+GCC 15) it does not: `log10f` was replaced by a correctly rounded implementation,
+and GCC 15 contracts one accumulation of the Q statistic into a fused multiply-add.
+The port is the 22.04 reference, which is also the 24.04 one. So the environment
+is recorded with every result, and CI runs on the baseline image.
 
 "Equal" means all of: exit status, stdout, stderr, and every file written, compared
 byte for byte. No whitespace, precision or line-ending normalisation is applied
