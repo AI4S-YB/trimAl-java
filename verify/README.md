@@ -60,6 +60,13 @@ the downloaded-data gates need their corpora under `verify/corpus/`, the `window
 gates need a Windows `java.exe`, `numeric_junit` a Maven repository. With
 `--skip-missing` such gates are recorded as skipped instead.
 
+Before the driver starts, `run_all.sh` runs `verify/workflow_check.py` on the
+workflow files. GitHub validates a workflow before it starts anything: an invalid
+file fails every run in zero seconds, with no job and no log, on every branch at
+once, so nothing inside CI can report it. (A typo in an expression once did exactly
+that.) The script parses each workflow and checks the expressions, the step keys,
+and every `matrix` reference.
+
 Before the first gate the driver records what it is about to verify: the commit,
 whether the tree is clean, the JAR's SHA-256, the reference binaries' SHA-256 and
 `--version` output, `uname`, the glibc, `g++`, `java` and Python versions, and the
