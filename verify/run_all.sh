@@ -4,26 +4,26 @@
 # This file is part of the trimAl Java port verification tooling
 # (https://github.com/inab/trimal, GPL-3.0-or-later).
 #
-# Build with tests, generate the quick matrix, and compare all output bytes.
-# Pass --scale to additionally run the slow 3,583-sequence conservation jobs.
+
+# Build with unit tests, then run the verification gates through verify/run_full.py.
+# Everything after the build is the driver's: `--only quick,numeric`, `--skip pffull`,
+# `--skip-missing` and its other options are passed on. Without arguments every gate
+# runs, including the slow ones and those that need downloaded data or a Windows JVM.
+#
+# Launched from Git Bash, the JAR is built on the Windows side and the gates run
+# under WSL, where the reference executables work. No Maven installation is needed:
+# the build goes through the Maven wrapper.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-if command -v cygpath >/dev/null 2>&1; then
-  cd "$ROOT"
-  mvn -B -f java/pom.xml package
-  WINDOWS_ROOT="$(cygpath -m "$ROOT")"
-  WSL_ROOT="$(wsl -e wslpath -a "$WINDOWS_ROOT" </dev/null | tr -d '\r')"
-  MSYS_NO_PATHCONV=1 exec wsl -e env TRIMAL_SKIP_BUILD=1 bash "$WSL_ROOT/verify/run_all.sh" "$@" </dev/null
-fi
 cd "$ROOT"
+
+if command -v cygpath >/dev/null 2>&1 && [[ "${TRIMAL_SKIP_BUILD:-0}" != 1 ]]; then
+  java/mvnw -B -f java/pom.xml package
+  WSL_ROOT="$(wsl -e wslpath -a "$ROOT" </dev/null | tr -d '\r')"
+  TRIMAL_SKIP_BUILD=1 exec wsl -e bash "$WSL_ROOT/verify/run_all.sh" "$@" </dev/null
+fi
+
 if [[ "${TRIMAL_SKIP_BUILD:-0}" != 1 ]]; then
-  mvn -B -f java/pom.xml package
+  java/mvnw -B -f java/pom.xml package
 fi
-python3 verify/generate_suite.py
-python3 verify/differential.py verify/quick_manifest.txt --timeout 90 --jobs 2
-python3 verify/differential.py verify/extended_manifest.txt --timeout 90 --jobs 2
-python3 verify/differential.py verify/legacy_manifest.txt --timeout 90 --jobs 2
-python3 verify/companions/verify_companions.py --java-jar "$ROOT/java/target/trimal.jar"
-if [[ "${1:-}" == --scale ]]; then
-  python3 verify/differential.py verify/scale_manifest.txt --timeout 3600 --jobs 1
-fi
+python3 verify/run_full.py "$@"

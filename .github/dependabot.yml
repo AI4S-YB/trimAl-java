@@ -1,0 +1,13 @@
+version: 2
+# Weekly proposals for the two kinds of dependencies: the workflow actions (pinned
+# by commit, so an update is a deliberate review of the new hash) and the Maven
+# plugins and test libraries of the Java project.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: maven
+    directory: /java
+    schedule:
+      interval: weekly
