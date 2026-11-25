@@ -82,7 +82,7 @@ jobs:
       - name: Loader fuzz gates (three labels)
         run: python3 verify/fuzz_suite.py --all
 
-      - name: CLI argument fuzz gates (two labels)
+      - name: CLI argument fuzz gates (three labels)
         run: python3 verify/argfuzz_suite.py --all
 
       - name: Boundary/alignment audit and direct-method probes

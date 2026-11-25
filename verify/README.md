@@ -336,3 +336,11 @@ mismatches against the port — the same seed passes 8,219/8,219 on the document
 reference environment (Ubuntu 22.04, glibc 2.35, GCC 11, `-Wall -O2`), which is the
 baseline the pure-Java `expf`/`log10f` ports target. Pinning the runner keeps the
 oracle environment identical to that baseline.
+
+`.github/workflows/numeric-env.yml` measures that dependence instead of assuming it.
+On demand it builds the reference on ubuntu-22.04 and ubuntu-24.04, runs both
+oracles, and compares what the C++ oracle printed in the two environments field by
+field (`verify/numeric/compare_env.py`) — the port is not involved. The comparison
+is written to the job log and uploaded as an artifact. It changes nothing: a
+reference built outside the documented environment is a different oracle, and the
+port does not claim to match it.
