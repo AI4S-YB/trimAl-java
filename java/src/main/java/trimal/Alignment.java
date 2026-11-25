@@ -3278,7 +3278,7 @@ public class Alignment {
           avg += identities[i][j];
         }
       }
-      avgSeq += avg / (sequenNumber - 1);
+      avgSeq += Utils.x86Div(avg, sequenNumber - 1);
       maxSeq += mx;
     }
 
@@ -3323,14 +3323,14 @@ public class Alignment {
           }
         }
       }
-      avgSeq += avg / (sequenNumber - 1);
+      avgSeq += Utils.x86Div(avg, sequenNumber - 1);
       maxAvgSeq += mx;
 
       maxs[i][0] = mx;
       maxs[i][1] = pos;
     }
 
-    // 0/0 with no sequence: the reference's NaN is the x86 one ("-nan")
+    // 0/0 with no sequence, or one: the reference's NaN is the x86 one ("-nan")
     avgSeq = Utils.x86Div(avgSeq, sequenNumber);
     maxAvgSeq = Utils.x86Div(maxAvgSeq, sequenNumber);
 
@@ -3398,14 +3398,14 @@ public class Alignment {
           }
         }
       }
-      avgSeq += avg / (sequenNumber - 1);
+      avgSeq += Utils.x86Div(avg, sequenNumber - 1);
       maxAvgSeq += mx;
 
       maxs[i][0] = mx;
       maxs[i][1] = pos;
     }
 
-    // 0/0 with no sequence: the reference's NaN is the x86 one ("-nan")
+    // 0/0 with no sequence, or one: the reference's NaN is the x86 one ("-nan")
     avgSeq = Utils.x86Div(avgSeq, sequenNumber);
     maxAvgSeq = Utils.x86Div(maxAvgSeq, sequenNumber);
 
