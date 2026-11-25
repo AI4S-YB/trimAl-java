@@ -34,8 +34,9 @@ From Linux or Windows Git Bash:
 bash verify/run_all.sh
 ```
 
-The script builds the Java JAR with unit tests enabled, generates deterministic
-FASTA inputs (seed `8151973`), and invokes the quick differential matrix. Every
+The script builds the Java JAR with unit tests enabled, generates the deterministic
+quick, extended and legacy matrices, and runs all three plus the companion suite
+(`--scale` adds the slow conservation jobs). Every
 native/Java pair uses the same working directory and input filename; `$OUT` and
 `$HTML` expand to isolated output directories. All stdout, stderr, exit status and
 produced alignment/HTML files are compared. **No whitespace, precision or line-ending
@@ -131,7 +132,9 @@ guard behind the bit-exact parallelization claim.
 **Loader fuzz gate** (`fuzz_suite.py`, seed 90210): 180 deterministic mutations of
 real corpus alignments — truncations, byte flips, line surgery, CRLF injection,
 control/high-byte insertion — each compared byte-for-byte through the same strict
-harness. This gate caught and fixed the `strcpy` NUL-truncation divergence in
+harness. 75 of the 180 mutants are accepted by the loader and written out; the other
+105 take its rejection paths, which are compared just as strictly. This gate caught
+and fixed the `strcpy` NUL-truncation divergence in
 `utils::readLine`. `run_numeric.py` and `run_math.py` fail on production-field
 mismatches or failed processes; diagnostic comparisons to unused Java double math
 are recorded separately, never mistaken for float compatibility failures. The UB
@@ -141,9 +144,10 @@ Java exceptions or unexecuted requested round trips; its original native crashes
 remain separately classified. The Windows smoke script requires Windows `java.exe`
 reachable from WSL; override `TRIMAL_WINDOWS_JAVA` or `--java-exe` when necessary.
 
-Exact final counts are recorded in `validation-summary.json` and summarized in the
-project README. Generated inputs/results are local test assets, not biological
-reference data.
+`validation-summary.json` holds the integrated counts of the October 16 run; the
+project README table lists each suite together with the date of its run (see its
+"Evidence provenance" section). Generated inputs/results are local test assets, not
+biological reference data.
 
 ## CI
 
@@ -152,6 +156,11 @@ upstream tag v1.5.1, builds the reference with make, runs the JUnit-enabled Mave
 build, the numeric oracle, the three differential matrices, the companion suite,
 the thread determinism gate and the loader fuzz gate on an ubuntu runner. The
 Windows smoke stays manual (it requires a Windows JVM host).
+
+The workflow's final `Summarize` step currently has no effect in CI:
+`validation_summary.py` depends on local audit results that CI does not produce, and
+the step ignores its own exit status. In CI, each gate's result is the exit status of
+its own step.
 
 ## Downloaded real-data gates (Pfam / eggNOG)
 
@@ -170,9 +179,11 @@ python3 verify/eggnog_stream.py           # or: bash verify/pdl.sh <tar-url> <by
 python3 verify/differential.py verify/eggnog_manifest.txt --timeout 3600 --jobs 1
 ```
 
-Measured on the reference datasets: every downloaded-data case byte-identical,
-with the Java build faster than the reference on every case (strict up to 13x,
-automated1 up to 12x, sgc up to 47x).
+Measured on the reference datasets (runs of 2026-10-24, before commit `bd7d642`):
+every downloaded-data case byte-identical. On the eggNOG clusters the Java build is
+faster on every case (strict up to 15x, automated1 up to 13x, sgc up to 49x). The
+Pfam-A.seed families are small enough that both implementations finish in about
+0.1 s per case, where JVM startup makes the Java build the slower of the two.
 
 ## CI runner environment
 

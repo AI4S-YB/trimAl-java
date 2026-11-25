@@ -91,14 +91,17 @@ independent suite's directory.
 bash verify/run_all.sh
 ```
 
-This command builds with unit tests enabled, runs the generated main-program quick
-matrix and the companion-tool suite. A real test failure or timeout fails the run;
+This command builds with unit tests enabled, runs the generated quick, extended and
+legacy matrices and the companion-tool suite (`--scale` adds the slow conservation
+jobs). A real test failure or timeout fails the run;
 known native undefined-behavior cases are reported separately, never counted as
 byte-identical PASS. See [verify/README.md](verify/README.md) for prerequisites,
 reference setup, manifests and individual runners.
 
-The final integrated counts are recorded in [verify/validation-summary.json](verify/validation-summary.json).
-The completed verification run has **zero actual failures**:
+The integrated counts of the October 16 run are recorded in
+[verify/validation-summary.json](verify/validation-summary.json); the other rows come from
+their own run directories (see [Evidence provenance](#evidence-provenance)). No completed
+run has an actual failure:
 
 | Suite | Strict byte/bit matches | Separately recorded differences |
 |---|---:|---:|
@@ -108,13 +111,13 @@ The completed verification run has **zero actual failures**:
 | Main `trimal` CLI — scale (3,583-seq real data + 4×60,000-col wide) | 8 / 8 | None |
 | `readal` / `statal` CLI | 474 / 475 | 1 native double-free |
 | Boundary/alignment audit | 480 / 605 | 125 native UB/crash paths |
-| Loader fuzz (two seeds × 180 mutations) | 360 / 360 | None |
+| Loader fuzz (seed 90210, 180 mutations) | 180 / 180 | None (75 cases load and write; 105 exercise rejection paths) |
 | Downloaded real data: Pfam-A.seed top-10 families | 40 / 40 | None |
 | Downloaded real data: 8 eggNOG5 Bacteria clusters (4K-10K seqs) | 32 / 32 | None |
 | Downloaded real data: Pfam-A.full mega-families (79K–366K seqs) | 30 / 30 | None |
 | Companions on downloaded clusters (readal conversions / statal stats) | 64 / 64 | None |
 | Thread determinism (4 workloads × 6 configs) | all byte-identical | None |
-| Windows: full quick matrix (Windows Java vs Linux ref) | 502 / 502 | None |
+| Windows: full quick matrix (Windows Java vs Linux ref) | 498 / 502, plus 8 / 8 in a rerun of the affected cases | 4 harness-path failures in the full run (passed in the rerun) |
 | Windows: full extended matrix (Windows Java vs Linux ref) | 471 / 474 | 3 native UB (same signature as Linux) |
 | Windows: CLI smoke + companions | 96 / 96 | None |
 | Numeric module oracle | 8,219 / 8,219 | None in the production fields |
@@ -122,9 +125,12 @@ The completed verification run has **zero actual failures**:
 | Integrated JUnit | 33 / 33 | None |
 
 The main CLI now covers **1,100 differential cases** (quick + extended + legacy) with
-zero actual failures, plus **360 loader-fuzz mutations** across two seeds and the
-full quick matrix re-verified **cross-platform** (Windows Temurin Java against the
-Linux reference binary, 502/502 byte-identical). The extended matrix adds full
+zero actual failures, plus **180 loader-fuzz mutations** (seed 90210). The same quick
+matrix was also run **cross-platform** with Windows Temurin Java against the Linux
+reference binary: 498 of 502 cases matched in the full run, and the four remaining
+cases — whose input lists the harness had not mapped to the Windows path — matched in
+a rerun after the harness fix. A single full run on the current commit is pending. The
+extended matrix adds full
 input×output format grids,
 manual-threshold/window/block/boundary/selection/cluster parameter sweeps, custom and
 alternative similarity matrices, backtranslation codon variants, five-alignment
@@ -157,9 +163,11 @@ bash verify/run_all.sh --scale
 ```
 
 All four have been completed **byte-identical** against the reference, and the Java
-build is now substantially faster on every one of them: strict 5 s vs 60 s,
-strictplus 5 s vs 58 s, automated1 8 s vs 88 s, gappyout -htmlout 8 s vs 526 s
-(11–66×; totals ≈ 26 s vs ≈ 12 min). Three changes deliver this while keeping every
+build is substantially faster on every one of them: strict 4.9 s vs 57.1 s,
+strictplus 5.1 s vs 58.1 s, automated1 7.7 s vs 86.6 s, gappyout -htmlout 6.3 s vs
+468.4 s (11–74×; totals ≈ 24 s vs ≈ 11 min; `scale_timings` in
+[verify/validation-summary.json](verify/validation-summary.json), run
+`scale_manifest-20261016-184943`). Three changes deliver this while keeping every
 output byte identical: the O(sequence-count² × columns) statistics loops run in
 parallel across rows/columns with per-unit serial accumulation order (`-Dtrimal.threads=1`
 forces the plain serial loop), the HTML writers precompute each column once per
@@ -179,14 +187,15 @@ O(n²) identity matrix is infeasible at this scale in *both* implementations):
 
 | Family | Sequences × Columns | Native | Java |
 |---|---|---:|---:|
-| `7tm_1` — gappyout | 366,230 × 3,489 | 1,947 s | **71 s (27×)** |
-| `7tm_1` — noallgaps | 366,230 × 3,489 | 2,304 s | **82 s (28×)** |
+| `7tm_1` — gappyout | 366,230 × 3,489 | 1,513 s | **56 s (27×)** |
+| `7tm_1` — noallgaps | 366,230 × 3,489 | 1,517 s | **60 s (25×)** |
 | `2_Hacid_dh_C` — gappyout | 126,849 × 1,500 | 226 s | **7 s (32×)** |
 | all 30 mega cases | up to 366K seqs | **189 min total** | **5 min total (38×)** |
 
-All 30 cases are **byte-identical** (`pffull_manifest.txt`, runner
-`pffull_extract.py`). At this scale the reference spends 32 minutes and a sluggish
-per-column `std::string` walk on `7tm_1` gappyout, while the port finishes in 71
+All 30 cases are **byte-identical** in the completed run
+`pffull_manifest-20261121-114055` (`pffull_manifest.txt`, extracted by
+`pffull_extract.py`). At this scale the reference spends 25 minutes and a sluggish
+per-column `std::string` walk on `7tm_1` gappyout, while the port finishes in 56
 seconds — and both write identical 1.3 GB outputs.
 
 ## Preserved quirks and explicit differences
@@ -227,6 +236,34 @@ seconds — and both write identical 1.3 GB outputs.
 
 These cases and their evidence are visible in the result reports; there is no
 blanket normalization or SKIP rule hiding native-success/Java-missing-output bugs.
+
+### Evidence provenance
+
+The rows of the verification table were not all produced by the same code revision:
+
+- **Re-validated on every push by CI** ([ci.yml](.github/workflows/ci.yml)): the quick,
+  extended and legacy matrices, the `readal`/`statal` companions, the numeric module
+  oracle, thread determinism and the seed-90210 loader fuzz.
+- **Last run on 2026-10-16, before the loader fixes of commit `bd7d642` (2026-11-18)**:
+  the scale gate (`scale_manifest-20261016-184943`), the boundary/alignment audit
+  (`alignment_audit/results_final-review`), the independent float math oracle, and the
+  Windows smoke and companion suites.
+- **Last run on 2026-10-23/24, also before `bd7d642`**: the Windows quick matrix (full
+  run `windows-matrix/20261023-232313` plus the 8-case rerun `20261023-232657` that
+  followed the harness path fix), the Pfam-A.seed gate
+  (`pfam_manifest-20261024-012205`) and the eggNOG gate
+  (`eggnog_manifest-20261024-015135`).
+- **Run at or after `bd7d642`**: companions on downloaded clusters
+  (`readal_big_manifest-20261118-085938`, `statal_big_manifest-20261118-090822`), the
+  Windows extended matrix (`windows-matrix/20261118-085948`) and the Pfam-A.full
+  mega-families (`pffull_manifest-20261121-114055`).
+- `verify/validation-summary.json` is the October 16 integrated snapshot; it does not
+  include the fuzz, downloaded-data, thread-determinism or full Windows rows, and its
+  recorded JAR predates the current build.
+
+A single re-verification of every row on the current commit, with the commit and JAR
+hashes recorded per row, is in progress; until it lands, read each row together with
+its date.
 
 ## Project layout
 
