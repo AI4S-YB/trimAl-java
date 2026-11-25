@@ -25,12 +25,19 @@ with the committed hash list (verify/corpus_manifests/eggnog.sha256): a corpus t
 differs from the one earlier verification runs used is reported, and the list is not
 rewritten unless --update-manifest is given.
 
+One more alignment is derived from the COG0037 member, in two forms, because a
+truncated real file is worth having as input (see TRUNCATED_MEMBER):
+COG0037.trimmed_alg.head.faa holds its complete records up to the cut and is aligned;
+COG0037.trimmed_alg.prefix.faa holds the cut bytes themselves, whose last record is
+cut in the middle, so the sequences differ in length and every tool rejects it.
+
     python3 verify/eggnog_stream.py                                  # remote, HTTP Range
     python3 verify/eggnog_stream.py --from-file verify/downloads/eggnog_window.bin
     python3 verify/eggnog_stream.py --verify                         # corpus vs. hash list
     bash verify/pdl.sh <tar-url> <bytes> <out> 16 <workdir>          # ranged download of a prefix
 
-The same extractor drives the 32-case gate manifest verify/eggnog_manifest.txt.
+The same extractor writes the gate manifest verify/eggnog_manifest.txt: the four
+methods of METHODS on every aligned file, and one case on the unaligned remainder.
 """
 import argparse
 import gzip
@@ -55,6 +62,11 @@ METHODS = ["-gappyout", "-automated1", "-strict -fasta", "-sgc"]
 # The corpus of every eggNOG gate run so far (see corpus_manifests/eggnog.sha256).
 PINNED = ["COG0006", "COG0008", "COG0013", "COG0018", "COG0019", "COG0025", "COG0031",
           "COG0037"]
+# The first streaming prototype saved COG0037 cut by the end of its download window:
+# the first TRUNCATED_BYTES of the member, an unaligned file. That accident is kept
+# as input, as the two forms described in the docstring.
+TRUNCATED_MEMBER = "COG0037"
+TRUNCATED_BYTES = 12083206
 
 
 class RemoteSource:
@@ -201,13 +213,33 @@ def extract(source, options):
     if not saved:
         raise SystemExit("no member of %.1f-%.1f MB found before the stop offset" % (
             options.min_mb, options.max_mb))
+    truncated(saved)
     return saved, found
+
+
+def truncated(saved):
+    """Add the truncated member in its two forms (see TRUNCATED_MEMBER)."""
+    complete = "verify/corpus/eggnog/%s.trimmed_alg.faa" % TRUNCATED_MEMBER
+    plain = saved[complete][0]
+    cut = plain[:TRUNCATED_BYTES]
+    if len(plain) <= TRUNCATED_BYTES:
+        raise SystemExit("%s is shorter than the recorded truncation; the member changed" % complete)
+    last = cut.rfind(b"\n>") + 1          # start of the last complete record
+    if last <= 0 or not cut[last:].startswith(b">"):
+        raise SystemExit("%s: no record boundary found below the recorded truncation" % complete)
+    head = plain[:last]
+    saved["verify/corpus/eggnog/%s.trimmed_alg.head.faa" % TRUNCATED_MEMBER] = (
+        head, hashlib.sha256(head).hexdigest())
+    saved["verify/corpus/eggnog/%s.trimmed_alg.prefix.faa" % TRUNCATED_MEMBER] = (
+        cut, hashlib.sha256(cut).hexdigest())
+    print("truncated %-32s %8.2f MB head (%d complete records) + %.2f MB unaligned remainder" % (
+        "%s.trimmed_alg" % TRUNCATED_MEMBER, len(head) / MIB, head.count(b"\n>") + 1,
+        len(cut) / MIB), flush=True)
 
 
 def compare_with_manifest(saved):
     """Extracted members against the committed hash list. Returns the differences.
-    Entries of the list that were not extracted now (other files kept in the corpus,
-    such as the legacy prefix below) are not differences."""
+    Entries of the list that are not extracted now are not differences."""
     if not HASH_MANIFEST.exists():
         return ["new corpus (no committed hash list yet)"]
     old = {}
@@ -259,22 +291,26 @@ def main():
     for relative, (data, _) in saved.items():
         (ROOT / relative).write_bytes(data)
     notes = ["corpus of the eggNOG gate; member names are pinned in verify/eggnog_stream.py",
-             "source: " + (options.from_file.as_posix() if options.from_file else URL)]
+             "source: " + (options.from_file.as_posix() if options.from_file else URL),
+             "%s.trimmed_alg.{head,prefix}.faa are derived from the complete member:"
+             " its first %d bytes, and the complete records inside them" % (TRUNCATED_MEMBER, TRUNCATED_BYTES)]
     if differences or not HASH_MANIFEST.exists():
         corpus_manifest.write_hashes(CORPUS, HASH_MANIFEST, notes)
 
-    alignments = sorted(p for p in CORPUS.glob("*.faa"))
-    rows = ["# eggNOG5 Bacteria clusters: %d alignments x %d methods" % (len(alignments), len(METHODS)),
-            "# COG0037.trimmed_alg.prefix.faa is the first 12,083,206 bytes of COG0037: the"
-            " truncated member an earlier extractor saved when the download window cut it."]
-    for path in alignments:
-        relative = path.relative_to(ROOT).as_posix()
-        rows.extend("-in %s %s -out $OUT" % (relative, method) for method in METHODS)
+    aligned = [path for path in sorted(CORPUS.glob("*.faa")) if not path.name.endswith(".prefix.faa")]
+    unaligned = sorted(CORPUS.glob("*.prefix.faa"))
+    rows = ["# eggNOG5 Bacteria clusters: %d aligned files x %d methods, and one case on the"
+            " unaligned remainder" % (len(aligned), len(METHODS))]
+    for path in aligned:
+        rows.extend("-in %s %s -out $OUT" % (path.relative_to(ROOT).as_posix(), method)
+                    for method in METHODS)
+    for path in unaligned:
+        rows.append("-in %s -gappyout -out $OUT" % path.relative_to(ROOT).as_posix())
     content = "\n".join(rows) + "\n"
     if not CASE_MANIFEST.exists() or CASE_MANIFEST.read_text(encoding="utf-8") != content:
         CASE_MANIFEST.write_text(content, encoding="utf-8", newline="\n")
         print("WROTE " + CASE_MANIFEST.relative_to(ROOT).as_posix())
-    print("CASES %d" % (len(rows) - 2))
+    print("CASES %d" % (len(rows) - 1))
     return 0
 
 

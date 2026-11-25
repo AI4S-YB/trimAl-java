@@ -13,17 +13,20 @@
     python3 verify/validation_summary.py --render         # rewrite the README tables
 
 A record is verify/work/run-<timestamp>/gates.json: one entry per gate with its exit
-status, seconds, report and a compact summary. Records may be merged only when they
-share the same commit and JAR hash, and a run made in a dirty tree is refused, so the
-summary always describes one exact build.
+status, seconds, load, report and a compact summary. Several records may be merged
+when they verified the same build - the same JAR and the same reference binaries -
+even from different commits (a corpus changes, and only the gates that read it are
+re-run); every gate then names the commit and the run it comes from, and a run made
+in a dirty tree is refused, so the summary always describes one exact build.
 
 A known native divergence is never counted as a match. `gated_failures` is the number
 of gates with a non-zero exit status plus every failed case inside the other gates;
 it must be zero for a summary to be written at all.
 
 The README tables live between `<!-- verification-table:start -->` / `:end -->`,
-`<!-- scale-table:... -->` and `<!-- mega-table:... -->` markers; `--render` replaces
-only what is between them, so no number in those tables is typed by hand.
+`<!-- verification-provenance:... -->`, `<!-- scale-table:... -->` and
+`<!-- mega-table:... -->` markers; `--render` replaces only what is between them, so
+no number in those tables is typed by hand.
 """
 import argparse
 import json
@@ -47,15 +50,16 @@ ROWS = [
     ("Main `trimal` CLI — legacy baseline", ["legacy"]),
     ("Main `trimal` CLI — scale (3,583-sequence real data + 4×60,000-column wide)", ["scale"]),
     ("`readal` / `statal` CLI", ["companions"]),
-    ("Boundary/alignment audit (parse, writers, edge shapes, round trips)", ["audit"]),
+    ("Boundary/alignment audit (parse, writers, edge shapes, round trips) ‡", ["audit"]),
     ("Direct-source probes (matrix order, locale, 96 identity alignments)", ["probes"]),
     ("Loader fuzz (three labels × 180 mutations)", ["fuzz", "fuzz2", "fuzz3"]),
     ("CLI argument fuzz (two random labels and one accepted-shape label, 400 vectors each)",
      ["argfuzz", "argfuzz2", "argfuzz3"]),
     ("Downloaded real data: Pfam-A.seed top-10 families", ["pfam"]),
-    ("Downloaded real data: 8 eggNOG5 Bacteria clusters + 1 truncated member", ["eggnog"]),
+    ("Downloaded real data: 8 eggNOG5 Bacteria clusters and the truncated head of a ninth "
+     "(plus its unaligned remainder)", ["eggnog"]),
     ("Downloaded real data: Pfam-A.full mega-families (up to 366K sequences)", ["pffull"]),
-    ("Companions on downloaded clusters (readal conversions / statal stats)",
+    ("Companions on the eggNOG clusters (readal conversions / statal stats)",
      ["readal_big", "statal_big"]),
     ("Thread determinism (4 workloads × 6 thread settings)", ["threading"]),
     ("Windows: full quick matrix (Windows Java vs Linux reference)", ["windows_quick"]),
@@ -80,29 +84,73 @@ def load_run(directory):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def fingerprints(provenance):
+    return {name: info["sha256"] for name, info in sorted(provenance["reference_binaries"].items())
+            if info}
+
+
 def merge(directories, allow_partial, allow_dirty):
-    records = [load_run(directory) for directory in sorted(directories)]
-    base = records[0]["provenance"]
-    for record in records[1:]:
+    """One record out of several run_full.py runs. They must have verified the same
+    build - the same JAR and the same reference binaries - and none may come from a
+    dirty tree. They may come from different commits: after a change to a corpus,
+    say, only the gates that read it are re-run. Every gate then names the commit
+    it ran on, and the record lists them all."""
+    directories = sorted(Path(directory).resolve() for directory in directories)
+    records = [load_run(directory) for directory in directories]
+    base = dict(records[0]["provenance"])
+    for record in records:
         other = record["provenance"]
-        if other["commit"] != base["commit"]:
-            raise SystemExit("runs to merge must share one commit: %s vs %s" % (
-                base["commit"][:10], other["commit"][:10]))
         if other["jar"]["sha256"] != base["jar"]["sha256"]:
             raise SystemExit("runs to merge must share one JAR: %s vs %s" % (
                 base["jar"]["sha256"][:16], other["jar"]["sha256"][:16]))
-    if base["dirty_files"] and not allow_dirty:
-        raise SystemExit("the run was made in a dirty tree (%d file(s)); a summary describes "
-                         "one exact build (pass --allow-dirty to override)" % len(base["dirty_files"]))
+        if fingerprints(other) != fingerprints(base):
+            raise SystemExit("runs to merge must share the reference binaries")
+        if other["dirty_files"] and not allow_dirty:
+            raise SystemExit("a run was made in a dirty tree (%d file(s)); a summary describes "
+                             "one exact build (pass --allow-dirty to override)" % len(other["dirty_files"]))
+    base["commits"] = sorted({record["provenance"]["commit"] for record in records})
     gates, skipped = {}, {}
-    for record in records:
-        gates.update({entry["name"]: entry for entry in record["gates"]})
+    for directory, record in zip(directories, records):
+        for entry in record["gates"]:
+            gates[entry["name"]] = dict(entry, commit=record["provenance"]["commit"],
+                                        run=directory.relative_to(ROOT).as_posix())
         skipped.update(record.get("skipped", {}))
     absent = [name for name in run_full.GATE_NAMES if name not in gates and name not in skipped]
     if absent and not allow_partial:
         raise SystemExit("the run(s) do not cover: " + ", ".join(absent))
-    runs = [Path(directory).resolve().relative_to(ROOT).as_posix() for directory in sorted(directories)]
+    runs = [directory.relative_to(ROOT).as_posix() for directory in directories]
     return base, gates, skipped, absent, runs
+
+
+def provenance_lines(provenance):
+    """The paragraph under the table: what exactly was verified, and where."""
+    jar, environment = provenance["jar"], provenance["environment"]
+    binaries = ", ".join("%s `%s`" % (name, info["sha256"][:12])
+                         for name, info in sorted(provenance["reference_binaries"].items()) if info)
+    commits = provenance.get("commits") or [provenance["commit"]]
+    fields = environment["uname"].split()
+    system = fields[0] if fields else ""
+    kernel = fields[2] if len(fields) > 2 else ""
+    compiler = (environment.get("gpp") or [""])[0].split(",")[0]
+    load = (environment.get("loadavg_at_start") or [None])[0]
+    lines = [
+        "**Provenance.** Recorded by `verify/run_full.py`. The full record is "
+        "[verify/validation-summary.json](verify/validation-summary.json), where every gate "
+        "names the commit and the run it comes from.",
+        "",
+        "- Build: commit%s %s; JAR SHA-256 `%s` (%s bytes)." % (
+            "s" if len(commits) > 1 else "", ", ".join("`%s`" % commit[:10] for commit in commits),
+            jar["sha256"][:16], num(jar["bytes"])),
+        "- Reference: %s, built from the pinned source with %s." % (binaries, compiler or "g++"),
+        "- Environment: %s %s, %s, %s." % (system, kernel, environment.get("glibc", ""),
+                                           (environment.get("java") or [""])[0]),
+    ]
+    if load is not None:
+        lines.append("- Load average of the machine before the first gate: %s on %s cores. The "
+                     "machine was not idle, so the seconds in the record are those of a machine "
+                     "under that load; each speed-up compares the two implementations under the "
+                     "same load." % (load, environment.get("cpu_count")))
+    return lines
 
 
 def tally(name, summary):
@@ -287,7 +335,8 @@ def main():
     summary = {
         "provenance": provenance,
         "runs": runs,
-        "gates": {name: {key: gate[key] for key in ("command", "rc", "seconds", "log", "report", "summary")}
+        "gates": {name: {key: gate.get(key) for key in (
+                    "command", "rc", "seconds", "loadavg", "commit", "run", "log", "report", "summary")}
                   for name, gate in sorted(gates.items())},
         "skipped_gates": skipped,
         "gates_not_run": absent,
@@ -307,6 +356,7 @@ def main():
     if options.render:
         text = README.read_text(encoding="utf-8")
         text = replace_block(text, "verification-table", verification_table(gates))
+        text = replace_block(text, "verification-provenance", provenance_lines(provenance))
         if "scale" in gates:
             text = replace_block(text, "scale-table", timing_table(summary["scale_timings"], "Job"))
         if "pffull" in gates:

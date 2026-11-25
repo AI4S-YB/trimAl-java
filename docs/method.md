@@ -85,7 +85,7 @@ Each layer can fail alone, and none is derived from another:
 | Argument fuzz | random and accepted-shaped argument vectors | 3 × 400 |
 | Boundary audit | edge shapes, every writer read back by every parser, direct method probes | 605 + 3 |
 | Golden CLI gate | the port run in-process against recorded reference output, in `mvn test` | 1,432 cases, any OS and JDK |
-| Real data | Pfam-A.seed families, eggNOG clusters, Pfam-A.full mega-families, companions on them | 259 cases |
+| Real data | Pfam-A.seed families, eggNOG clusters (and the truncated head of one of them), Pfam-A.full mega-families, companions on them | 262 cases |
 | Cross-platform | Windows Java against the Linux reference | 1,000+ cases |
 | Determinism | 1, 2, 7 and default thread counts against each other and the reference | 4 workloads |
 | Coverage | every method the reference can reach and every CLI option exists in the port | machine-checked |
@@ -108,6 +108,12 @@ one of three classes, and the class decides what the port does:
   trimmed, an empty comparison set, a similarity matrix that failed to load and is
   used anyway. The port either continues with a defined result or reports the
   problem and exits; it never prints a stack trace where the reference crashes.
+  Some of these crashes are not deterministic: on six audit cases (a
+  backtranslation with an empty selection) the reference segfaults in about half of
+  the runs and exits normally in the rest. Whenever it exits normally, its output is
+  byte-identical to the port's — the strongest evidence there is that the port's
+  safe continuation is the right one. Such a case is a strict match in one run and a
+  recorded native crash in the next, never a failure in either.
 
 The class of every site is visible in the result reports. The port never turns an
 undefined behaviour of the reference into a matching success.

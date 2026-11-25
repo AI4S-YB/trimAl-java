@@ -139,13 +139,15 @@ one on its own.
 | Integrated JUnit (`mvn package`), the golden gate included | 1,466 / 1,466 | None | — |
 <!-- verification-table:end -->
 
-Rows without a mark come from runs of the current sources. Rows marked † are the
-last completed run of that gate, which predates them: the scale gate (2026-10-16),
-the Pfam-A.full gate (2026-11-21), the Windows suites (2026-10-23 and 2026-11-18)
-and the `readal` half of the companions on downloaded clusters (2026-11-25, before
-the last fixes). The Pfam-A.seed and eggNOG gates have not yet been run on a corpus
-the reference accepts. A full run of every gate on one commit, with the commit and
-the JAR hash recorded, is in progress and will replace this table.
+<!-- verification-provenance:start -->
+**Provenance (provisional).** Rows marked † are the last completed run of that gate
+before this build: the scale gate (2026-10-16), the Pfam-A.full gate (2026-11-21),
+the Windows suites (2026-10-23 and 2026-11-18) and the `readal` half of the
+companions on the eggNOG clusters (2026-11-25, before the last fixes). The Pfam-A.seed
+and eggNOG gates had not yet been run on a corpus the reference accepts. A full run
+of every gate on one commit is in progress; this paragraph is rendered from its
+record when it has finished.
+<!-- verification-provenance:end -->
 
 ### How to read the table
 
@@ -166,6 +168,12 @@ the JAR hash recorded, is in progress and will replace this table.
   used options the tools do not have.
 - The suites overlap; the counts are reported per suite and never summed into one
   coverage figure.
+- ‡ Six cases of the boundary audit — a backtranslation whose selection of columns or
+  sequences is empty — sit on undefined behaviour on which the reference crashes in
+  about half of the runs and exits normally in the others (measured: 10 to 13 crashes
+  in 20 runs, per case). Whenever it exits normally, its output is byte-identical to
+  the port's. Those cases are therefore strict matches in some runs and native crash
+  paths in others; the two together are always 605.
 
 ### What the gates are
 
@@ -191,9 +199,9 @@ the JAR hash recorded, is in progress and will replace this table.
   port calls double `pow()` over 200,000.
 - **Coverage.** A machine check that every method the reference defines and can
   reach, and every CLI option of the three tools, has a counterpart in the port.
-- **Real data.** Pfam-A.seed families, eggNOG5 Bacteria clusters and the
-  mega-families of a Pfam-A.full window, each corpus pinned by the SHA-256 of its
-  files.
+- **Real data.** Pfam-A.seed families, eight eggNOG5 Bacteria clusters and the
+  truncated head of a ninth, and the mega-families of a Pfam-A.full window, each
+  corpus pinned by the SHA-256 of its files.
 
 ### Scale validation
 
@@ -304,6 +312,10 @@ with their exit status, streams and files kept, and are never counted as matches
    where the source would perform undefined C++ memory accesses. The boundary audit
    records the actual native observations and the port's result without counting them
    as successful byte matches.
+9. **Some of these crashes are not deterministic.** On six audit cases (a
+   backtranslation with an empty selection) the reference segfaults in about half of
+   the runs and exits normally in the rest. The port always takes the path the
+   reference takes when it survives, and its output is byte-identical to it there.
 
 There is no blanket normalization or SKIP rule hiding a reference-success versus
 port-missing-output bug: a tagged vector is compared strictly on every run in which

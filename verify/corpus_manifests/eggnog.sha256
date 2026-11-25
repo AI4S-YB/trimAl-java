@@ -1,7 +1,8 @@
 # corpus: verify/corpus/eggnog
 # corpus of the eggNOG gate; member names are pinned in verify/eggnog_stream.py
 # source: verify/downloads/eggnog_window.bin
-# 17 file(s), SHA-256, path relative to the repository root
+# COG0037.trimmed_alg.{head,prefix}.faa are derived from the complete member: its first 12083206 bytes, and the complete records inside them
+# 18 file(s), SHA-256, path relative to the repository root
 362bc6aed34bdb42ec38f3fc2686c3bdf7c1c07bd94c767830071d2cd3be1b41  verify/corpus/eggnog/COG0006.trimmed_alg.faa
 616c77cdcbad1562b989f13485c184cd0e02a323570d6298e607ad0892bde73e  verify/corpus/eggnog/COG0006.trimmed_alg.faa.gz
 c61988efbc4d6962a2cf29bd7d8bd3d613288678492d1aa9c3ca8734812c801e  verify/corpus/eggnog/COG0008.trimmed_alg.faa
@@ -18,4 +19,5 @@ e213413a96dd4d2697f4160a430ff9932e1272c910f772ebcd3af5702935d7d1  verify/corpus/
 ac324a055b2bc15c470db946e3bf7e2cc14e41718d025bf86ed47a121770ffb7  verify/corpus/eggnog/COG0031.trimmed_alg.faa.gz
 a59449f58bef4fefb96320a87aa3364134f1d86c6dd2f5f1dc5ee87c1aa1d2f5  verify/corpus/eggnog/COG0037.trimmed_alg.faa
 6e3d00d18a36360a94515cc6a5944059479f71bef0dceb7c19fc552dafe9a60a  verify/corpus/eggnog/COG0037.trimmed_alg.faa.gz
+16a890cba81150af28c7dd17841a4337f65d50700db5cfdc31104377c3101a53  verify/corpus/eggnog/COG0037.trimmed_alg.head.faa
 ef2f695482a95515a3eb341b6f2909f8809b1f15cbddbbd0d16c68e7e69fae27  verify/corpus/eggnog/COG0037.trimmed_alg.prefix.faa

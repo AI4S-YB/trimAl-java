@@ -234,8 +234,13 @@ python3 verify/corpus_manifest.py verify verify/corpus_manifests/eggnog.sha256
   guarantee.
 - **Boundary audit.** `run_audit.py` fails on actual differences, timeouts, Java
   exceptions or a requested round trip that did not run; its native crashes remain
-  separately classified. `run_probes.py` calls single methods of both
-  implementations directly.
+  separately classified. Six of its cases — a backtranslation whose selection of
+  columns or sequences is empty — are on undefined behaviour that makes the reference
+  segfault in about half of the runs (10 to 13 of 20, measured per case) and exit
+  normally in the others; whenever it exits normally, its output is byte-identical
+  to the port's. So the audit's split between matches and native crash paths moves by
+  a few cases from run to run; their sum is always 605. `run_probes.py` calls single
+  methods of both implementations directly.
 - **Thread determinism.** `threading_test.py` runs conservation/HTML workloads with
   `-Dtrimal.threads` = 1 (the plain serial loop), 2, 7 and the JVM default, twice for
   the default, and requires identical bytes everywhere.
@@ -261,8 +266,9 @@ bash verify/pdl.sh https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam
 python3 verify/pfam_extract.py                # needs verify/downloads/Pfam-A.seed.gz
 python3 verify/differential.py verify/pfam_manifest.txt --timeout 3600 --jobs 2
 
-# eggNOG5 Bacteria: eight pinned clusters and one truncated member. The stream
-# reader takes the remote tar itself, or a downloaded prefix of it:
+# eggNOG5 Bacteria: eight pinned clusters, the truncated head of one of them,
+# and its unaligned remainder. The stream reader takes the remote tar itself, or a
+# downloaded prefix of it:
 python3 verify/eggnog_stream.py                # HTTP Range requests against the tar
 bash verify/pdl.sh http://eggnog5.embl.de/download/eggnog_5.0/per_tax_level/2/2_trimmed_algs.tar \
   428438264 verify/downloads/eggnog_window.bin 16 verify/downloads/eggnog_parts
@@ -286,10 +292,16 @@ python3 verify/differential.py verify/pffull_manifest.txt --timeout 3600 --jobs 
 dropped and the `-` gaps of the model columns are kept. `eggnog_stream.py` walks the
 tar headers of the archive as one stream and skips the data of members it does not
 want; its eight members are pinned by name because the first prototype selected them
-by accident of chunk boundaries. `COG0037.trimmed_alg.prefix.faa` is what that
-prototype saved when the download window cut a member: the first 12,083,206 bytes of
-COG0037, kept as a truncated-real-input case. `pffull_extract.py` streams the
-families of the window one at a time and keeps the largest by sequence count.
+by accident of chunk boundaries. That prototype had also saved COG0037 cut by its
+download window: the first 12,083,206 bytes of the member. The extractor derives that
+cut again, in two forms. `COG0037.trimmed_alg.head.faa` is the 4,149 complete records
+inside those bytes, aligned (2,888 columns); `COG0037.trimmed_alg.prefix.faa` is the
+bytes themselves, whose last record is cut in the middle — unaligned, so every tool
+rejects it. The gate manifest has the four methods on each of the nine aligned files
+and one case on the unaligned remainder (37 cases); `big_companions.py` gives every
+aligned file its ten conversions and seven statistics, and the remainder one case per
+tool (91 `readal` and 64 `statal` cases). `pffull_extract.py` streams the families of
+the window one at a time and keeps the largest by sequence count.
 
 ## Windows gates
 
