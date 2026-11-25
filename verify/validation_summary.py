@@ -318,13 +318,17 @@ def replace_block(text, name, lines):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", action="append", type=Path, help="a run_full.py run directory")
-    parser.add_argument("--allow-partial", action="store_true")
+    parser.add_argument("--allow-partial", action="store_true",
+                        help="accept a run that lacks gates (never one with a failure)")
     parser.add_argument("--allow-dirty", action="store_true")
+    parser.add_argument("--allow-failures", action="store_true",
+                        help="write the summary even with gated failures (diagnosis only)")
     parser.add_argument("--render", action="store_true", help="rewrite the README tables")
     parser.add_argument("--no-write", action="store_true")
     options = parser.parse_args()
-    directories = options.run or sorted(WORK.glob("run-*"))
-    if not directories:
+    # default: the newest record; several records must be named (and share one build)
+    directories = options.run or [sorted(WORK.glob("run-*"))[-1]]
+    if not options.run and not list(WORK.glob("run-*")):
         raise SystemExit("no run_full.py record under " + str(WORK))
     provenance, gates, skipped, absent, runs = merge(directories, options.allow_partial, options.allow_dirty)
 
@@ -347,12 +351,16 @@ def main():
         "failed_cases": failed_cases,
         "gated_failures": len(failed_gates) + failed_cases + tests["failures"] + tests["errors"],
     }
-    if not options.no_write:
-        if summary["gated_failures"] and not options.allow_partial:
-            raise SystemExit("refusing to write a summary with %d gated failure(s)" % summary["gated_failures"])
-        OUTPUT.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({key: summary[key] for key in
                       ("runs", "failed_gates", "failed_cases", "gated_failures", "gates_not_run")}, indent=2))
+    if summary["gated_failures"] and not options.allow_failures:
+        # Nothing is written and the README is not rendered: a record with a failure
+        # must not become the committed summary, however incomplete the run was allowed to be.
+        print("refusing to write a summary with %d gated failure(s)" % summary["gated_failures"],
+              file=sys.stderr)
+        return 1
+    if not options.no_write:
+        OUTPUT.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     if options.render:
         text = README.read_text(encoding="utf-8")
         text = replace_block(text, "verification-table", verification_table(gates))
