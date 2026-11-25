@@ -419,6 +419,7 @@
         "toStderr",
         "toStdout",
         "unsetfixed",
+        "x86Div",
         "x86IntCast",
         "zeroFixed"
       ]

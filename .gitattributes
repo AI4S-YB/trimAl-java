@@ -14,6 +14,8 @@ java/src/test/resources/** -text
 verify/corpus_manifests/** text eol=lf
 verify/*_manifest.txt text eol=lf
 verify/baseline_manifest.txt text eol=lf
+# Written by the tools with LF on every platform; CI rewrites some and diffs.
+verify/*.json text eol=lf
 # The Maven wrapper scripts are read by a shell on every platform.
 java/mvnw text eol=lf
 java/mvnw.cmd text eol=crlf
